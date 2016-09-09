@@ -346,11 +346,11 @@ PlayerSettings:
   scriptingDefineSymbols: {}
   metroPackageName: HoloLens Driving App
   metroPackageVersion: 
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 807370b9cf29d301
   metroApplicationDescription: HoloLens Driving App
   wsaImages: {}
   metroTileShortName: 

@@ -3,6 +3,10 @@
 # =============== #
 Temp/
 Library/
+Build/
+UWP/
+project.json
+project.lock.json
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
