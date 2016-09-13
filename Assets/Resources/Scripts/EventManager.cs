@@ -5,15 +5,20 @@ using UnityEngine.UI;
 //TODO Link with actual trigger + trigger type info
 public class EventManager : MonoBehaviour
 {
-    public delegate void ClickAction(string prefabName);
-    public static event ClickAction OnClicked;
+    public delegate void TriggerAction(string prefabName);
+    public static event TriggerAction OnTrigger;
+
+    public delegate void TabClickAction();
+    public static event TabClickAction OnTabClick;
 
     public void SendWarningEvent(string prefabName)
     {
-        if (OnClicked != null)
+        if (OnTrigger != null)
         {
-            OnClicked(prefabName);
+            OnTabClick();
+            OnTrigger(prefabName);
         }
         
     }
+
 }

@@ -25,43 +25,28 @@ public class ShowWarningScript : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.OnClicked += ShowWarning;
+        EventManager.OnTrigger += ShowWarning;
     }
 
     void OnDisable()
     {
-        EventManager.OnClicked -= ShowWarning;
+        EventManager.OnTrigger -= ShowWarning;
     }
 
     void ShowWarning(string prefabName)
     {
         if(warningDisplay) { Destroy(warningDisplay); }
+
         SetupWarning(prefabName);
-        //warningDisplay.SetActive(true);
-        this.gameObject.transform.SetAsLastSibling();
+
         UAudioManager.Instance.PlayEvent("WarningBeep", this.gameObject.GetComponent<AudioSource>());
         Destroy(warningDisplay, DisplayTime);
-        //StartCoroutine(DisableAfterTime());
     }
 
     void SetupWarning(string prefabName)
     {
-        //string direction = "left";
-        //sign.texture = resources.load("images/warning_icon") as texture;
-        //sign.color = color.red;
-        //sign.recttransform.sizedelta = new vector2(96f, 96f);
-        //arrow.texture = resources.load("images/" + direction + "_arrow_icon") as texture;
-        //arrow.color = color.black;
-        //arrow.recttransform.sizedelta = new vector2(32f, 32f);
-        //arrow.transform.localposition = new vector3(1, transform.localposition.y, transform.localposition.z);
-
         warningDisplay = (Instantiate(Resources.Load("Prefabs/" + prefabName), Vector3.zero, Quaternion.identity) as GameObject);
         warningDisplay.transform.SetParent(gameObject.transform, false);
     }
 
-    //IEnumerator DisableAfterTime()
-    //{
-    //    yield return new WaitForSeconds(DisplayTime);
-    //    warningDisplay.SetActive(false);
-    //}
 }
