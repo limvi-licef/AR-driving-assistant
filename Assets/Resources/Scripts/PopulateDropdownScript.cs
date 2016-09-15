@@ -18,6 +18,11 @@ public class PopulateDropdownScript : MonoBehaviour {
             dropdown.options.Add(new Dropdown.OptionData(option));
         }
 
+        //Unselect first option
+        Dropdown d = gameObject.GetComponent<Dropdown>();
+        d.options.Add(new Dropdown.OptionData() { text = "" });
+        d.value = d.options.Count - 1;
+        d.options.RemoveAt(d.options.Count - 1);
     }
 
 }

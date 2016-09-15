@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 public class SettingsScript : MonoBehaviour {
 
-    public Slider volumeSlider;
-    public Slider sizeSlider;
-    public GameObject ui;
+    public Slider VolumeSlider;
+    public Slider SizeSlider;
+    public GameObject UI;
 
     void Start()
     {
@@ -18,11 +18,11 @@ public class SettingsScript : MonoBehaviour {
     void Update()
     {
         //Set UI scale
-        ui.transform.localScale = new Vector3(sizeSlider.value, sizeSlider.value, ui.transform.localScale.z);
+        UI.transform.localScale = new Vector3(SizeSlider.value, SizeSlider.value, UI.transform.localScale.z);
     }
 
     public void SetVolume()
     {
-       AudioListener.volume = volumeSlider.value;
+       AudioListener.volume = VolumeSlider.value;
     }
 }

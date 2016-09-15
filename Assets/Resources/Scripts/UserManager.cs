@@ -6,16 +6,6 @@ public class UserManager : MonoBehaviour {
     string userId;
     int userAge;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
     public string GetUserId()
     {
         return this.userId;

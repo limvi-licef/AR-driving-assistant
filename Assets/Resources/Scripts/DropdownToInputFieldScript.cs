@@ -4,7 +4,16 @@ using UnityEngine.UI;
 
 public class DropdownToInputFieldScript : MonoBehaviour {
 
-    public InputField inputfield;
+    public InputField Inputfield;
+
+    void Start()
+    {
+        //Unselect first option
+        Dropdown d = gameObject.GetComponent<Dropdown>();
+        d.options.Add(new Dropdown.OptionData() { text = "" });
+        d.value = d.options.Count - 1;
+        d.options.RemoveAt(d.options.Count - 1);
+    }
 
     void OnEnable()
     {
@@ -18,7 +27,9 @@ public class DropdownToInputFieldScript : MonoBehaviour {
 
     void ChangeInputText(int i)
     {
-        inputfield.text = gameObject.GetComponentInChildren<Text>().text;
+        Inputfield.text = gameObject.GetComponentInChildren<Text>().text;
+        gameObject.GetComponentInChildren<Outline>().effectColor = Color.black;
+        Inputfield.GetComponentInChildren<Outline>().effectColor = Color.black;
     }
 
 }

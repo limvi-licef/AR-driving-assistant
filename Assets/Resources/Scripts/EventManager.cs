@@ -21,14 +21,12 @@ public class EventManager : MonoBehaviour
         m_Events.Add(new Event() { Prefab = "RightWarningDisplay", Sound = "WarningBeep", Color = Color.red, Icon = "warning_icon", Text = "" });
     }
 
-    //public void SendEvent(Event e)
-    public void SendEvent()
+    public void SendEvent(Event e)
     {
         if (OnTrigger != null)
         {
             OnTabClick();
-            //OnTrigger(e);
-            OnTrigger(m_Events[2]);
+            OnTrigger(e);
         }
         
     }

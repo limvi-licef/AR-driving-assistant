@@ -4,27 +4,27 @@ using UnityEngine.UI;
 
 public class MenuTabScript : MonoBehaviour {
 
-    public Button tabButton;
-    public Transform tabDisplay;
-    public GameObject tabOutline;
+    public Button TabButton;
+    public Transform TabDisplay;
+    public GameObject TabOutline;
 
     void OnEnable()
     {
-        tabButton.onClick.AddListener(ChangeTab);
+        TabButton.onClick.AddListener(ChangeTab);
         EventManager.OnTabClick += ChangeTab;
     }
 
     void OnDisable()
     {
-        tabButton.onClick.RemoveListener(ChangeTab);
+        TabButton.onClick.RemoveListener(ChangeTab);
         EventManager.OnTabClick -= ChangeTab;
     }
 
     public void ChangeTab()
     {
-        tabOutline.GetComponent<RawImage>().transform.SetParent(gameObject.transform, false);
-        tabOutline.GetComponent<RawImage>().color = gameObject.GetComponentInChildren<RawImage>().color;
-        tabDisplay.SetAsLastSibling();
+        TabOutline.GetComponent<RawImage>().transform.SetParent(gameObject.transform, false);
+        TabOutline.GetComponent<RawImage>().color = gameObject.GetComponentInChildren<RawImage>().color;
+        TabDisplay.SetAsLastSibling();
     }
 
 }
