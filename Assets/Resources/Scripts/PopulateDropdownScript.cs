@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class PopulateDropdownScript : MonoBehaviour {
 
-    const int lowerLimit = 55;
-    const int upperLimit = 99;
+    public int lowerLimit;
+    public int upperLimit;
+    public Text Placeholder;
 
     void Start () {
         List<string> list = new List<string>();
@@ -23,6 +24,8 @@ public class PopulateDropdownScript : MonoBehaviour {
         d.options.Add(new Dropdown.OptionData() { text = "" });
         d.value = d.options.Count - 1;
         d.options.RemoveAt(d.options.Count - 1);
+
+        Placeholder.gameObject.SetActive(true);
     }
 
 }
