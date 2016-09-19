@@ -9,6 +9,11 @@ public class ValidateInputScript : MonoBehaviour {
     public Text Placeholder;
     public UserManager UserManager;
 
+    void Start()
+    {
+        gameObject.SetActive(true);
+    }
+
     public void ValidateInput()
     {
         if(ValidateID())
