@@ -48,7 +48,7 @@ public partial class CursorManager : Singleton<CursorManager>
         }
         else
         {
-            CursorOffHolograms.SetActive(true);
+            CursorOffHolograms.SetActive(false);
             CursorOnHolograms.SetActive(false);
         }
 

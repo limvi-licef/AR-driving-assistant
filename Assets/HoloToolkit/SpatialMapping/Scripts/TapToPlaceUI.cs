@@ -34,7 +34,6 @@ namespace HoloToolkit.Unity
             {
                 gameObject.GetComponent<BoxCollider>().size = colliderSize;
                 transform.position = localPosition + Camera.main.transform.position;
-
             }
         }
     }
