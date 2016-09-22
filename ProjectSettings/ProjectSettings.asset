@@ -343,7 +343,8 @@ PlayerSettings:
   psp2UseDebugIl2cppLibs: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    14: 
   metroPackageName: AR-driving-assistant
   metroPackageVersion: 1.0.0.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
@@ -376,7 +377,7 @@ PlayerSettings:
       HumanInterfaceDevice: False
       InternetClient: False
       InternetClientServer: False
-      Location: False
+      Location: True
       Microphone: False
       MusicLibrary: False
       Objects3D: False
