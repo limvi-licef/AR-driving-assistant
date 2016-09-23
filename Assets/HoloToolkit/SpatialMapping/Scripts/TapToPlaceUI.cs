@@ -4,20 +4,25 @@ namespace HoloToolkit.Unity
 {
     public partial class TapToPlaceUI : MonoBehaviour
     {
-        const float scaleDifference = 500;
+        const float scaleDifference = 500f;
+        const float colliderScale = 10f;
+        const float speed = 0.5f;
+        const float widthScale = 1.5f;
+
         public GameObject UIComponent;
         public float DistanceToCamera = 2f;
+
         bool placing = false;
+        float fixedAngle;
         Vector3 colliderSize;
         Vector3 placingColliderSize;
-        Vector3 newPosition = Vector3.zero;
         Vector3 targetPosition;
-        float fixedAngle;
+        Vector3 velocity = Vector3.zero;
 
         void Start()
         {
             colliderSize = gameObject.GetComponent<BoxCollider>().size;
-            placingColliderSize = new Vector3(colliderSize.x * 10, colliderSize.y * 10, colliderSize.z);
+            placingColliderSize = new Vector3(colliderSize.x * colliderScale, colliderSize.y * colliderScale, colliderSize.z);
             fixedAngle = Camera.main.transform.forward.y;
         }
 
@@ -38,21 +43,12 @@ namespace HoloToolkit.Unity
             {
                 gameObject.GetComponent<BoxCollider>().size = colliderSize;
                 targetPosition = new Vector3(Camera.main.transform.forward.x, fixedAngle, Camera.main.transform.forward.z) * DistanceToCamera + Camera.main.transform.position;
-                //transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime);
                 float distance = Vector3.Distance(UIComponent.GetComponent<RectTransform>().position, targetPosition) * scaleDifference;
-                float width = UIComponent.GetComponent<RectTransform>().rect.width;
+                float width = UIComponent.GetComponent<RectTransform>().rect.width * widthScale;
 
-                if (distance > width * 1.5)
+                if (distance > width)
                 {
-                    transform.position = Vector3.Slerp(transform.position, targetPosition, Time.deltaTime);
-                    //Vector3 lerpTargetPosition = targetPosition;
-                    //lerpTargetPosition = Vector3.Lerp(transform.position, lerpTargetPosition, 1f);
-                    //newPosition = Interpolator.NonLinearInterpolateTo(transform.position, lerpTargetPosition, Time.deltaTime, 9.8f);
-                    //if ((targetPosition - newPosition).sqrMagnitude <= 0.0000001f)
-                    //{
-                    //    newPosition = targetPosition;
-                    //}
-                    //transform.position = newPosition;
+                    transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, speed);
                 }
             }
         }
