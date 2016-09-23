@@ -43,10 +43,11 @@ namespace HoloToolkit.Unity
             {
                 gameObject.GetComponent<BoxCollider>().size = colliderSize;
                 targetPosition = new Vector3(Camera.main.transform.forward.x, fixedAngle, Camera.main.transform.forward.z) * DistanceToCamera + Camera.main.transform.position;
-                float distance = Vector3.Distance(UIComponent.GetComponent<RectTransform>().position, targetPosition) * scaleDifference;
-                float width = UIComponent.GetComponent<RectTransform>().rect.width * widthScale;
 
-                if (distance > width)
+                //Only move if the cursor is widthScale times away from UI so it remains interactible
+                float distance = Vector3.Distance(UIComponent.GetComponent<RectTransform>().position, targetPosition) * scaleDifference;
+                float interactibleWidth = UIComponent.GetComponent<RectTransform>().rect.height * widthScale;
+                if (distance > interactibleWidth)
                 {
                     transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, speed);
                 }

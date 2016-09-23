@@ -41,7 +41,7 @@ public partial class CursorManager : Singleton<CursorManager>
             return;
         }
 
-        if (GazeManager.Instance.Hit)
+        if (GazeManager.Instance.Hit && GazeManager.Instance.HitInfo.transform.gameObject.layer == LayerMask.NameToLayer("UI"))
         {
             CursorOnHolograms.SetActive(true);
             CursorOffHolograms.SetActive(false);

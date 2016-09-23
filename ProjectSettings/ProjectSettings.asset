@@ -377,7 +377,7 @@ PlayerSettings:
       HumanInterfaceDevice: False
       InternetClient: False
       InternetClientServer: False
-      Location: True
+      Location: False
       Microphone: False
       MusicLibrary: False
       Objects3D: False
