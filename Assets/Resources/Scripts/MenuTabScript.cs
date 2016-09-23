@@ -7,17 +7,18 @@ public class MenuTabScript : MonoBehaviour {
     public Button TabButton;
     public Transform TabDisplay;
     public GameObject TabOutline;
+    public bool IsHomeMenu;
 
     void OnEnable()
     {
         TabButton.onClick.AddListener(ChangeTab);
-        EventManager.OnTabClick += ChangeTab;
+        if(IsHomeMenu) EventManager.OnTabClick += ChangeTab;
     }
 
     void OnDisable()
     {
         TabButton.onClick.RemoveListener(ChangeTab);
-        EventManager.OnTabClick -= ChangeTab;
+        if (IsHomeMenu) EventManager.OnTabClick -= ChangeTab;
     }
 
     public void ChangeTab()
