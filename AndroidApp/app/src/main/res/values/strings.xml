@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AR-driving-assistant</string>
+    <string name="app_title">Welcome to the AR-driving-assistant helper tool!</string>
+    <string name="monitoring_start">Start Monitoring</string>
+    <string name="monitoring_stop">Stop Monitoring</string>
+    <string name="monitoring_empty">No results yet</string>
+    <string name="setup_user">Setup User</string>
+    <string name="check_db">Check Database</string>
 </resources>
