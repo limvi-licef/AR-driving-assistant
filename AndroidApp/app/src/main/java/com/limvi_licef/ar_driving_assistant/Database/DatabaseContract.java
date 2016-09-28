@@ -1,6 +1,4 @@
-package com.limvi_licef.ar_driving_assistant.Database;
-
-import android.provider.BaseColumns;
+package com.limvi_licef.ar_driving_assistant.database;
 
 public final class DatabaseContract {
 

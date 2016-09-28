@@ -1,4 +1,4 @@
-package com.limvi_licef.ar_driving_assistant.Database;
+package com.limvi_licef.ar_driving_assistant.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

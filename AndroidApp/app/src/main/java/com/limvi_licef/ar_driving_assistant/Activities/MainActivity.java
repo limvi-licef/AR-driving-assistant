@@ -1,4 +1,4 @@
-package com.limvi_licef.ar_driving_assistant.Activities;
+package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -21,7 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.limvi_licef.ar_driving_assistant.Database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.R;
 
 import java.util.ArrayList;
