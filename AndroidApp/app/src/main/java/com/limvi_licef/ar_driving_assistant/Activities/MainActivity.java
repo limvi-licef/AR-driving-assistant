@@ -1,7 +1,11 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.widget.ToggleButton;
 
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
+import com.aware.Gyroscope;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.R;
 
@@ -26,13 +31,32 @@ public class MainActivity extends Activity {
     private ArrayAdapter<String> resultsAdapter;
     private SQLiteDatabase db;
 
+    //testing purposes
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ContentValues values = (ContentValues) intent.getExtras().get(Gyroscope.EXTRA_DATA);
+            if(values == null || values.size() == 0) return;
+            for(String key : values.keySet()) {
+                results.add(key + " : " + values.getAsString(key));
+            }
+            resultsAdapter.notifyDataSetChanged();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupAwareProviders();
         setupUIElements();
+        setupListeners();
         db = DatabaseHelper.getHelper(this).getWritableDatabase();
+    }
+
+    @Override
+    protected  void onDestroy() {
+        unregisterReceiver(mReceiver);
     }
 
     private void setupUIElements() {
@@ -90,6 +114,12 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Settings.ACCURACY_FUSED_LOCATION, 102, Settings.FUSED_LOCATION_PACKAGE);
         //TODO set all other sensors
 
+    }
+
+    private void setupListeners(){
+        IntentFilter broadcastFilter = new IntentFilter();
+        broadcastFilter.addAction(Gyroscope.ACTION_AWARE_GYROSCOPE);
+        registerReceiver(mReceiver, broadcastFilter);
     }
 
     private void startMonitoring() {
