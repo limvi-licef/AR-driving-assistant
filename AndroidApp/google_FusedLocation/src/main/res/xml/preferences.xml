@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="plugin_google_fused_location"
+    android:title="@string/app_name">
+
+    <CheckBoxPreference
+        android:key="status_google_fused_location"
+        android:defaultValue="false"
+        android:persistent="true"
+        android:summary="Activate/deactivate plugin"/>
+
+    <EditTextPreference
+        android:defaultValue="300"
+        android:inputType="numberDecimal"
+        android:key="frequency_google_fused_location"
+        android:persistent="true"
+        android:summary="Every 300 seconds"
+        android:title="How frequently to acquire location (in seconds)" />
+
+    <EditTextPreference
+        android:defaultValue="60"
+        android:inputType="numberDecimal"
+        android:key="max_frequency_google_fused_location"
+        android:persistent="true"
+        android:summary="Every 60 second(s)"
+        android:title="How fast your app handles locations (in seconds)" />
+
+    <EditTextPreference
+        android:defaultValue="20"
+        android:inputType="numberDecimal"
+        android:key="fallback_location_timeout"
+        android:persistent="true"
+        android:summary="Wait 20 seconds"
+        android:title="GPS satellite fix timeout" />
+
+    <EditTextPreference
+        android:defaultValue="5"
+        android:inputType="numberDecimal"
+        android:key="location_sensitivity"
+        android:persistent="true"
+        android:summary="More than 5 meter(s)"
+        android:title="Motion sensitivity" />
+
+    <ListPreference
+        android:key="accuracy_google_fused_location"
+        android:defaultValue="102"
+        android:persistent="true"
+        android:summary="Medium (network + WiFi)"
+        android:title="Location accuracy"
+        android:entries="@array/accuracies_readable"
+        android:entryValues="@array/accuracies_values" />
+
+</PreferenceScreen>

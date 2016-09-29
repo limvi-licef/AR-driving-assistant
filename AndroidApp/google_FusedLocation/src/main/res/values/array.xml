@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="accuracies_readable">
+        <item>High accuracy (GPS + network + WiFi)</item>
+        <item>Medium accuracy (network + WiFi)</item>
+        <item>Low accuracy (network only)</item>
+        <item>Opportunistic (reused location)</item>
+    </string-array>
+    <string-array name="accuracies_values">
+        <item>100</item>
+        <item>102</item>
+        <item>104</item>
+        <item>105</item>
+    </string-array>
+</resources>
