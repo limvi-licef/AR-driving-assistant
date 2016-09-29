@@ -79,23 +79,26 @@ public class MainActivity extends Activity {
         //gyroscope settings
         Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
 
-        //fused location settings
-        Aware.setSetting(this, Settings.fusedLocationStatus, true, Settings.fusedLocationPackageName);
-        Aware.setSetting(this, Settings.fusedLocationFrequency, 10, Settings.fusedLocationPackageName);
-        Aware.setSetting(this, Settings.fusedLocationMaxFrequency, 5, Settings.fusedLocationPackageName);
-        Aware.setSetting(this, Settings.fusedLocationAccuracy, 102, Settings.fusedLocationPackageName);
+        //accelerometer settings
+        Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
+
+        //fused location plugin settings
+        Aware.setSetting(this, Settings.STATUS_FUSED_LOCATION, true, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.setSetting(this, Settings.FREQUENCY_FUSED_LOCATION, 10, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.setSetting(this, Settings.MAX_FREQUENCY_FUSED_LOCATION, 5, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.setSetting(this, Settings.ACCURACY_FUSED_LOCATION, 102, Settings.FUSED_LOCATION_PACKAGE);
         //TODO set all other sensors
 
     }
 
     private void startMonitoring() {
         Aware.startAWARE();
-        Aware.startPlugin(this, Settings.fusedLocationPackageName);
+        Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
     }
 
     private void stopMonitoring() {
         Aware.stopAWARE();
-        Aware.stopPlugin(this, Settings.fusedLocationPackageName);
+        Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
     }
 
 }
