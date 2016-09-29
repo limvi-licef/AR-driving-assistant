@@ -13,11 +13,12 @@ import android.widget.ToggleButton;
 
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
-import com.aware.utils.Aware_Sensor;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.R;
 
 import java.util.ArrayList;
+
+import com.limvi_licef.ar_driving_assistant.Settings;
 
 public class MainActivity extends Activity {
 
@@ -74,17 +75,27 @@ public class MainActivity extends Activity {
     private void setupAwareProviders(){
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
+
+        //gyroscope settings
         Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
+
+        //fused location settings
+        Aware.setSetting(this, Settings.fusedLocationStatus, true, Settings.fusedLocationPackageName);
+        Aware.setSetting(this, Settings.fusedLocationFrequency, 10, Settings.fusedLocationPackageName);
+        Aware.setSetting(this, Settings.fusedLocationMaxFrequency, 5, Settings.fusedLocationPackageName);
+        Aware.setSetting(this, Settings.fusedLocationAccuracy, 102, Settings.fusedLocationPackageName);
         //TODO set all other sensors
 
     }
 
     private void startMonitoring() {
         Aware.startAWARE();
+        Aware.startPlugin(this, Settings.fusedLocationPackageName);
     }
 
     private void stopMonitoring() {
         Aware.stopAWARE();
+        Aware.stopPlugin(this, Settings.fusedLocationPackageName);
     }
 
 }
