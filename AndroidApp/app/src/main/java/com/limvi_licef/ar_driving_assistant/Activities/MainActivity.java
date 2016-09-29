@@ -81,6 +81,7 @@ public class MainActivity extends Activity {
 
         //accelerometer settings
         Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 200000);
 
         //fused location plugin settings
         Aware.setSetting(this, Settings.STATUS_FUSED_LOCATION, true, Settings.FUSED_LOCATION_PACKAGE);
