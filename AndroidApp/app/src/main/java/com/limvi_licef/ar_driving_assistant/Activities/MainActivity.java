@@ -1,26 +1,19 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.aware.Aware;
+import com.aware.Aware_Preferences;
+import com.aware.utils.Aware_Sensor;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.R;
 
@@ -36,7 +29,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupMonitoringTargets();
+        setupAwareProviders();
         setupUIElements();
         db = DatabaseHelper.getHelper(this).getWritableDatabase();
     }
@@ -78,16 +71,20 @@ public class MainActivity extends Activity {
         resultsView.setEmptyView(findViewById(R.id.emptyList));
     }
 
-    private void setupMonitoringTargets(){
+    private void setupAwareProviders(){
+        Intent aware = new Intent(this, Aware.class);
+        startService(aware);
+        Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
+        //TODO set all other sensors
 
     }
 
     private void startMonitoring() {
-
+        Aware.startAWARE();
     }
 
     private void stopMonitoring() {
-
+        Aware.stopAWARE();
     }
 
 }
