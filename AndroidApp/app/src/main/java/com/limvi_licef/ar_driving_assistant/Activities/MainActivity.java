@@ -26,15 +26,11 @@ import com.limvi_licef.ar_driving_assistant.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends Activity {
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
     private SQLiteDatabase db;
-
-    //Location monitoring
-    private GoogleApiClient googleApiClient;
-    private LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,43 +39,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         setupMonitoringTargets();
         setupUIElements();
         db = DatabaseHelper.getHelper(this).getWritableDatabase();
-    }
-
-    @Override
-    protected  void onStart(){
-        googleApiClient.connect();
-    }
-
-    @Override
-    protected  void onStop(){
-        googleApiClient.disconnect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult result){
-        Toast.makeText(getApplicationContext(), "GoogleApiClient connection failure : " + result,
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Toast.makeText(getApplicationContext(), "GoogleApiClient connection suspended",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Toast.makeText(getApplicationContext(), "GoogleApiClient connection successful",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onLocationChanged (Location location){
-        float speed = location.getSpeed();
-        results.add("Speed : " + speed);
-        // TODO
-
-        resultsAdapter.notifyDataSetChanged();
     }
 
     private void setupUIElements() {
@@ -120,28 +79,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     private void setupMonitoringTargets(){
-        googleApiClient = new GoogleApiClient.Builder(MainActivity.this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5);
-        locationRequest.setFastestInterval(1);
+
     }
 
     private void startMonitoring() {
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return  ;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+
     }
 
     private void stopMonitoring() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+
     }
 
 }
