@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
-    private SQLiteDatabase db;
+    private DatabaseHelper dbHelper;
 
     //testing purposes
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         setupAwareProviders();
         setupUIElements();
         setupListeners();
-        db = DatabaseHelper.getHelper(this).getWritableDatabase();
+        dbHelper = DatabaseHelper.getHelper(this);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         exportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                dbHelper.exportDatabaseAsJSON();
             }
         });
 
