@@ -5,5 +5,11 @@
     <string name="monitoring_stop">Stop Monitoring</string>
     <string name="monitoring_empty">No results yet</string>
     <string name="setup_user">Setup User</string>
-    <string name="check_db">Check Database</string>
+    <string name="export_db">Export Database</string>
+
+    <string name="user_dialog_id_placeholder">ID</string>
+    <string name="user_dialog_dismiss">Close</string>
+    <string name="user_dialog_ok">Save</string>
+    <string name="user_dialog_title">Current User Setup</string>
+    <string name="user_id_pref">user_id</string>
 </resources>

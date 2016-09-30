@@ -24,6 +24,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import java.util.ArrayList;
 
 import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.fragments.UserDialogFragment;
 
 public class MainActivity extends Activity {
 
@@ -77,11 +78,12 @@ public class MainActivity extends Activity {
         setupUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                UserDialogFragment userFragment = UserDialogFragment.newInstance();
+                userFragment.show(getFragmentManager(), "usersetupdialog");
             }
         });
-        Button checkDatabase = (Button) findViewById(R.id.check_database_button);
-        checkDatabase.setOnClickListener(new View.OnClickListener() {
+        Button exportDatabase = (Button) findViewById(R.id.check_database_button);
+        exportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO

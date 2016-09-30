@@ -38,7 +38,7 @@
             android:id="@+id/check_database_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/check_db" />
+            android:text="@string/export_db" />
 
     </LinearLayout>
 
