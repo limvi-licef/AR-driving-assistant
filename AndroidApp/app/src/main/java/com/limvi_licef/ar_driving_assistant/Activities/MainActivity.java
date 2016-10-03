@@ -114,6 +114,11 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Settings.FREQUENCY_FUSED_LOCATION, 10, Settings.FUSED_LOCATION_PACKAGE);
         Aware.setSetting(this, Settings.MAX_FREQUENCY_FUSED_LOCATION, 5, Settings.FUSED_LOCATION_PACKAGE);
         Aware.setSetting(this, Settings.ACCURACY_FUSED_LOCATION, 102, Settings.FUSED_LOCATION_PACKAGE);
+
+        //open weather plugin settings
+        Aware.setSetting(this, Settings.STATUS_OPEN_WEATHER, true, Settings.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Settings.FREQUENCY_OPEN_WEATHER, 30, Settings.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, R.string.open_weather_key, Settings.OPEN_WEATHER_PACKAGE);
         //TODO set all other sensors
 
     }
@@ -127,11 +132,13 @@ public class MainActivity extends Activity {
     private void startMonitoring() {
         Aware.startAWARE();
         Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
     }
 
     private void stopMonitoring() {
         Aware.stopAWARE();
         Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.stopPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
     }
 
 }
