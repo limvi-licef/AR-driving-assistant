@@ -13,7 +13,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 
 public class UserDialogFragment extends DialogFragment {
 
-    private final String idPref = getResources().getString(R.string.user_id_pref);
+    private String idPref;
 
     public static UserDialogFragment newInstance() {
         return new UserDialogFragment();
@@ -21,6 +21,7 @@ public class UserDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        idPref = getResources().getString(R.string.user_id_pref);
         final EditText idtext = new EditText(getActivity());
         idtext.setHint(R.string.user_dialog_id_placeholder);
         SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
