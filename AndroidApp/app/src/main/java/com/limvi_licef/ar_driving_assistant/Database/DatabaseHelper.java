@@ -41,6 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
     }
 
     public void exportDatabaseAsJSON(){
+
+        if(!isExternalStorageWritable()){
+            Log.d("EXTERNAL STORAGE", "The external storage is unavailable");
+            return;
+        }
         //TODO TEST
         try{
             FileWriter fWriter;
@@ -119,5 +124,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         c.close();
         return namesArray;
+    }
+
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 }
