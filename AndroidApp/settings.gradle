@@ -1,1 +1,1 @@
-include ':app', ':google_FusedLocation'
+include ':app', ':google_FusedLocation', ':openWeather'
