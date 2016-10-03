@@ -40,6 +40,7 @@ public class UserDialogFragment extends DialogFragment {
                 editor.apply();
             }
         })
+        .setView(idtext)
         .create();
     }
 }
