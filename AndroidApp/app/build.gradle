@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.limvi_licef.ar_driving_assistant"
-        minSdkVersion 18
+        minSdkVersion 10
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
