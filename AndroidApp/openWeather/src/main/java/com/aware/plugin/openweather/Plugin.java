@@ -146,7 +146,7 @@ public class Plugin extends Aware_Plugin implements GoogleApiClient.ConnectionCa
         }
 
         Aware.stopPlugin(this, "com.aware.plugin.openweather");
-        Aware.stopAWARE();
+        //Aware.stopAWARE();
     }
 
     private boolean is_google_services_available() {

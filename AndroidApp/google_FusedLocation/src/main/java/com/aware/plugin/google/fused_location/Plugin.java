@@ -249,7 +249,7 @@ public class Plugin extends Aware_Plugin implements GoogleApiClient.ConnectionCa
         stopService(geofences);
 
         Aware.stopPlugin(this, PACKAGE_NAME);
-        Aware.stopAWARE();
+        //Aware.stopAWARE();
     }
 
     private boolean is_google_services_available() {
