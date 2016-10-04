@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,9 +16,11 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
+import com.aware.Accelerometer;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.aware.Gyroscope;
+import com.aware.LinearAccelerometer;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.R;
 
@@ -31,13 +34,23 @@ public class MainActivity extends Activity {
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
     private DatabaseHelper dbHelper;
+    private Intent aware;
 
     //testing purposes
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ContentValues values = (ContentValues) intent.getExtras().get(Gyroscope.EXTRA_DATA);
+            ContentValues values = (ContentValues) intent.getExtras().get(Accelerometer.EXTRA_DATA);
+//            Location values = (Location)intent.getExtras().get("data");
             if(values == null || values.size() == 0) return;
+            results.clear();
+//            results.add("System Timestamp" + System.currentTimeMillis());
+//            results.add("Get Time" + values.getTime());
+//            results.add("Altitude" + values.getAltitude());
+//            results.add("Longitude" + values.getLongitude());
+//            results.add("Latitude" + values.getLatitude());
+//            results.add("Speed" + values.getSpeed());
+//            results.add("Bearing" + values.getBearing());
             for(String key : values.keySet()) {
                 results.add(key + " : " + values.getAsString(key));
             }
@@ -51,13 +64,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         setupAwareProviders();
         setupUIElements();
-        setupListeners();
         dbHelper = DatabaseHelper.getHelper(this);
     }
 
     @Override
     protected  void onDestroy() {
-        unregisterReceiver(mReceiver);
+        super.onDestroy();
+        stopService(aware);
     }
 
     private void setupUIElements() {
@@ -99,7 +112,7 @@ public class MainActivity extends Activity {
     }
 
     private void setupAwareProviders(){
-        Intent aware = new Intent(this, Aware.class);
+        aware = new Intent(this, Aware.class);
         startService(aware);
 
         //gyroscope settings
@@ -109,24 +122,31 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 200000);
 
+        //linear accelerometer settings
+        Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 200000);
+
         //fused location plugin settings
         Aware.setSetting(this, Settings.STATUS_FUSED_LOCATION, true, Settings.FUSED_LOCATION_PACKAGE);
-        Aware.setSetting(this, Settings.FREQUENCY_FUSED_LOCATION, 10, Settings.FUSED_LOCATION_PACKAGE);
-        Aware.setSetting(this, Settings.MAX_FREQUENCY_FUSED_LOCATION, 5, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.setSetting(this, Settings.FREQUENCY_FUSED_LOCATION, 0, Settings.FUSED_LOCATION_PACKAGE);
+        Aware.setSetting(this, Settings.MAX_FREQUENCY_FUSED_LOCATION, 0, Settings.FUSED_LOCATION_PACKAGE);
         Aware.setSetting(this, Settings.ACCURACY_FUSED_LOCATION, 102, Settings.FUSED_LOCATION_PACKAGE);
-
+        Aware.setSetting(this, "location_sensitivity", 0, Settings.FUSED_LOCATION_PACKAGE);
+//
         //open weather plugin settings
         Aware.setSetting(this, Settings.STATUS_OPEN_WEATHER, true, Settings.OPEN_WEATHER_PACKAGE);
         Aware.setSetting(this, Settings.FREQUENCY_OPEN_WEATHER, 30, Settings.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, R.string.open_weather_key, Settings.OPEN_WEATHER_PACKAGE);
-        //TODO set all other sensors
-
+        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, R.string.openweather, Settings.OPEN_WEATHER_PACKAGE);
     }
 
-    private void setupListeners(){
+    private void registerListeners(){
         IntentFilter broadcastFilter = new IntentFilter();
-        broadcastFilter.addAction(Gyroscope.ACTION_AWARE_GYROSCOPE);
+        broadcastFilter.addAction(Accelerometer.ACTION_AWARE_ACCELEROMETER);
         registerReceiver(mReceiver, broadcastFilter);
+    }
+
+    private void unregisterListeners(){
+        unregisterReceiver(mReceiver);
     }
 
     private void startMonitoring() {
@@ -135,14 +155,18 @@ public class MainActivity extends Activity {
         Aware.startLinearAccelerometer(this);
         Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
         Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
+
+        registerListeners();
     }
 
     private void stopMonitoring() {
         Aware.stopAccelerometer(this);
         Aware.stopGyroscope(this);
         Aware.stopLinearAccelerometer(this);
-        Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
-        Aware.stopPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
+//        Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
+//        Aware.stopPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
+
+        unregisterListeners();
     }
 
 }
