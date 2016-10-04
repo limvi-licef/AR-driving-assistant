@@ -130,13 +130,17 @@ public class MainActivity extends Activity {
     }
 
     private void startMonitoring() {
-        Aware.startAWARE();
+        Aware.startAccelerometer(this);
+        Aware.startGyroscope(this);
+        Aware.startLinearAccelerometer(this);
         Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
         Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
     }
 
     private void stopMonitoring() {
-        Aware.stopAWARE();
+        Aware.stopAccelerometer(this);
+        Aware.stopGyroscope(this);
+        Aware.stopLinearAccelerometer(this);
         Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
         Aware.stopPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
     }
