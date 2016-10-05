@@ -76,10 +76,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
         for(String tableName : getAllTableNames(database)){
             JSONArray tableArray = tableToJSON(database, tableName);
             try {
-                Log.d("TAG_TABLE", tableName);
+                Log.d("EXPORT TABLE", tableName);
                 databaseJSON.put(tableName, tableArray);
             } catch (JSONException e) {
-                Log.d("TAG_TABLE", e.getMessage());
+                Log.d("EXPORT TABLE", e.getMessage());
             }
         }
         return databaseJSON;
@@ -100,14 +100,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 if( cursor.getColumnName(i) != null ) {
                     try {
                         if( cursor.getString(i) != null ) {
-                            Log.d("TAG_NAME", cursor.getString(i) );
+                            Log.d("EXPORT COLUMN", cursor.getString(i) );
                             rowObject.put(cursor.getColumnName(i) ,  cursor.getString(i) );
                         }
                         else {
                             rowObject.put( cursor.getColumnName(i) ,  "" );
                         }
                     } catch( Exception e ) {
-                        Log.d("TAG_NAME", e.getMessage()  );
+                        Log.d("EXPORT COLUMN", e.getMessage()  );
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             cursor.moveToNext();
         }
         cursor.close();
-        Log.d("TAG_NAME", resultSet.toString() );
+        Log.d("EXPORT COLUMN", resultSet.toString() );
         return resultSet;
     }
 
