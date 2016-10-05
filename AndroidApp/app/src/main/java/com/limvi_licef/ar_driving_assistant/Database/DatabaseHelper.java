@@ -32,11 +32,15 @@ public class DatabaseHelper extends SQLiteOpenHelper
         super(context, DatabaseContract.DATABASE_NAME, null, DatabaseContract.DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseContract.SQL_CREATE_ENTRIES);
+        for (String createStatement : DatabaseContract.SQL_CREATE_TABLE_ARRAY) {
+            db.execSQL(createStatement);
+        }
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Data migration once dev is complete
-        db.execSQL(DatabaseContract.SQL_DELETE_ENTRIES);
+        for (String deleteStatement : DatabaseContract.SQL_DELETE_TABLE_ARRAY) {
+            db.execSQL(deleteStatement);
+        }
         onCreate(db);
     }
 
