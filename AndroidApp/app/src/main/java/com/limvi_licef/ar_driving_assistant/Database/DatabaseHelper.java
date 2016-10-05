@@ -53,10 +53,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
         //TODO TEST
         try{
             FileWriter fWriter;
-            File jsonFile = new File(Environment.getExternalStorageDirectory() + "/driving_assistant/database_" + System.currentTimeMillis() + ".json");
+            File jsonDir = new File(Environment.getExternalStorageDirectory() + "/AR-Driving-assistant");
+            jsonDir.mkdirs();
+            File jsonFile = new File(jsonDir, "database_" + System.currentTimeMillis() + ".json");
             Log.d("JSON EXPORT PATH", jsonFile.getPath());
             fWriter = new FileWriter(jsonFile, true);
-            fWriter.write( getDatabaseAsJSON().toString() ); //?
+            fWriter.write( getDatabaseAsJSON().toString() );
             fWriter.flush();
             fWriter.close();
         }catch(Exception e){
