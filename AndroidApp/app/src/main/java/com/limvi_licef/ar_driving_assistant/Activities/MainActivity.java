@@ -16,11 +16,22 @@ import com.limvi_licef.ar_driving_assistant.database.*;
 import com.limvi_licef.ar_driving_assistant.R;
 
 import com.limvi_licef.ar_driving_assistant.fragments.UserDialogFragment;
+import com.limvi_licef.ar_driving_assistant.receivers.AccelerometerReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 
 public class MainActivity extends Activity {
 
     private DatabaseHelper dbHelper;
     private Intent aware;
+
+    private AccelerometerReceiver accelerometerReceiver;
+    private TemperatureReceiver temperatureReceiver;
+    private LocationReceiver locationReceiver;
+    private LinearAccelerometerReceiver linearAccelerometerReceiver;
+    private GyroscopeReceiver gyroscopeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +40,12 @@ public class MainActivity extends Activity {
         setupUIElements();
         dbHelper = DatabaseHelper.getHelper(this);
         aware = new Intent(this, Aware.class);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterListeners();
     }
 
     private void setupUIElements() {
@@ -96,14 +113,24 @@ public class MainActivity extends Activity {
     }
 
     private void registerListeners(){
-        //TODO create listeners for all
-//        IntentFilter broadcastFilter = new IntentFilter();
-//        broadcastFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
-//        registerReceiver(mReceiver, broadcastFilter);
+        accelerometerReceiver = new AccelerometerReceiver();
+        accelerometerReceiver.register(this);
+        linearAccelerometerReceiver = new LinearAccelerometerReceiver();
+        linearAccelerometerReceiver.register(this);
+        gyroscopeReceiver = new GyroscopeReceiver();
+        gyroscopeReceiver.register(this);
+        locationReceiver = new LocationReceiver();
+        locationReceiver.register(this);
+        temperatureReceiver = new TemperatureReceiver();
+        temperatureReceiver.register(this);
     }
 
     private void unregisterListeners(){
-//        unregisterReceiver(mReceiver);
+        accelerometerReceiver.unregister(this);
+        linearAccelerometerReceiver.unregister(this);
+        gyroscopeReceiver.unregister(this);
+        locationReceiver.unregister(this);
+        temperatureReceiver.unregister(this);
     }
 
     private void startMonitoring() {
