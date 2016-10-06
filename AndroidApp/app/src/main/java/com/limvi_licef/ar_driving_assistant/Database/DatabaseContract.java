@@ -114,6 +114,7 @@ public final class DatabaseContract {
 
     public static abstract class TemperatureData implements BaseColumns {
         public static final String TABLE_NAME       = "TemperatureData";
+        public static final String TIMESTAMP = "Timestamp";
         public static final String CURRENT_USER_ID = "CurrentUserID";
         public static final String CITY = "City";
         public static final String TEMPERATURE = "Temperature";
@@ -127,6 +128,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                TIMESTAMP + REAL_TYPE + COMMA_SEP +
                 CITY + TEXT_TYPE + COMMA_SEP +
                 TEMPERATURE + REAL_TYPE + COMMA_SEP +
                 WIND_SPEED + REAL_TYPE + COMMA_SEP +
