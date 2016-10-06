@@ -1,6 +1,6 @@
 package com.limvi_licef.ar_driving_assistant;
 
-public class Settings {
+public abstract class Settings {
 
     //google fused location
     public static final String FUSED_LOCATION_PACKAGE = "com.aware.plugin.google.fused_location";
