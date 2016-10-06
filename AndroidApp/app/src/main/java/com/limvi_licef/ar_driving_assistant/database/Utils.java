@@ -27,7 +27,7 @@ public class Utils {
         }
         try{
             FileWriter fWriter;
-            File jsonDir = new File(Environment.getExternalStorageDirectory() + "/AR-Driving-assistant");
+            File jsonDir = new File(Environment.getExternalStorageDirectory() + "/AR-driving-assistant");
             jsonDir.mkdirs();
             File jsonFile = new File(jsonDir, "database_" + System.currentTimeMillis() + ".json");
             Log.d("JSON EXPORT PATH", jsonFile.getPath());
