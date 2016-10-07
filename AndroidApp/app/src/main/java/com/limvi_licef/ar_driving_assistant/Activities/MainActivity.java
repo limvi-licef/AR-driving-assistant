@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity {
         setupUIElements();
         dbHelper = DatabaseHelper.getHelper(this);
         aware = new Intent(this, Aware.class);
+        setupSensors();
     }
 
     @Override
@@ -109,8 +111,8 @@ public class MainActivity extends Activity {
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_NETWORK, 0);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0.25);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_NETWORK, 0.25);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 0);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_NETWORK_ACCURACY, 0);
         Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 4);
@@ -154,7 +156,6 @@ public class MainActivity extends Activity {
     }
 
     private void startMonitoring() {
-        setupSensors();
         registerListeners();
 
         Aware.startLocations(this);
