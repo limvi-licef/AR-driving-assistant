@@ -10,7 +10,7 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
 public class InsertDatabaseIntentService extends IntentService {
 
-    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
     public static String TABLE_NAME = "table_name";
     public static String VALUES = "values";
 
@@ -21,7 +21,7 @@ public class InsertDatabaseIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        dbHelper = DatabaseHelper.getHelper(this);
+        db = DatabaseHelper.getHelper(this).getWritableDatabase();
     }
 
     @Override
@@ -37,7 +37,6 @@ public class InsertDatabaseIntentService extends IntentService {
         Log.d("Insert Service", "Started Intent Handling");
         String tableName = (String) intent.getExtras().get(TABLE_NAME);
         ContentValues values = (ContentValues) intent.getExtras().get(VALUES);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.insert(tableName, null, values);
         Log.d("Insert Service Values", values.toString());
     }
