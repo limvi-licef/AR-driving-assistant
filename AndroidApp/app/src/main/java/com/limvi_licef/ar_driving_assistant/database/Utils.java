@@ -64,6 +64,7 @@ public class Utils {
         String searchQuery = "SELECT  * FROM " + tableName;
         Cursor cursor = database.rawQuery(searchQuery, null );
         JSONArray resultSet = new JSONArray();
+        cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
 
             int totalColumn = cursor.getColumnCount();
