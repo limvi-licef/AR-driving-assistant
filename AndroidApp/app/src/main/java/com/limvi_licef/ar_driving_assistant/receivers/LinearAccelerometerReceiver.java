@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
@@ -19,9 +20,9 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
     public boolean isRegistered;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
 
-    public Intent register(Context context) {
+    public Intent register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter);
+        return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

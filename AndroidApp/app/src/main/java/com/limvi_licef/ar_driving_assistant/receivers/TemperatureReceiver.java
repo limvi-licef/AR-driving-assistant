@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
@@ -20,9 +21,9 @@ public class TemperatureReceiver extends BroadcastReceiver {
     private static final String extraData = "openweather";
     private IntentFilter broadcastFilter = new IntentFilter(broadcastAction);
 
-    public Intent register(Context context) {
+    public Intent register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter);
+        return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

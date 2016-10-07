@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.aware.Accelerometer;
 import com.aware.providers.Accelerometer_Provider;
@@ -20,9 +21,9 @@ public class AccelerometerReceiver extends BroadcastReceiver {
 
     private IntentFilter broadcastFilter = new IntentFilter(Accelerometer.ACTION_AWARE_ACCELEROMETER);
 
-    public Intent register(Context context) {
+    public Intent register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter);
+        return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

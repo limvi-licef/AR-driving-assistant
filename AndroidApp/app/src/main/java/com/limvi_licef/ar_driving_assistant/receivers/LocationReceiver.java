@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 
 import com.aware.Locations;
 import com.aware.providers.Accelerometer_Provider;
@@ -28,9 +29,9 @@ public class LocationReceiver extends BroadcastReceiver {
     private static final String extraData = "data";
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
 
-    public Intent register(Context context) {
+    public Intent register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter);
+        return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

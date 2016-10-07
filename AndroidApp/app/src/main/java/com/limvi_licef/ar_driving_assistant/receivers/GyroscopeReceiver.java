@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.aware.Gyroscope;
 import com.aware.providers.Gyroscope_Provider;
@@ -19,9 +20,9 @@ public class GyroscopeReceiver extends BroadcastReceiver {
     public boolean isRegistered;
     private IntentFilter broadcastFilter = new IntentFilter(Gyroscope.ACTION_AWARE_GYROSCOPE);
 
-    public Intent register(Context context) {
+    public Intent register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter);
+        return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

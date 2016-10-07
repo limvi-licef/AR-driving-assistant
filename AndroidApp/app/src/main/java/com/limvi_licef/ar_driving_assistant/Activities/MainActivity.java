@@ -2,7 +2,11 @@ package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,6 +31,8 @@ public class MainActivity extends Activity {
 
     private DatabaseHelper dbHelper;
     private Intent aware;
+    private HandlerThread sensorThread;
+    private Handler sensorHandler;
 
     private AccelerometerReceiver accelerometerReceiver;
     private TemperatureReceiver temperatureReceiver;
@@ -115,16 +121,21 @@ public class MainActivity extends Activity {
     }
 
     private void registerListeners(){
+        sensorThread = new HandlerThread("SensorDataHandlerThread");
+        sensorThread.start();
+        Looper looper = sensorThread.getLooper();
+        sensorHandler = new Handler(looper);
+
         accelerometerReceiver = new AccelerometerReceiver();
-        accelerometerReceiver.register(this);
+        accelerometerReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
-        linearAccelerometerReceiver.register(this);
+        linearAccelerometerReceiver.register(this, sensorHandler);
         gyroscopeReceiver = new GyroscopeReceiver();
-        gyroscopeReceiver.register(this);
+        gyroscopeReceiver.register(this, sensorHandler);
         locationReceiver = new LocationReceiver();
-        locationReceiver.register(this);
+        locationReceiver.register(this, sensorHandler);
         temperatureReceiver = new TemperatureReceiver();
-        temperatureReceiver.register(this);
+        temperatureReceiver.register(this, sensorHandler);
     }
 
     private void unregisterListeners(){
@@ -133,6 +144,13 @@ public class MainActivity extends Activity {
         gyroscopeReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
+
+        sensorHandler.removeCallbacksAndMessages(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            sensorThread.quitSafely();
+        } else {
+            sensorThread.quit();
+        }
     }
 
     private void startMonitoring() {
