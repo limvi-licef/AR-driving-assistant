@@ -51,8 +51,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unregisterListeners();
+        super.onDestroy();
     }
 
     private void setupUIElements() {
