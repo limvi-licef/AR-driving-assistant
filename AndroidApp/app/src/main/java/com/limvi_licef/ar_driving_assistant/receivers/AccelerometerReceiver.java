@@ -14,6 +14,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
+import com.limvi_licef.ar_driving_assistant.services.InsertTask;
 
 public class AccelerometerReceiver extends BroadcastReceiver {
 
@@ -52,9 +53,10 @@ public class AccelerometerReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Y, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Z, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_2));
 
-        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.AccelerometerData.TABLE_NAME);
-        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-        context.startService(insertIntent);
+//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
+//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.AccelerometerData.TABLE_NAME);
+//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
+//        context.startService(insertIntent);
+        new InsertTask(context).execute(DatabaseContract.AccelerometerData.TABLE_NAME, valuesToSave);
     }
 }

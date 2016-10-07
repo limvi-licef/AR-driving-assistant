@@ -14,6 +14,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
+import com.limvi_licef.ar_driving_assistant.services.InsertTask;
 
 public class GyroscopeReceiver extends BroadcastReceiver {
 
@@ -45,15 +46,16 @@ public class GyroscopeReceiver extends BroadcastReceiver {
         if(userId == null) return;
 
         ContentValues valuesToSave = new ContentValues();
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsLong(Gyroscope_Provider.Gyroscope_Data.TIMESTAMP));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_X, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_0));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_1));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_2));
+        valuesToSave.put(DatabaseContract.GyroscopeData.CURRENT_USER_ID, userId);
+        valuesToSave.put(DatabaseContract.GyroscopeData.TIMESTAMP, values.getAsLong(Gyroscope_Provider.Gyroscope_Data.TIMESTAMP));
+        valuesToSave.put(DatabaseContract.GyroscopeData.AXIS_X, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_0));
+        valuesToSave.put(DatabaseContract.GyroscopeData.AXIS_Y, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_1));
+        valuesToSave.put(DatabaseContract.GyroscopeData.AXIS_Z, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_2));
 
-        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.GyroscopeData.TABLE_NAME);
-        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-        context.startService(insertIntent);
+//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
+//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.GyroscopeData.TABLE_NAME);
+//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
+//        context.startService(insertIntent);
+        new InsertTask(context).execute(DatabaseContract.GyroscopeData.TABLE_NAME, valuesToSave);
     }
 }

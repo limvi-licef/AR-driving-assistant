@@ -18,6 +18,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
+import com.limvi_licef.ar_driving_assistant.services.InsertTask;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -67,11 +68,11 @@ public class LocationReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.LocationData.BEARING, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.BEARING)));
         valuesToSave.put(DatabaseContract.LocationData.ACCURACY, location.getInt(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY)));
 
-        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.LocationData.TABLE_NAME);
-        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-        context.startService(insertIntent);
-
+//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
+//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.LocationData.TABLE_NAME);
+//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
+//        context.startService(insertIntent);
+        new InsertTask(context).execute(DatabaseContract.LocationData.TABLE_NAME, valuesToSave);
         location.close();
     }
 

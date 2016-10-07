@@ -12,6 +12,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
+import com.limvi_licef.ar_driving_assistant.services.InsertTask;
 
 public class TemperatureReceiver extends BroadcastReceiver {
 
@@ -56,9 +57,10 @@ public class TemperatureReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.TemperatureData.SNOW, values.getAsDouble("snow"));
         valuesToSave.put(DatabaseContract.TemperatureData.CLOUDINESS, values.getAsDouble("cloudiness"));
 
-        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.TemperatureData.TABLE_NAME);
-        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-        context.startService(insertIntent);
+//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
+//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.TemperatureData.TABLE_NAME);
+//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
+//        context.startService(insertIntent);
+        new InsertTask(context).execute(DatabaseContract.TemperatureData.TABLE_NAME, valuesToSave);
     }
 }
