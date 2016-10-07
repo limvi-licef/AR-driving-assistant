@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.aware.Aware;
@@ -74,7 +75,8 @@ public class MainActivity extends Activity {
         exportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.exportDatabaseAsJSON(dbHelper.getReadableDatabase());
+                String returnToast = Utils.exportDatabaseAsJSON(dbHelper.getReadableDatabase()) ? "Database Export Successful" : "Database Export Failure";
+                Toast.makeText((MainActivity.this), returnToast, Toast.LENGTH_SHORT).show();
             }
         });
     }

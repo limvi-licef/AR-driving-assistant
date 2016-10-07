@@ -19,11 +19,11 @@ public class Utils {
      *  Dump the database into a json file inside the phone storage
      * The json file will only be visible after the device is rebooted
      */
-    public static void exportDatabaseAsJSON(SQLiteDatabase database){
+    public static boolean exportDatabaseAsJSON(SQLiteDatabase database){
 
         if(!isExternalStorageWritable()){
             Log.d("EXTERNAL STORAGE", "The external storage is unavailable");
-            return;
+            return false;
         }
         try{
             FileWriter fWriter;
@@ -37,7 +37,9 @@ public class Utils {
             fWriter.close();
         }catch(Exception e){
             Log.d("EXPORT EXCEPTION", e.getMessage());
+            return false;
         }
+        return true;
     }
 
     /*
