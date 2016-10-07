@@ -46,7 +46,7 @@ public class GyroscopeReceiver extends BroadcastReceiver {
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.TIMESTAMP));
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsLong(Gyroscope_Provider.Gyroscope_Data.TIMESTAMP));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_X, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_0));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_2));

@@ -7,6 +7,7 @@ public final class DatabaseContract {
     private static final String TEXT_TYPE          = " TEXT";
     private static final String REAL_TYPE          = " REAL";
     private static final String INTEGER_TYPE          = " INTEGER";
+    private static final String DATETIME_TYPE          = " DATETIME";
     private static final String COMMA_SEP          = ",";
 
     public static final int    DATABASE_VERSION   = 1;
@@ -42,7 +43,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + REAL_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 AXIS_X + REAL_TYPE + COMMA_SEP +
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + " )";
@@ -61,7 +62,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + REAL_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 AXIS_X + REAL_TYPE + COMMA_SEP +
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + " )";
@@ -80,7 +81,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + REAL_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 AXIS_X + REAL_TYPE + COMMA_SEP +
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + " )";
@@ -102,7 +103,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + REAL_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 LATITUDE + REAL_TYPE + COMMA_SEP +
                 LONGITUDE + REAL_TYPE + COMMA_SEP +
                 ALTITUDE + REAL_TYPE + COMMA_SEP +
@@ -128,7 +129,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + REAL_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 CITY + TEXT_TYPE + COMMA_SEP +
                 TEMPERATURE + REAL_TYPE + COMMA_SEP +
                 WIND_SPEED + REAL_TYPE + COMMA_SEP +

@@ -59,13 +59,13 @@ public class LocationReceiver extends BroadcastReceiver {
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.LocationData.TIMESTAMP, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)));
-        valuesToSave.put(DatabaseContract.LocationData.LATITUDE, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.LATITUDE)));
-        valuesToSave.put(DatabaseContract.LocationData.LONGITUDE, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.LONGITUDE)));
-        valuesToSave.put(DatabaseContract.LocationData.ALTITUDE, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.ALTITUDE)));
-        valuesToSave.put(DatabaseContract.LocationData.SPEED, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED)));
-        valuesToSave.put(DatabaseContract.LocationData.BEARING, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.BEARING)));
-        valuesToSave.put(DatabaseContract.LocationData.ACCURACY, location.getString(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY)));
+        valuesToSave.put(DatabaseContract.LocationData.TIMESTAMP, location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)));
+        valuesToSave.put(DatabaseContract.LocationData.LATITUDE, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.LATITUDE)));
+        valuesToSave.put(DatabaseContract.LocationData.LONGITUDE, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.LONGITUDE)));
+        valuesToSave.put(DatabaseContract.LocationData.ALTITUDE, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.ALTITUDE)));
+        valuesToSave.put(DatabaseContract.LocationData.SPEED, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED)));
+        valuesToSave.put(DatabaseContract.LocationData.BEARING, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.BEARING)));
+        valuesToSave.put(DatabaseContract.LocationData.ACCURACY, location.getInt(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY)));
 
         Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
         insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.LocationData.TABLE_NAME);

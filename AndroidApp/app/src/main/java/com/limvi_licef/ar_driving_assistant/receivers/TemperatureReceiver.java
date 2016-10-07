@@ -47,7 +47,7 @@ public class TemperatureReceiver extends BroadcastReceiver {
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.TemperatureData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.TemperatureData.TIMESTAMP, values.getAsDouble("timestamp"));
+        valuesToSave.put(DatabaseContract.TemperatureData.TIMESTAMP, values.getAsLong("timestamp"));
         valuesToSave.put(DatabaseContract.TemperatureData.CITY, values.getAsString("city"));
         valuesToSave.put(DatabaseContract.TemperatureData.TEMPERATURE, values.getAsDouble("temperature"));
         valuesToSave.put(DatabaseContract.TemperatureData.WIND_SPEED, values.getAsDouble("wind_speed"));

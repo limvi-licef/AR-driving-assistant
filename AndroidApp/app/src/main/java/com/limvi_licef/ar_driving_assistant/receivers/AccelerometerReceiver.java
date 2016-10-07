@@ -47,7 +47,7 @@ public class AccelerometerReceiver extends BroadcastReceiver {
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.AccelerometerData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.AccelerometerData.TIMESTAMP, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.TIMESTAMP));
+        valuesToSave.put(DatabaseContract.AccelerometerData.TIMESTAMP, values.getAsLong(Accelerometer_Provider.Accelerometer_Data.TIMESTAMP));
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_X, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_0));
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Y, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Z, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_2));

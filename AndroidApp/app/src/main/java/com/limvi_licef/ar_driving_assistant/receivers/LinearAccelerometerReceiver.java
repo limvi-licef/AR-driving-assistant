@@ -46,7 +46,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP));
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_X, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2));
