@@ -30,8 +30,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService" />
-
         <!-- Core providers -->
         <provider
             android:name="com.aware.providers.Scheduler_Provider"
