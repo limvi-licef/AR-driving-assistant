@@ -7,25 +7,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.aware.Locations;
-import com.aware.providers.Accelerometer_Provider;
 import com.aware.providers.Locations_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
-import com.limvi_licef.ar_driving_assistant.services.InsertTask;
-
-import static android.content.Context.LOCATION_SERVICE;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
 public class LocationReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
-
     private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
     private static final String extraData = "data";
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
@@ -46,6 +42,8 @@ public class LocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Location Receiver", "Received intent");
+        SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         //get most recent
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
         location.moveToFirst();
@@ -68,12 +66,10 @@ public class LocationReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.LocationData.BEARING, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.BEARING)));
         valuesToSave.put(DatabaseContract.LocationData.ACCURACY, location.getInt(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY)));
 
-//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.LocationData.TABLE_NAME);
-//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-//        context.startService(insertIntent);
-        new InsertTask(context).execute(DatabaseContract.LocationData.TABLE_NAME, valuesToSave);
+        db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave);
         location.close();
+
+        Log.d("Location Receiver", "Finished insert");
     }
 
 }

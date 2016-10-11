@@ -6,18 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.services.InsertDatabaseIntentService;
-import com.limvi_licef.ar_driving_assistant.services.InsertTask;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
 public class TemperatureReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
-
     private static final String broadcastAction = "ACTION_AWARE_PLUGIN_OPENWEATHER";
     private static final String extraData = "openweather";
     private IntentFilter broadcastFilter = new IntentFilter(broadcastAction);
@@ -38,6 +39,8 @@ public class TemperatureReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Temperature Receiver", "Received intent");
+        SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         ContentValues values = (ContentValues) intent.getExtras().get(extraData);
         if(values == null || values.size() == 0) return;
 
@@ -57,10 +60,8 @@ public class TemperatureReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.TemperatureData.SNOW, values.getAsDouble("snow"));
         valuesToSave.put(DatabaseContract.TemperatureData.CLOUDINESS, values.getAsDouble("cloudiness"));
 
-//        Intent insertIntent = new Intent(context, InsertDatabaseIntentService.class);
-//        insertIntent.putExtra(InsertDatabaseIntentService.TABLE_NAME, DatabaseContract.TemperatureData.TABLE_NAME);
-//        insertIntent.putExtra(InsertDatabaseIntentService.VALUES, valuesToSave);
-//        context.startService(insertIntent);
-        new InsertTask(context).execute(DatabaseContract.TemperatureData.TABLE_NAME, valuesToSave);
+        db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave);
+
+        Log.d("Temperature Receiver", "Finished insert");
     }
 }
