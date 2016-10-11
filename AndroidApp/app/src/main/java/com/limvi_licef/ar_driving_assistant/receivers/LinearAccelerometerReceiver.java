@@ -56,7 +56,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2));
 
-        db.insert(DatabaseContract.GyroscopeData.TABLE_NAME, null, valuesToSave);
+        db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, valuesToSave);
 
         Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.LinearAccelerometerData.TABLE_NAME + System.currentTimeMillis());
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
