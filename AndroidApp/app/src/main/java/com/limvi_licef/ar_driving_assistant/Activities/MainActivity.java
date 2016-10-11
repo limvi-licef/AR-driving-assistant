@@ -145,11 +145,11 @@ public class MainActivity extends Activity {
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 1);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_NETWORK, 1);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 0);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_NETWORK_ACCURACY, 0);
-        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 4);
+        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 1);
 
         Aware.setSetting(this, Settings.STATUS_OPEN_WEATHER, true, Settings.OPEN_WEATHER_PACKAGE);
         Aware.setSetting(this, Settings.FREQUENCY_OPEN_WEATHER, 30, Settings.OPEN_WEATHER_PACKAGE);
