@@ -1,22 +1,33 @@
 package com.limvi_licef.ar_driving_assistant.tasks;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.database.Utils;
 
 public class ExportTask extends AsyncTask<Void, Void, String> {
 
+    private ProgressDialog dialog;
     private SQLiteDatabase db;
     private Context context;
+
     public ExportTask (Context context){
         db =  DatabaseHelper.getHelper(context).getWritableDatabase();
+        dialog = new ProgressDialog(context);
         this.context = context;
         Log.d("Insert Service", "Created Insert Task");
+    }
+
+    @Override
+    protected void onPreExecute() {
+        this.dialog.setMessage("Exporting...");
+        this.dialog.show();
     }
 
     @Override
@@ -26,7 +37,11 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute (String result) {
-        Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+        if (dialog.isShowing()) { dialog.dismiss(); }
+        new AlertDialog.Builder(context)
+                .setMessage(result)
+                .setNegativeButton("Close", null)
+                .show();
     }
 
 }
