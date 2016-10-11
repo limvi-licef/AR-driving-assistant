@@ -58,6 +58,8 @@ public class AccelerometerReceiver extends BroadcastReceiver {
 
         db.insert(DatabaseContract.AccelerometerData.TABLE_NAME, null, valuesToSave);
 
+        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.AccelerometerData.TABLE_NAME + System.currentTimeMillis());
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
         Log.d("Accelerometer Receiver", "Finished insert");
     }
 }

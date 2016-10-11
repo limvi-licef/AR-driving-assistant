@@ -58,6 +58,8 @@ public class GyroscopeReceiver extends BroadcastReceiver {
 
         db.insert(DatabaseContract.GyroscopeData.TABLE_NAME, null, valuesToSave);
 
+        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.GyroscopeData.TABLE_NAME + System.currentTimeMillis());
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
         Log.d("Gyroscope Receiver", "Finished insert");
     }
 }

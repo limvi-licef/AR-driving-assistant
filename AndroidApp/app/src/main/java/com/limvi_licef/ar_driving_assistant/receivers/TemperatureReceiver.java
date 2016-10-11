@@ -62,6 +62,8 @@ public class TemperatureReceiver extends BroadcastReceiver {
 
         db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave);
 
+        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.TemperatureData.TABLE_NAME + System.currentTimeMillis());
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
         Log.d("Temperature Receiver", "Finished insert");
     }
 }

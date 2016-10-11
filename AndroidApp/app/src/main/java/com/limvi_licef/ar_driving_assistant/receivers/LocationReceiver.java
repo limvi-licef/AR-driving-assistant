@@ -69,6 +69,8 @@ public class LocationReceiver extends BroadcastReceiver {
         db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave);
         location.close();
 
+        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.LocationData.TABLE_NAME + System.currentTimeMillis());
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
         Log.d("Location Receiver", "Finished insert");
     }
 

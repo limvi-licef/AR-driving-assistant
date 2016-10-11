@@ -16,4 +16,7 @@ public abstract class Settings {
     public static final String STATUS_OPEN_WEATHER = "status_plugin_openweather";
     public static final String FREQUENCY_OPEN_WEATHER = "plugin_openweather_frequency";
     public static final String API_KEY_OPEN_WEATHER = "api_key_plugin_openweather";
+
+    public static final String ACTION_INSERT_DONE = "ACTION_INSERT_DONE";
+    public static final String INSERT_STATUS = "INSERT_STATUS";
 }

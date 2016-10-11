@@ -1,17 +1,21 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
+import android.widget.ListView;
 import android.widget.ToggleButton;
 
 import com.aware.Aware;
@@ -27,7 +31,9 @@ import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
-import com.limvi_licef.ar_driving_assistant.services.ExportTask;
+import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -41,6 +47,18 @@ public class MainActivity extends Activity {
     private LocationReceiver locationReceiver;
     private LinearAccelerometerReceiver linearAccelerometerReceiver;
     private GyroscopeReceiver gyroscopeReceiver;
+
+    private ArrayList<String> results;
+    private ArrayAdapter<String> resultsAdapter;
+
+    IntentFilter statusIntentFilter = new IntentFilter(Settings.ACTION_INSERT_DONE);
+    private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String status = (String) intent.getExtras().get(Settings.INSERT_STATUS);
+            results.add(status);
+            resultsAdapter.notifyDataSetChanged();
+    }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +74,16 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         unregisterListeners();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver, statusIntentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
     }
 
     private void setupUIElements() {
@@ -87,6 +115,12 @@ public class MainActivity extends Activity {
                 new ExportTask(MainActivity.this).execute();
             }
         });
+
+        ListView resultsView = (ListView) findViewById(R.id.monitoring_result);
+        results = new ArrayList<>();
+        resultsAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.list_results, results);
+        resultsView.setAdapter(resultsAdapter);
+        resultsView.setEmptyView(findViewById(R.id.emptyList));
     }
 
     private void setupSensors(){
