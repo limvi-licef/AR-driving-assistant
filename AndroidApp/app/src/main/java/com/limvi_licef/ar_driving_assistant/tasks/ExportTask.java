@@ -1,13 +1,11 @@
-package com.limvi_licef.ar_driving_assistant.services;
+package com.limvi_licef.ar_driving_assistant.tasks;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.limvi_licef.ar_driving_assistant.activities.MainActivity;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.database.Utils;
 
