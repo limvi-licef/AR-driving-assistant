@@ -27,6 +27,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
+import com.limvi_licef.ar_driving_assistant.services.ExportTask;
 
 public class MainActivity extends Activity {
 
@@ -83,8 +84,7 @@ public class MainActivity extends Activity {
         exportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String returnToast = Utils.exportDatabaseAsJSON(dbHelper.getReadableDatabase()) ? "Database Export Successful" : "Database Export Failure";
-                Toast.makeText((MainActivity.this), returnToast, Toast.LENGTH_SHORT).show();
+                new ExportTask(MainActivity.this).execute();
             }
         });
     }
