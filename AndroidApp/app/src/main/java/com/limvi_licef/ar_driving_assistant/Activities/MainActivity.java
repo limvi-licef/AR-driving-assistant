@@ -78,11 +78,13 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onStart() {
+        super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver, statusIntentFilter);
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
     }
 
