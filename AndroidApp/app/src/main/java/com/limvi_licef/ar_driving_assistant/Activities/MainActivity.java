@@ -30,6 +30,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.AccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.OrientationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
     private LinearAccelerometerReceiver linearAccelerometerReceiver;
     private GyroscopeReceiver gyroscopeReceiver;
     private RotationReceiver rotationReceiver;
+    private OrientationReceiver orientationReceiver;
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
@@ -181,6 +183,9 @@ public class MainActivity extends Activity {
         locationReceiver.register(this, sensorHandler);
         temperatureReceiver = new TemperatureReceiver();
         temperatureReceiver.register(this, sensorHandler);
+
+        orientationReceiver = new OrientationReceiver();
+        orientationReceiver.register(this, sensorHandler);
     }
 
     private void unregisterListeners(){
@@ -190,6 +195,7 @@ public class MainActivity extends Activity {
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
         rotationReceiver.unregister(this);
+        orientationReceiver.unregister(this);
 
         sensorHandler.removeCallbacksAndMessages(null);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
