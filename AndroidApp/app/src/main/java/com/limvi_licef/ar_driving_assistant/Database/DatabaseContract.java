@@ -18,7 +18,8 @@ public final class DatabaseContract {
             LinearAccelerometerData.CREATE_TABLE,
             GyroscopeData.CREATE_TABLE,
             LocationData.CREATE_TABLE,
-            TemperatureData.CREATE_TABLE
+            TemperatureData.CREATE_TABLE,
+            RotationData.CREATE_TABLE
     };
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
@@ -26,7 +27,8 @@ public final class DatabaseContract {
             LinearAccelerometerData.DELETE_TABLE,
             GyroscopeData.DELETE_TABLE,
             LocationData.DELETE_TABLE,
-            TemperatureData.DELETE_TABLE
+            TemperatureData.DELETE_TABLE,
+            RotationData.DELETE_TABLE
     };
 
     private DatabaseContract() {}
@@ -137,6 +139,27 @@ public final class DatabaseContract {
                 RAIN + REAL_TYPE + COMMA_SEP +
                 SNOW + REAL_TYPE + COMMA_SEP +
                 CLOUDINESS + REAL_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class RotationData implements BaseColumns {
+        public static final String TABLE_NAME       = "RotationData";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String TIMESTAMP = "Timestamp";
+        public static final String AXIS_X = "AxisX";
+        public static final String AXIS_Y = "AxisY";
+        public static final String AXIS_Z = "AxisZ";
+        public static final String AZIMUTH = "Azimuth";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                AXIS_X + REAL_TYPE + COMMA_SEP +
+                AXIS_Y + REAL_TYPE + COMMA_SEP +
+                AXIS_Z + REAL_TYPE + COMMA_SEP +
+                AZIMUTH + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 }
