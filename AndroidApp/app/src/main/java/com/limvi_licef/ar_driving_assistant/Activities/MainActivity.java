@@ -149,7 +149,7 @@ public class MainActivity extends Activity {
 //        Aware.setSetting(this, "location_sensitivity", 0, Settings.FUSED_LOCATION_PACKAGE);
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, true);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, false);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_NETWORK, 1);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 0);
