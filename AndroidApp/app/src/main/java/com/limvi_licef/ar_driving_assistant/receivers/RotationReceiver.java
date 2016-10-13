@@ -1,12 +1,13 @@
 package com.limvi_licef.ar_driving_assistant.receivers;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,74 +22,77 @@ import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
-public class RotationReceiver extends BroadcastReceiver {
+import static android.content.Context.SENSOR_SERVICE;
+
+public class RotationReceiver implements SensorEventListener {
 
     public boolean isRegistered;
-    private int screenRotation;
+
+    private Context context;
     private int axisX, axisY;
-    private float[] rotationVector = new float[3];
+    private SensorManager sensorManager;
+    private Sensor rotationSensor;
     private float[] orientation = new float[3];
     private float[] rMat = new float[16];
     private float[] rMatRemap = new float[16];
-    private IntentFilter broadcastFilter = new IntentFilter(Rotation.ACTION_AWARE_ROTATION);
 
-    public Intent register(Context context, Handler handler) {
-        setAxis(context);
+    public RotationReceiver() {}
+
+    public void register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter, null, handler);
+        this.context = context;
+        sensorManager = (SensorManager)context.getSystemService(SENSOR_SERVICE);
+        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL, handler);
     }
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            context.unregisterReceiver(this);
+            sensorManager.unregisterListener(this, rotationSensor);
             isRegistered = false;
             return true;
         }
         return false;
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.d("Rotation Receiver", "Received intent");
-        SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
-        ContentValues values = (ContentValues) intent.getExtras().get(Rotation.EXTRA_DATA);
-        if(values == null || values.size() == 0) return;
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
-        String idPref = context.getResources().getString(R.string.user_id_pref);
-        SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        String userId = prefs.getString(idPref, null);
-        if(userId == null) return;
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            Log.d("Rotation Receiver", "Received event");
+            SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
+            if (event.values.length == 0) return;
 
-        ContentValues valuesToSave = new ContentValues();
-        valuesToSave.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
-        valuesToSave.put(DatabaseContract.RotationData.TIMESTAMP, values.getAsLong(Rotation_Provider.Rotation_Data.TIMESTAMP));
-        valuesToSave.put(DatabaseContract.RotationData.AXIS_X, values.getAsDouble(Rotation_Provider.Rotation_Data.VALUES_0));
-        valuesToSave.put(DatabaseContract.RotationData.AXIS_Y, values.getAsDouble(Rotation_Provider.Rotation_Data.VALUES_1));
-        valuesToSave.put(DatabaseContract.RotationData.AXIS_Z, values.getAsDouble(Rotation_Provider.Rotation_Data.VALUES_2));
+            String idPref = context.getResources().getString(R.string.user_id_pref);
+            SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            String userId = prefs.getString(idPref, null);
+            if (userId == null) return;
 
-        //calculate azimuth
-        rotationVector[0] = values.getAsFloat(Rotation_Provider.Rotation_Data.VALUES_0);
-        rotationVector[1] = values.getAsFloat(Rotation_Provider.Rotation_Data.VALUES_1);
-        rotationVector[2] = values.getAsFloat(Rotation_Provider.Rotation_Data.VALUES_2);
+            ContentValues valuesToSave = new ContentValues();
+            valuesToSave.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
+            valuesToSave.put(DatabaseContract.RotationData.TIMESTAMP, System.currentTimeMillis());
+            valuesToSave.put(DatabaseContract.RotationData.AXIS_X, event.values[0]);
+            valuesToSave.put(DatabaseContract.RotationData.AXIS_Y, event.values[1]);
+            valuesToSave.put(DatabaseContract.RotationData.AXIS_Z, event.values[2]);
 
-        SensorManager.getRotationMatrixFromVector(rMat, rotationVector);
-        SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
+            SensorManager.getRotationMatrixFromVector(rMat, event.values);
+//            setAxis(context);
+//            SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
 
-        valuesToSave.put(DatabaseContract.RotationData.AZIMUTH, ( Math.toDegrees( SensorManager.getOrientation( rMatRemap, orientation )[0] ) + 360 ) % 360);
-        Log.d("Rotate Azimuth", String.valueOf(( Math.toDegrees( orientation[0] ) + 360 ) % 360));
-        Log.d("Rotate Pitch", String.valueOf(( Math.toDegrees( orientation[1] ) + 360 ) % 360));
-        Log.d("Rotate Roll", String.valueOf(( Math.toDegrees( orientation[2] ) + 360 ) % 360));
+            valuesToSave.put(DatabaseContract.RotationData.AZIMUTH, (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360);
+            Log.d("Rotate Azimuth", String.valueOf((Math.toDegrees(orientation[0]) + 360) % 360));
 
-        db.insert(DatabaseContract.RotationData.TABLE_NAME, null, valuesToSave);
+            db.insert(DatabaseContract.RotationData.TABLE_NAME, null, valuesToSave);
 
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.RotationData.TABLE_NAME + System.currentTimeMillis());
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-        Log.d("Rotation Receiver", "Finished insert");
+            Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.RotationData.TABLE_NAME + System.currentTimeMillis());
+            LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
+            Log.d("Rotation Receiver", "Finished insert");
+        }
     }
 
     private void setAxis(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        screenRotation = wm.getDefaultDisplay().getRotation();
+        int screenRotation = wm.getDefaultDisplay().getRotation();
 
         switch (screenRotation) {
             case Surface.ROTATION_0:

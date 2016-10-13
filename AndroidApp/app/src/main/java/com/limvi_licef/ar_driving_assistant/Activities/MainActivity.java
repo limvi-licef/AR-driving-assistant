@@ -30,7 +30,6 @@ import com.limvi_licef.ar_driving_assistant.receivers.AccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
-import com.limvi_licef.ar_driving_assistant.receivers.OrientationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
@@ -43,14 +42,14 @@ public class MainActivity extends Activity {
     private Intent aware;
     private HandlerThread sensorThread;
     private Handler sensorHandler;
-
+    private HandlerThread rotationThread;
+    private Handler rotationHandler;
     private AccelerometerReceiver accelerometerReceiver;
     private TemperatureReceiver temperatureReceiver;
     private LocationReceiver locationReceiver;
     private LinearAccelerometerReceiver linearAccelerometerReceiver;
     private GyroscopeReceiver gyroscopeReceiver;
     private RotationReceiver rotationReceiver;
-    private OrientationReceiver orientationReceiver;
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
@@ -138,9 +137,6 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 400000);
 
-        Aware.setSetting(this, Aware_Preferences.STATUS_ROTATION, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_ROTATION, 400000);
-
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
 
@@ -166,6 +162,17 @@ public class MainActivity extends Activity {
     }
 
     private void registerListeners(){
+
+        //custom
+        rotationThread = new HandlerThread("RotationHandlerThread");
+        rotationThread.start();
+        Looper rotationLooper = rotationThread.getLooper();
+        rotationHandler = new Handler(rotationLooper);
+
+        rotationReceiver = new RotationReceiver();
+        rotationReceiver.register(this, rotationHandler);
+
+        //aware
         sensorThread = new HandlerThread("SensorDataHandlerThread");
         sensorThread.start();
         Looper looper = sensorThread.getLooper();
@@ -177,27 +184,28 @@ public class MainActivity extends Activity {
         linearAccelerometerReceiver.register(this, sensorHandler);
         gyroscopeReceiver = new GyroscopeReceiver();
         gyroscopeReceiver.register(this, sensorHandler);
-        rotationReceiver = new RotationReceiver();
-        rotationReceiver.register(this, sensorHandler);
         locationReceiver = new LocationReceiver();
         locationReceiver.register(this, sensorHandler);
         temperatureReceiver = new TemperatureReceiver();
         temperatureReceiver.register(this, sensorHandler);
-
-        orientationReceiver = new OrientationReceiver();
-        orientationReceiver.register(this, sensorHandler);
     }
 
     private void unregisterListeners(){
+        rotationReceiver.unregister(this);
+//        rotationHandler.removeCallbacksAndMessages(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            rotationThread.quitSafely();
+        } else {
+            rotationThread.quit();
+        }
+
         accelerometerReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
         gyroscopeReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
-        rotationReceiver.unregister(this);
-        orientationReceiver.unregister(this);
 
-        sensorHandler.removeCallbacksAndMessages(null);
+//        sensorHandler.removeCallbacksAndMessages(null);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             sensorThread.quitSafely();
         } else {
@@ -212,7 +220,6 @@ public class MainActivity extends Activity {
         Aware.startAccelerometer(this);
         Aware.startGyroscope(this);
         Aware.startLinearAccelerometer(this);
-        Aware.startRotation(this);
 //        Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
         Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
     }
@@ -222,7 +229,6 @@ public class MainActivity extends Activity {
         Aware.stopAccelerometer(this);
         Aware.stopGyroscope(this);
         Aware.stopLinearAccelerometer(this);
-        Aware.stopRotation(this);
 
         unregisterListeners();
 
