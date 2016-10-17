@@ -50,11 +50,17 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         if(userId == null) return;
 
         ContentValues valuesToSave = new ContentValues();
+        double axisX = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0);
+        double axisY = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1);
+        double axisZ = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2);
+
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
         valuesToSave.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_X, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1));
-        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2));
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_X, axisX);
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, axisY);
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, axisY);
+
+        valuesToSave.put(DatabaseContract.LinearAccelerometerData.ACCEL, Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ));
 
         db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, valuesToSave);
 
