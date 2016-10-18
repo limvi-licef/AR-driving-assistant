@@ -1,7 +1,12 @@
 package com.limvi_licef.ar_driving_assistant.algorithms;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +17,17 @@ import java.util.Map;
 
 public class MonotoneSegmentationAlgorithm {
 
-    public List<Double> ComputeData(List<Double> values, int tolerance) {
+    public static List<Double> ComputeData(List<Double> values, int tolerance) {
+        if(values.size() < 3) return new ArrayList<>();
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
+        if(significantExtrema.size() < 2) return new ArrayList<>();
         List<Double> monotoneValues = piecewiseMonotone(values, significantExtrema);
         return monotoneValues;
     }
 
-    private Map<Integer,Double> computeScaleLabels(List<Double> values) {
+    private static Map<Integer,Double> computeScaleLabels(List<Double> values) {
         boolean isMin;
-        Map<Integer,Double> extrema = new HashMap<>(values.size());
+        Map<Integer,Double> extrema = new LinkedHashMap<>(values.size());
         Map<Integer,Double> scaleLabels = new HashMap<>(values.size());
         List<Integer> indexes = new ArrayList<>();
         int lastKey = 0;
@@ -46,7 +53,12 @@ public class MonotoneSegmentationAlgorithm {
         }
 
         //create scalelabel array
-        isMin = (extrema.get(0) < extrema.get(1));
+        Collection<Double> tempValues = extrema.values();
+        if (tempValues.size() < 2) return new HashMap<>();
+        Iterator it = tempValues.iterator();
+        Double first = (Double)it.next();
+        Double second = (Double)it.next();
+        isMin = (first < second);
         for(Map.Entry<Integer,Double> extremum : extrema.entrySet()) {
             int i = extremum.getKey();
             while((indexes.size() > 2) && (( (!isMin) && (extrema.get(i) > extrema.get(indexes.get(1)))) || (isMin && (extrema.get(i) < extrema.get(indexes.get(1))))) ) {
@@ -76,7 +88,7 @@ public class MonotoneSegmentationAlgorithm {
         return scaleLabels;
     }
 
-    private List<Integer> selectSignificantExtrema(List<Double> values, int tolerance) {
+    private static List<Integer> selectSignificantExtrema(List<Double> values, int tolerance) {
         Map<Integer,Double> scaleLabels = computeScaleLabels(values);
         List<Integer> significantExtremaIndexes = new ArrayList<>();
 
@@ -85,16 +97,17 @@ public class MonotoneSegmentationAlgorithm {
                 significantExtremaIndexes.add(scaleLabel.getKey());
             }
         }
+        Collections.sort(significantExtremaIndexes);
         return significantExtremaIndexes;
     }
 
-    private List<Double> piecewiseMonotone(List<Double> values, List<Integer> indexes){
+    private static List<Double> piecewiseMonotone(List<Double> values, List<Integer> indexes){
         Map<Integer,Double> monotoneValues = new LinkedHashMap<>();
         for(int i = 0; i < indexes.size() - 1; ++ i) {
             Double a = values.get(indexes.get(i));
             Double b = values.get(indexes.get(i+1));
-            Map<Integer,Double> Xmin = new LinkedHashMap<>();
-            Map<Integer,Double> Xmax = new LinkedHashMap<>();
+            Map<Integer,Double> Xmin = new HashMap<>();
+            Map<Integer,Double> Xmax = new HashMap<>();
 
             if(a > b) {
                 Xmin.put(indexes.get(i), values.get(indexes.get(i)));
