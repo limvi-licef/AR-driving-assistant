@@ -18,6 +18,7 @@ public final class DatabaseContract {
             LinearAccelerometerData.CREATE_TABLE,
             GyroscopeData.CREATE_TABLE,
             LocationData.CREATE_TABLE,
+            SpeedData.CREATE_TABLE,
             TemperatureData.CREATE_TABLE,
             RotationData.CREATE_TABLE
     };
@@ -27,6 +28,7 @@ public final class DatabaseContract {
             LinearAccelerometerData.DELETE_TABLE,
             GyroscopeData.DELETE_TABLE,
             LocationData.DELETE_TABLE,
+            SpeedData.DELETE_TABLE,
             TemperatureData.DELETE_TABLE,
             RotationData.DELETE_TABLE
     };
@@ -93,7 +95,6 @@ public final class DatabaseContract {
         public static final String LATITUDE = "Latitude";
         public static final String LONGITUDE = "Longitude";
         public static final String ALTITUDE = "Altitude";
-        public static final String SPEED = "Speed";
         public static final String BEARING = "Bearing";
         public static final String ACCURACY = "Accuracy";
 
@@ -105,9 +106,23 @@ public final class DatabaseContract {
                 LATITUDE + REAL_TYPE + COMMA_SEP +
                 LONGITUDE + REAL_TYPE + COMMA_SEP +
                 ALTITUDE + REAL_TYPE + COMMA_SEP +
-                SPEED + REAL_TYPE + COMMA_SEP +
                 BEARING + REAL_TYPE + COMMA_SEP +
                 ACCURACY + INTEGER_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class SpeedData implements BaseColumns {
+        public static final String TABLE_NAME       = "SpeedData";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String TIMESTAMP = "Timestamp";
+        public static final String SPEED = "Speed";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                SPEED + INTEGER_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
