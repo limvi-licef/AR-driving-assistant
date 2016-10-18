@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -14,8 +13,8 @@ import android.util.Log;
 
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
@@ -48,13 +47,7 @@ public class LocationReceiver extends BroadcastReceiver {
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
         location.moveToFirst();
 
-        String idPref = context.getResources().getString(R.string.user_id_pref);
-        SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        String userId = prefs.getString(idPref, null);
-        if(userId == null) {
-            location.close();
-            return;
-        }
+        String userId = Utils.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);

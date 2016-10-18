@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,8 +12,8 @@ import android.util.Log;
 
 import com.aware.Accelerometer;
 import com.aware.providers.Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
@@ -44,10 +43,7 @@ public class AccelerometerReceiver extends BroadcastReceiver {
         ContentValues values = (ContentValues) intent.getExtras().get(Accelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
-        String idPref = context.getResources().getString(R.string.user_id_pref);
-        SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        String userId = prefs.getString(idPref, null);
-        if(userId == null) return;
+        String userId = Utils.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.AccelerometerData.CURRENT_USER_ID, userId);

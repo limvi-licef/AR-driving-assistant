@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,8 +12,8 @@ import android.util.Log;
 
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
@@ -44,10 +43,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
-        String idPref = context.getResources().getString(R.string.user_id_pref);
-        SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        String userId = prefs.getString(idPref, null);
-        if(userId == null) return;
+        String userId = Utils.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         double axisX = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0);

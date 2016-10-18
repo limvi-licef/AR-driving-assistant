@@ -3,7 +3,6 @@ package com.limvi_licef.ar_driving_assistant.receivers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,10 +14,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.aware.Rotation;
-import com.aware.providers.Rotation_Provider;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
@@ -63,10 +60,7 @@ public class RotationReceiver implements SensorEventListener {
             SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
             if (event.values.length == 0) return;
 
-            String idPref = context.getResources().getString(R.string.user_id_pref);
-            SharedPreferences prefs = context.getSharedPreferences(Settings.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-            String userId = prefs.getString(idPref, null);
-            if (userId == null) return;
+            String userId = Utils.getCurrentUserId(context);
 
             ContentValues valuesToSave = new ContentValues();
             valuesToSave.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
