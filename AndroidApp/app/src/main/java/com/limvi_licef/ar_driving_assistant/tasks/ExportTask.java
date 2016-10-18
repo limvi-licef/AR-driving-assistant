@@ -3,13 +3,12 @@ package com.limvi_licef.ar_driving_assistant.tasks;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.Utils;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 
 public class ExportTask extends AsyncTask<Void, Void, String> {
 
@@ -32,7 +31,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        return Utils.exportDatabaseAsJSON(db) ? "Database Export Successful" : "Database Export Failure";
+        return DatabaseUtils.exportDatabaseAsJSON(db) ? "Database Export Successful" : "Database Export Failure";
     }
 
     @Override

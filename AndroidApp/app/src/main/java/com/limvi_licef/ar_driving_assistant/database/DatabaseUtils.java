@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class Utils {
+public class DatabaseUtils {
 
     /*
      *  Dump the database into a json file inside the phone storage
