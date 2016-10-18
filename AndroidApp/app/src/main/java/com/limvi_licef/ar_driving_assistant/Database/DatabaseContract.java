@@ -56,9 +56,6 @@ public final class DatabaseContract {
         public static final String TABLE_NAME       = "LinearAccelerometerData";
         public static final String CURRENT_USER_ID = "CurrentUserID";
         public static final String TIMESTAMP = "Timestamp";
-        public static final String AXIS_X = "AxisX";
-        public static final String AXIS_Y = "AxisY";
-        public static final String AXIS_Z = "AxisZ";
         public static final String ACCEL = "Acceleration";
 
         public static final String CREATE_TABLE = "CREATE TABLE " +
@@ -66,9 +63,6 @@ public final class DatabaseContract {
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
-                AXIS_X + REAL_TYPE + COMMA_SEP +
-                AXIS_Y + REAL_TYPE + COMMA_SEP +
-                AXIS_Z + REAL_TYPE + COMMA_SEP +
                 ACCEL + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
