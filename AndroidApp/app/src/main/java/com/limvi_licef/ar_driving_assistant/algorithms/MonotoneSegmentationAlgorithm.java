@@ -2,6 +2,8 @@ package com.limvi_licef.ar_driving_assistant.algorithms;
 
 import android.util.Log;
 
+import com.limvi_licef.ar_driving_assistant.Utils.TimestampedDouble;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,15 +19,15 @@ import java.util.Map;
 
 public class MonotoneSegmentationAlgorithm {
 
-    public static List<Double> ComputeData(List<Double> values, int tolerance) {
+    public static List<TimestampedDouble> ComputeData(List<TimestampedDouble> values, int tolerance) {
         if(values.size() < 3) return new ArrayList<>();
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
         if(significantExtrema.size() < 2) return new ArrayList<>();
-        List<Double> monotoneValues = piecewiseMonotone(values, significantExtrema);
+        List<TimestampedDouble> monotoneValues = piecewiseMonotone(values, significantExtrema);
         return monotoneValues;
     }
 
-    private static Map<Integer,Double> computeScaleLabels(List<Double> values) {
+    private static Map<Integer,Double> computeScaleLabels(List<TimestampedDouble> values) {
         boolean isMin;
         Map<Integer,Double> extrema = new LinkedHashMap<>(values.size());
         Map<Integer,Double> scaleLabels = new HashMap<>(values.size());
@@ -33,23 +35,23 @@ public class MonotoneSegmentationAlgorithm {
         int lastKey = 0;
 
         //select extrema
-        extrema.put(0, values.get(0));
+        extrema.put(0, values.get(0).value);
         for(int i = 1; i < values.size() - 1; i++) {
             if(values.get(i).equals(values.get(i-1))) {
                 //do nothing
-            } else if((values.get(i) >= values.get(i-1)) && (values.get(i) >= values.get(i+1))) {
-                extrema.put(i, values.get(i));
+            } else if((values.get(i).value >= values.get(i-1).value) && (values.get(i).value >= values.get(i+1).value)) {
+                extrema.put(i, values.get(i).value);
                 lastKey= i;
-            } else if((values.get(i) <= values.get(i-1)) && (values.get(i) <= values.get(i+1))) {
-                extrema.put(i, values.get(i));
+            } else if((values.get(i).value <= values.get(i-1).value) && (values.get(i).value <= values.get(i+1).value)) {
+                extrema.put(i, values.get(i).value);
                 lastKey= i;
             }
         }
         if(values.get(values.size()-1).equals(extrema.get(lastKey))) {
             extrema.remove(lastKey);
-            extrema.put(lastKey, values.get(values.size()-1));
+            extrema.put(lastKey, values.get(values.size()-1).value);
         } else {
-            extrema.put(lastKey + 1, values.get(values.size()-1));
+            extrema.put(lastKey + 1, values.get(values.size()-1).value);
         }
 
         //create scalelabel array
@@ -88,7 +90,7 @@ public class MonotoneSegmentationAlgorithm {
         return scaleLabels;
     }
 
-    private static List<Integer> selectSignificantExtrema(List<Double> values, int tolerance) {
+    private static List<Integer> selectSignificantExtrema(List<TimestampedDouble> values, int tolerance) {
         Map<Integer,Double> scaleLabels = computeScaleLabels(values);
         List<Integer> significantExtremaIndexes = new ArrayList<>();
 
@@ -101,26 +103,26 @@ public class MonotoneSegmentationAlgorithm {
         return significantExtremaIndexes;
     }
 
-    private static List<Double> piecewiseMonotone(List<Double> values, List<Integer> indexes){
-        Map<Integer,Double> monotoneValues = new LinkedHashMap<>();
+    private static List<TimestampedDouble> piecewiseMonotone(List<TimestampedDouble> values, List<Integer> indexes){
+        Map<Integer,TimestampedDouble> monotoneValues = new LinkedHashMap<>();
         for(int i = 0; i < indexes.size() - 1; ++ i) {
-            Double a = values.get(indexes.get(i));
-            Double b = values.get(indexes.get(i+1));
-            Map<Integer,Double> Xmin = new HashMap<>();
-            Map<Integer,Double> Xmax = new HashMap<>();
+            Double a = values.get(indexes.get(i)).value;
+            Double b = values.get(indexes.get(i+1)).value;
+            Map<Integer,TimestampedDouble> Xmin = new HashMap<>();
+            Map<Integer,TimestampedDouble> Xmax = new HashMap<>();
 
             if(a > b) {
                 Xmin.put(indexes.get(i), values.get(indexes.get(i)));
                 Xmax.put(indexes.get(i+1), values.get(indexes.get(i+1)));
                 for(int j = indexes.get(i) + 1; j <= indexes.get(i+1); ++j) {
-                    if( values.get(j) < Xmin.get(j-1)) {
+                    if( values.get(j).value < Xmin.get(j-1).value) {
                         Xmin.put(j, values.get(j));
                     } else {
                         Xmin.put(j, Xmin.get(j-1));
                     }
                 }
                 for(int j = indexes.get(i+1) - 1; j >= indexes.get(i); --j) {
-                    if( values.get(j) < Xmax.get(j+1)) {
+                    if( values.get(j).value < Xmax.get(j+1).value) {
                         Xmax.put(j, Xmax.get(j+1));
                     } else {
                         Xmax.put(j, values.get(j));
@@ -130,28 +132,28 @@ public class MonotoneSegmentationAlgorithm {
                 Xmin.put(indexes.get(i+1), values.get(indexes.get(i+1)));
                 Xmax.put(indexes.get(i), values.get(indexes.get(i)));
                 for(int j = indexes.get(i) + 1; j <= indexes.get(i+1); ++j) {
-                    if( values.get(j) > Xmax.get(j-1)) {
+                    if( values.get(j).value > Xmax.get(j-1).value) {
                         Xmax.put(j, values.get(j));
                     } else {
                         Xmax.put(j, Xmax.get(j-1));
                     }
                 }
                 for(int j = indexes.get(i+1) - 1; j >= indexes.get(i); --j) {
-                    if( values.get(j) > Xmin.get(j+1)) {
+                    if( values.get(j).value > Xmin.get(j+1).value) {
                         Xmin.put(j, Xmin.get(j+1));
                     } else {
                         Xmin.put(j, values.get(j));
                     }
                 }
             }
-            for (Map.Entry<Integer,Double> max : Xmax.entrySet()) {
+            for (Map.Entry<Integer,TimestampedDouble> max : Xmax.entrySet()) {
                 int key = max.getKey();
-                monotoneValues.put(key, (Xmax.get(key) + Xmin.get(key)) / 2.0);
+                monotoneValues.put(key, new TimestampedDouble((Xmax.get(key).timestamp + Xmin.get(key).timestamp) / 2L , (Xmax.get(key).value + Xmin.get(key).value) / 2.0));
             }
         }
 
         //reorder values
-        List<Double> returnArray = new ArrayList<>();
+        List<TimestampedDouble> returnArray = new ArrayList<>();
         for(int i = 0; i < monotoneValues.size(); i++){
             returnArray.add(monotoneValues.get(i));
         }
