@@ -131,11 +131,11 @@ public class MainActivity extends Activity {
     private void setupSensors(){
         startService(aware);
 
-        Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_GYROSCOPE, 400000);
-
-        Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 400000);
+//        Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
+//        Aware.setSetting(this, Aware_Preferences.FREQUENCY_GYROSCOPE, 400000);
+//
+//        Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
+//        Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 400000);
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
@@ -178,12 +178,12 @@ public class MainActivity extends Activity {
         Looper looper = sensorThread.getLooper();
         sensorHandler = new Handler(looper);
 
-        accelerometerReceiver = new AccelerometerReceiver();
-        accelerometerReceiver.register(this, sensorHandler);
+//        accelerometerReceiver = new AccelerometerReceiver();
+//        accelerometerReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
         linearAccelerometerReceiver.register(this, sensorHandler);
-        gyroscopeReceiver = new GyroscopeReceiver();
-        gyroscopeReceiver.register(this, sensorHandler);
+//        gyroscopeReceiver = new GyroscopeReceiver();
+//        gyroscopeReceiver.register(this, sensorHandler);
         locationReceiver = new LocationReceiver();
         locationReceiver.register(this, sensorHandler);
         temperatureReceiver = new TemperatureReceiver();
@@ -199,9 +199,9 @@ public class MainActivity extends Activity {
             rotationThread.quit();
         }
 
-        accelerometerReceiver.unregister(this);
+//        accelerometerReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
-        gyroscopeReceiver.unregister(this);
+//        gyroscopeReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
 
@@ -217,8 +217,8 @@ public class MainActivity extends Activity {
         registerListeners();
 
         Aware.startLocations(this);
-        Aware.startAccelerometer(this);
-        Aware.startGyroscope(this);
+//        Aware.startAccelerometer(this);
+//        Aware.startGyroscope(this);
         Aware.startLinearAccelerometer(this);
 //        Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
         Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
@@ -226,8 +226,8 @@ public class MainActivity extends Activity {
 
     private void stopMonitoring() {
         Aware.stopLocations(this);
-        Aware.stopAccelerometer(this);
-        Aware.stopGyroscope(this);
+//        Aware.stopAccelerometer(this);
+//        Aware.stopGyroscope(this);
         Aware.stopLinearAccelerometer(this);
 
         unregisterListeners();
