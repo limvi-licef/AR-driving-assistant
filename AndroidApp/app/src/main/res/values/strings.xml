@@ -13,6 +13,6 @@
     <string name="user_dialog_title">Current User Setup</string>
     <string name="user_id_pref">user_id</string>
 
-    <string name="database_insert_success"> Success</string>
-    <string name="database_insert_failure"> Failure</string>
+    <string name="database_insert_success"> Insert Success</string>
+    <string name="database_insert_failure"> Insert Failure</string>
 </resources>
