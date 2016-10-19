@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 
 public class TemperatureReceiver extends BroadcastReceiver {
 
@@ -56,10 +56,9 @@ public class TemperatureReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.TemperatureData.SNOW, values.getAsDouble("snow"));
         valuesToSave.put(DatabaseContract.TemperatureData.CLOUDINESS, values.getAsDouble("cloudiness"));
 
-        db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave);
+        boolean success = db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.TemperatureData.TABLE_NAME + System.currentTimeMillis());
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-        Log.d("Temperature Receiver", "Finished insert");
+        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.TemperatureData.TABLE_NAME + " " +
+                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 }

@@ -1,9 +1,15 @@
 package com.limvi_licef.ar_driving_assistant.database;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.Settings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +20,14 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class DatabaseUtils {
+
+    /*
+     * Send local broadcast upon inserting to database to show status of insert
+     */
+    public static void sendInsertStatusBroadcast(Context context, String message) {
+        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, message);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
+    }
 
     /*
      *  Dump the database into a json file inside the phone storage

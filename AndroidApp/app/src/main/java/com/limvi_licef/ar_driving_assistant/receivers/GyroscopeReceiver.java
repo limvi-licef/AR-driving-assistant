@@ -7,15 +7,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.aware.Gyroscope;
 import com.aware.providers.Gyroscope_Provider;
-import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 
 public class GyroscopeReceiver extends BroadcastReceiver {
 
@@ -52,10 +52,9 @@ public class GyroscopeReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.GyroscopeData.AXIS_Y, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.GyroscopeData.AXIS_Z, values.getAsDouble(Gyroscope_Provider.Gyroscope_Data.VALUES_2));
 
-        db.insert(DatabaseContract.GyroscopeData.TABLE_NAME, null, valuesToSave);
+        boolean success = db.insert(DatabaseContract.GyroscopeData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.GyroscopeData.TABLE_NAME + System.currentTimeMillis());
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-        Log.d("Gyroscope Receiver", "Finished insert");
+        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.GyroscopeData.TABLE_NAME + " " +
+                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 }

@@ -2,18 +2,16 @@ package com.limvi_licef.ar_driving_assistant.tasks;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +48,16 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
             }
             db.setTransactionSuccessful();
             clearData();
-            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + R.string.database_insert_success;
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
         }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + R.string.database_insert_failure;
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_failure);
             Log.d("Runnable Exception", "" + e);
         }
         finally{
             db.endTransaction();
 
-            Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, insertionStatus);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
+            DatabaseUtils.sendInsertStatusBroadcast(context, insertionStatus);
             handler.postDelayed(this, DELAY);
         }
     }

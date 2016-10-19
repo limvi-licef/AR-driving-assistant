@@ -7,15 +7,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.aware.Accelerometer;
 import com.aware.providers.Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 
 public class AccelerometerReceiver extends BroadcastReceiver {
 
@@ -52,10 +52,9 @@ public class AccelerometerReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Y, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_1));
         valuesToSave.put(DatabaseContract.AccelerometerData.AXIS_Z, values.getAsDouble(Accelerometer_Provider.Accelerometer_Data.VALUES_2));
 
-        db.insert(DatabaseContract.AccelerometerData.TABLE_NAME, null, valuesToSave);
+        boolean success = db.insert(DatabaseContract.AccelerometerData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.AccelerometerData.TABLE_NAME + System.currentTimeMillis());
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-        Log.d("Accelerometer Receiver", "Finished insert");
+        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.AccelerometerData.TABLE_NAME + " " +
+                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 }

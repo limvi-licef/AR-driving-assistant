@@ -8,16 +8,15 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeSpeedRunnable;
 
@@ -71,11 +70,11 @@ public class LocationReceiver extends BroadcastReceiver {
         valuesToSave.put(DatabaseContract.LocationData.BEARING, location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.BEARING)));
         valuesToSave.put(DatabaseContract.LocationData.ACCURACY, location.getInt(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY)));
 
-        db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave);
+        boolean success = db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave) != -1L;
         location.close();
 
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, DatabaseContract.LocationData.TABLE_NAME + " " + R.string.database_insert_success);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
+        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
+                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 
 }
