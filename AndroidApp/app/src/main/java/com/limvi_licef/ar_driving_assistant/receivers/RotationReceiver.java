@@ -1,24 +1,17 @@
 package com.limvi_licef.ar_driving_assistant.receivers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.aware.providers.Linear_Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.Utils;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAzimuthRunnable;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -27,7 +20,7 @@ public class RotationReceiver implements SensorEventListener {
 
     public boolean isRegistered;
 
-    private ComputeAzimuthRunnable runnable;
+    private ComputeAlgorithmRunnable runnable;
 
     private int axisX, axisY;
     private SensorManager sensorManager;

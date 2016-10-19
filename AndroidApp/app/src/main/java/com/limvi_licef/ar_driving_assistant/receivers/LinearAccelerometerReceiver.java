@@ -12,11 +12,12 @@ import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAccelerationRunnable;
+import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 
 public class LinearAccelerometerReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
-    private ComputeAccelerationRunnable runnable;
+    private ComputeAlgorithmRunnable runnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
 
     public Intent register(Context context, Handler handler) {

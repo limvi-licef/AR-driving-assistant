@@ -19,14 +19,14 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComputeAccelerationRunnable implements Runnable {
+public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
 
     private static final int DELAY = 1000 * 60;
-    private static int TOLERANCE = 0;
+    private static final int TOLERANCE = 0;
 
     private String insertionStatus;
     private List<TimestampedDouble> data = new ArrayList<>();
-    private static Handler handler;
+    private Handler handler;
     private SQLiteDatabase db;
     private Context context;
 
@@ -67,18 +67,22 @@ public class ComputeAccelerationRunnable implements Runnable {
         }
     }
 
-    public void accumulateData(TimestampedDouble d){
+    @Override
+    public void accumulateData(Utils.TimestampedDouble d){
         data.add(d);
     }
 
+    @Override
     public void clearData(){
         data.clear();
     }
 
+    @Override
     public void startRunnable(){
         handler.postDelayed(this, DELAY);
     }
 
+    @Override
     public void stopRunnable(){
         handler.removeCallbacksAndMessages(null);
     }

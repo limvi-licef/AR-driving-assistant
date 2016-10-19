@@ -18,13 +18,14 @@ import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeSpeedRunnable;
 
 public class LocationReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
 
-    private ComputeSpeedRunnable runnable;
+    private ComputeAlgorithmRunnable runnable;
 
     private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
     private static final String extraData = "data";
