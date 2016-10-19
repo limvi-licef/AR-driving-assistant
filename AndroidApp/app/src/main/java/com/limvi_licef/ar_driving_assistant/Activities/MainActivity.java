@@ -26,7 +26,6 @@ import com.limvi_licef.ar_driving_assistant.database.*;
 import com.limvi_licef.ar_driving_assistant.R;
 
 import com.limvi_licef.ar_driving_assistant.fragments.UserDialogFragment;
-import com.limvi_licef.ar_driving_assistant.receivers.AccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.GyroscopeReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
@@ -44,7 +43,6 @@ public class MainActivity extends Activity {
     private Handler sensorHandler;
     private HandlerThread rotationThread;
     private Handler rotationHandler;
-    private AccelerometerReceiver accelerometerReceiver;
     private TemperatureReceiver temperatureReceiver;
     private LocationReceiver locationReceiver;
     private LinearAccelerometerReceiver linearAccelerometerReceiver;
@@ -135,9 +133,6 @@ public class MainActivity extends Activity {
 
 //        Aware.setSetting(this, Aware_Preferences.STATUS_GYROSCOPE, true);
 //        Aware.setSetting(this, Aware_Preferences.FREQUENCY_GYROSCOPE, 400000);
-//
-//        Aware.setSetting(this, Aware_Preferences.STATUS_ACCELEROMETER, true);
-//        Aware.setSetting(this, Aware_Preferences.FREQUENCY_ACCELEROMETER, 400000);
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
@@ -179,7 +174,6 @@ public class MainActivity extends Activity {
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
         locationReceiver = new LocationReceiver();
         temperatureReceiver = new TemperatureReceiver();
-//        accelerometerReceiver = new AccelerometerReceiver();
 //        gyroscopeReceiver = new GyroscopeReceiver();
 
     }
@@ -200,7 +194,6 @@ public class MainActivity extends Activity {
 
     private void registerListeners(){
         rotationReceiver.register(this, rotationHandler);
-//        accelerometerReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver.register(this, sensorHandler);
 //        gyroscopeReceiver.register(this, sensorHandler);
         locationReceiver.register(this, sensorHandler);
@@ -211,7 +204,6 @@ public class MainActivity extends Activity {
         rotationReceiver.unregister(this);
 //        rotationHandler.removeCallbacksAndMessages(null);
 
-//        accelerometerReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
 //        gyroscopeReceiver.unregister(this);
         locationReceiver.unregister(this);
@@ -222,7 +214,6 @@ public class MainActivity extends Activity {
         registerListeners();
 
         Aware.startLocations(this);
-//        Aware.startAccelerometer(this);
 //        Aware.startGyroscope(this);
         Aware.startLinearAccelerometer(this);
 //        Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
@@ -231,7 +222,6 @@ public class MainActivity extends Activity {
 
     private void stopMonitoring() {
         Aware.stopLocations(this);
-//        Aware.stopAccelerometer(this);
 //        Aware.stopGyroscope(this);
         Aware.stopLinearAccelerometer(this);
 
