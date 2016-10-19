@@ -38,7 +38,12 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
         try{
             Utils.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
             List<Integer> significantExtrema = returnData.significantExtremaIndex;
+
+            Utils.ExtremaStats extremaStats = Utils.computeExtremaStats(data, significantExtrema);
+
             List<Utils.TimestampedDouble> processedData = returnData.monotoneValues;
+            long firstTimestamp = processedData.get(0).timestamp;
+            long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
             String userId = Utils.getCurrentUserId(context);
 
@@ -50,6 +55,17 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
                 values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.value);
                 db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values);
             }
+
+            ContentValues stats = new ContentValues();
+            stats.put(DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID, userId);
+            stats.put(DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP, firstTimestamp);
+            stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
+            stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
+            stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+            stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_AVERAGE, extremaStats.negativeAverage);
+            stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_STD_DEVIATION, extremaStats.negativeStandardDeviation);
+            db.insert(DatabaseContract.LinearAccelerometerStats.TABLE_NAME, null, stats);
+
             db.setTransactionSuccessful();
             clearData();
             insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);

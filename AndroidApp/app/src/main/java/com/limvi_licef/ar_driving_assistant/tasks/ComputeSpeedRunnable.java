@@ -37,7 +37,12 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
         try{
             Utils.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
             List<Integer> significantExtrema = returnData.significantExtremaIndex;
+
+            Utils.ExtremaStats extremaStats = Utils.computeExtremaStats(data, significantExtrema);
+
             List<Utils.TimestampedDouble> processedData = returnData.monotoneValues;
+            long firstTimestamp = processedData.get(0).timestamp;
+            long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
             String userId = Utils.getCurrentUserId(context);
 
@@ -48,6 +53,16 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
                 values.put(DatabaseContract.SpeedData.TIMESTAMP, td.timestamp);
                 values.put(DatabaseContract.SpeedData.SPEED, td.value);
                 db.insert(DatabaseContract.SpeedData.TABLE_NAME, null, values);
+
+                ContentValues stats = new ContentValues();
+                stats.put(DatabaseContract.SpeedStats.CURRENT_USER_ID, userId);
+                stats.put(DatabaseContract.SpeedStats.START_TIMESTAMP, firstTimestamp);
+                stats.put(DatabaseContract.SpeedStats.END_TIMESTAMP, lastTimestamp);
+                stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_AVERAGE, extremaStats.positiveAverage);
+                stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+                stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_AVERAGE, extremaStats.negativeAverage);
+                stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_STD_DEVIATION, extremaStats.negativeStandardDeviation);
+                db.insert(DatabaseContract.SpeedStats.TABLE_NAME, null, stats);
             }
             db.setTransactionSuccessful();
             clearData();
