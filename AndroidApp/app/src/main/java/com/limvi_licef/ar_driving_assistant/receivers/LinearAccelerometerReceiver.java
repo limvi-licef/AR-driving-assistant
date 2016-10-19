@@ -17,6 +17,10 @@ import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 public class LinearAccelerometerReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
+    private boolean offsetDefined = false;
+    private double offsetX;
+    private double offsetY;
+    private double offsetZ;
     private ComputeAlgorithmRunnable runnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
 
@@ -31,6 +35,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         if (isRegistered) {
             context.unregisterReceiver(this);
             isRegistered = false;
+            offsetDefined = false;
             runnable.stopRunnable();
             runnable.clearData();
             return true;
@@ -47,7 +52,24 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         double axisX = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0);
         double axisY = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1);
         double axisZ = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2);
+
+        //TODO calibration step instead of first sensor data received
+        if(!offsetDefined){
+            defineOffsets(axisX, axisY, axisZ);
+        }
+
+        axisX -= offsetX;
+        axisY -= offsetY;
+        axisZ -= offsetZ;
+
         double acceleration = Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
         runnable.accumulateData(new Utils.TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), acceleration));
+    }
+
+    private void defineOffsets(double x, double y , double z){
+        offsetX = x;
+        offsetY = y;
+        offsetZ = z;
+        offsetDefined = true;
     }
 }
