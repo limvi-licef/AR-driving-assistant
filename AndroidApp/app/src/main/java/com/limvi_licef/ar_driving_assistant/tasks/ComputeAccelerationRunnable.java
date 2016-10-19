@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.Utils;
-import com.limvi_licef.ar_driving_assistant.Utils.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
@@ -23,7 +22,7 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
-    private List<TimestampedDouble> data = new ArrayList<>();
+    private List<Utils.TimestampedDouble> data = new ArrayList<>();
     private Handler handler;
     private SQLiteDatabase db;
     private Context context;
@@ -37,11 +36,14 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            List<TimestampedDouble> processedData = MonotoneSegmentationAlgorithm.ComputeData(data, TOLERANCE);
+            Utils.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
+            List<Integer> significantExtrema = returnData.significantExtremaIndex;
+            List<Utils.TimestampedDouble> processedData = returnData.monotoneValues;
+
             String userId = Utils.getCurrentUserId(context);
 
             db.beginTransaction();
-            for(TimestampedDouble td : processedData) {
+            for(Utils.TimestampedDouble td : processedData) {
                 ContentValues values = new ContentValues();
                 values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
                 values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);

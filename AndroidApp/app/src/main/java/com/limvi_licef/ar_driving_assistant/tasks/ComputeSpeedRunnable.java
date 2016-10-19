@@ -35,7 +35,10 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            List<Utils.TimestampedDouble> processedData = MonotoneSegmentationAlgorithm.ComputeData(data, TOLERANCE);
+            Utils.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
+            List<Integer> significantExtrema = returnData.significantExtremaIndex;
+            List<Utils.TimestampedDouble> processedData = returnData.monotoneValues;
+
             String userId = Utils.getCurrentUserId(context);
 
             db.beginTransaction();

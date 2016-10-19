@@ -3,9 +3,12 @@ package com.limvi_licef.ar_driving_assistant;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.sql.Time;
+import java.util.List;
+
 public class Utils {
 
-    public static final String DEFAULT_ID = "0";
+    private static final String DEFAULT_ID = "0";
 
     /*
      * Returns the current user id defined in 'Setup User' button
@@ -27,6 +30,19 @@ public class Utils {
         public TimestampedDouble(long timestamp, Double value) {
             this.timestamp = timestamp;
             this.value = value;
+        }
+    }
+
+    /*
+     * Struct to return both the significant extrema and the processed data from the segmentation algorithm
+     */
+    public static class SegmentationAlgorithmReturnData {
+        public List<Integer> significantExtremaIndex;
+        public List<TimestampedDouble> monotoneValues;
+
+        public SegmentationAlgorithmReturnData(List<Integer> significantExtremaIndex, List<TimestampedDouble> monotoneValues) {
+            this.significantExtremaIndex = significantExtremaIndex;
+            this.monotoneValues = monotoneValues;
         }
     }
 }

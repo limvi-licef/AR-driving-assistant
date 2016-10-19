@@ -35,7 +35,7 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            List<Utils.TimestampedDouble> processedData = MonotoneSegmentationAlgorithm.ComputeData(data, TOLERANCE);
+            List<Utils.TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE).monotoneValues;
             String userId = Utils.getCurrentUserId(context);
 
             db.beginTransaction();
