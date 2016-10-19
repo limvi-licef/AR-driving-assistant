@@ -15,16 +15,20 @@ public final class DatabaseContract {
 
     public static final String[] SQL_CREATE_TABLE_ARRAY = {
             LinearAccelerometerData.CREATE_TABLE,
+            LinearAccelerometerStats.CREATE_TABLE,
             LocationData.CREATE_TABLE,
             SpeedData.CREATE_TABLE,
+            SpeedStats.CREATE_TABLE,
             TemperatureData.CREATE_TABLE,
             RotationData.CREATE_TABLE
     };
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
             LinearAccelerometerData.DELETE_TABLE,
+            LinearAccelerometerStats.DELETE_TABLE,
             LocationData.DELETE_TABLE,
             SpeedData.DELETE_TABLE,
+            SpeedStats.DELETE_TABLE,
             TemperatureData.DELETE_TABLE,
             RotationData.DELETE_TABLE
     };
@@ -43,6 +47,29 @@ public final class DatabaseContract {
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 ACCEL + REAL_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class LinearAccelerometerStats implements BaseColumns {
+        public static final String TABLE_NAME       = "LinearAccelerometerStats";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String START_TIMESTAMP = "StartTimestamp";
+        public static final String END_TIMESTAMP = "EndTimestamp";
+        public static final String ACCEL_AVERAGE = "AccelerationAverage";
+        public static final String ACCEL_STD_DEVIATION = "AccelerationStandardDeviation";
+        public static final String DECEL_AVERAGE = "DecelerationAverage";
+        public static final String DECEL_STD_DEVIATION = "DecelerationStandardDeviation";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                ACCEL_AVERAGE + REAL_TYPE + COMMA_SEP +
+                ACCEL_STD_DEVIATION + REAL_TYPE + COMMA_SEP +
+                DECEL_AVERAGE + REAL_TYPE + COMMA_SEP +
+                DECEL_STD_DEVIATION + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
@@ -81,6 +108,29 @@ public final class DatabaseContract {
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 SPEED + INTEGER_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class SpeedStats implements BaseColumns {
+        public static final String TABLE_NAME       = "SpeedStats";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String START_TIMESTAMP = "StartTimestamp";
+        public static final String END_TIMESTAMP = "EndTimestamp";
+        public static final String INCREASING_SPEED_AVERAGE = "IncreasingSpeedAverage";
+        public static final String INCREASING_SPEED_STD_DEVIATION = "IncreasingSpeedStandardDeviation";
+        public static final String DECREASING_SPEED_AVERAGE = "DecreasingSpeedAverage";
+        public static final String DECREASING_SPEED_STD_DEVIATION = "DecreasingSpeedStandardDeviation";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                INCREASING_SPEED_AVERAGE + REAL_TYPE + COMMA_SEP +
+                INCREASING_SPEED_STD_DEVIATION + REAL_TYPE + COMMA_SEP +
+                DECREASING_SPEED_AVERAGE + REAL_TYPE + COMMA_SEP +
+                DECREASING_SPEED_STD_DEVIATION + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
