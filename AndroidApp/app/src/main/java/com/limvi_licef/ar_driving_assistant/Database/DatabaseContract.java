@@ -15,7 +15,6 @@ public final class DatabaseContract {
 
     public static final String[] SQL_CREATE_TABLE_ARRAY = {
             LinearAccelerometerData.CREATE_TABLE,
-            GyroscopeData.CREATE_TABLE,
             LocationData.CREATE_TABLE,
             SpeedData.CREATE_TABLE,
             TemperatureData.CREATE_TABLE,
@@ -24,7 +23,6 @@ public final class DatabaseContract {
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
             LinearAccelerometerData.DELETE_TABLE,
-            GyroscopeData.DELETE_TABLE,
             LocationData.DELETE_TABLE,
             SpeedData.DELETE_TABLE,
             TemperatureData.DELETE_TABLE,
@@ -45,25 +43,6 @@ public final class DatabaseContract {
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 ACCEL + REAL_TYPE + " )";
-        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
-    }
-
-    public static abstract class GyroscopeData implements BaseColumns {
-        public static final String TABLE_NAME       = "GyroscopeData";
-        public static final String CURRENT_USER_ID = "CurrentUserID";
-        public static final String TIMESTAMP = "Timestamp";
-        public static final String AXIS_X = "AxisX";
-        public static final String AXIS_Y = "AxisY";
-        public static final String AXIS_Z = "AxisZ";
-
-        public static final String CREATE_TABLE = "CREATE TABLE " +
-                TABLE_NAME + " (" +
-                _ID + " INTEGER PRIMARY KEY," +
-                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
-                AXIS_X + REAL_TYPE + COMMA_SEP +
-                AXIS_Y + REAL_TYPE + COMMA_SEP +
-                AXIS_Z + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
