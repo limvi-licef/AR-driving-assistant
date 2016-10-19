@@ -20,13 +20,13 @@ import java.util.Map;
 public class MonotoneSegmentationAlgorithm {
 
     public static List<TimestampedDouble> ComputeData(List<TimestampedDouble> values, int tolerance) {
-        if(values.size() < 3) return new ArrayList<>();
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
         List<TimestampedDouble> monotoneValues = piecewiseMonotone(values, significantExtrema);
         return monotoneValues;
     }
 
     private static Map<Integer,Double> computeScaleLabels(List<TimestampedDouble> values) {
+        if(values.size() < 3) return new HashMap<>();
         boolean isMin;
         Map<Integer,Double> extrema = new LinkedHashMap<>(values.size());
         Map<Integer,Double> scaleLabels = new HashMap<>(values.size());
