@@ -71,11 +71,13 @@ public class MainActivity extends Activity {
         dbHelper = DatabaseHelper.getHelper(this);
         aware = new Intent(this, Aware.class);
         setupSensors();
+        setupListeners();
     }
 
     @Override
     protected void onDestroy() {
         unregisterListeners();
+        stopListenerThreads();
         super.onDestroy();
     }
 
@@ -161,56 +163,59 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, R.string.openweather, Settings.OPEN_WEATHER_PACKAGE);
     }
 
-    private void registerListeners(){
-
-        //custom
+    private void setupListeners() {
         rotationThread = new HandlerThread("RotationHandlerThread");
         rotationThread.start();
         Looper rotationLooper = rotationThread.getLooper();
         rotationHandler = new Handler(rotationLooper);
 
         rotationReceiver = new RotationReceiver();
-        rotationReceiver.register(this, rotationHandler);
 
-        //aware
         sensorThread = new HandlerThread("SensorDataHandlerThread");
         sensorThread.start();
         Looper looper = sensorThread.getLooper();
         sensorHandler = new Handler(looper);
 
-//        accelerometerReceiver = new AccelerometerReceiver();
-//        accelerometerReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
-        linearAccelerometerReceiver.register(this, sensorHandler);
-//        gyroscopeReceiver = new GyroscopeReceiver();
-//        gyroscopeReceiver.register(this, sensorHandler);
         locationReceiver = new LocationReceiver();
-        locationReceiver.register(this, sensorHandler);
         temperatureReceiver = new TemperatureReceiver();
+//        accelerometerReceiver = new AccelerometerReceiver();
+//        gyroscopeReceiver = new GyroscopeReceiver();
+
+    }
+
+    private void stopListenerThreads() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            rotationThread.quitSafely();
+        } else {
+            rotationThread.quit();
+        }
+        //        sensorHandler.removeCallbacksAndMessages(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            sensorThread.quitSafely();
+        } else {
+            sensorThread.quit();
+        }
+    }
+
+    private void registerListeners(){
+        rotationReceiver.register(this, rotationHandler);
+//        accelerometerReceiver.register(this, sensorHandler);
+        linearAccelerometerReceiver.register(this, sensorHandler);
+//        gyroscopeReceiver.register(this, sensorHandler);
+        locationReceiver.register(this, sensorHandler);
         temperatureReceiver.register(this, sensorHandler);
     }
 
     private void unregisterListeners(){
         rotationReceiver.unregister(this);
 //        rotationHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            rotationThread.quitSafely();
-        } else {
-            rotationThread.quit();
-        }
 
 //        accelerometerReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
 //        gyroscopeReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
-
-//        sensorHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            sensorThread.quitSafely();
-        } else {
-            sensorThread.quit();
-        }
     }
 
     private void startMonitoring() {
