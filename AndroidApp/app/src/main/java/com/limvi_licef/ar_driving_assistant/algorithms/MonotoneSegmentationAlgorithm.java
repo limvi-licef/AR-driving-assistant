@@ -22,7 +22,6 @@ public class MonotoneSegmentationAlgorithm {
     public static List<TimestampedDouble> ComputeData(List<TimestampedDouble> values, int tolerance) {
         if(values.size() < 3) return new ArrayList<>();
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
-        if(significantExtrema.size() < 2) return new ArrayList<>();
         List<TimestampedDouble> monotoneValues = piecewiseMonotone(values, significantExtrema);
         return monotoneValues;
     }
