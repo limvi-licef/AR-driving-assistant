@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
 
         Aware.setSetting(this, Settings.STATUS_OPEN_WEATHER, true, Settings.OPEN_WEATHER_PACKAGE);
         Aware.setSetting(this, Settings.FREQUENCY_OPEN_WEATHER, 30, Settings.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, R.string.openweather, Settings.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Settings.OPEN_WEATHER_PACKAGE);
     }
 
     private void setupListeners() {
