@@ -180,7 +180,6 @@ public class MainActivity extends Activity {
         } else {
             rotationThread.quit();
         }
-        //        sensorHandler.removeCallbacksAndMessages(null);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             sensorThread.quitSafely();
         } else {
@@ -197,11 +196,12 @@ public class MainActivity extends Activity {
 
     private void unregisterListeners(){
         rotationReceiver.unregister(this);
-//        rotationHandler.removeCallbacksAndMessages(null);
-
         linearAccelerometerReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
+
+        rotationHandler.removeCallbacksAndMessages(null);
+        sensorHandler.removeCallbacksAndMessages(null);
     }
 
     private void startMonitoring() {

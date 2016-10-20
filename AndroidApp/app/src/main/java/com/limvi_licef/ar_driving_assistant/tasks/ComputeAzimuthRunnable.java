@@ -79,11 +79,6 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     }
 
     @Override
-    public void clearAllData(){
-        data.clear();
-    }
-
-    @Override
     public void clearData(List<TimestampedDouble> oldData){
         data.removeAll(oldData);
     }
@@ -91,10 +86,5 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void startRunnable(){
         handler.postDelayed(this, DELAY);
-    }
-
-    @Override
-    public void stopRunnable(){
-        handler.removeCallbacksAndMessages(null);
     }
 }
