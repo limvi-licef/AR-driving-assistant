@@ -24,7 +24,7 @@ public class RewriteAzimuthRunnable implements Runnable {
     public final int DELAY = 1000 * 60 * 10;
     private static final int REWRITE_MINUTES = 10;
     private static final int TOLERANCE = 0;
-    private static final String WHERE_CLAUSE = DatabaseContract.RotationData.CURRENT_USER_ID + " = ? AND " + DatabaseContract.RotationData.TIMESTAMP + "BETWEEN ? AND ?";
+    private static final String WHERE_CLAUSE = DatabaseContract.RotationData.CURRENT_USER_ID + " = ? AND " + DatabaseContract.RotationData.TIMESTAMP + " BETWEEN ? AND ?";
 
     private String insertionStatus;
     private Handler handler;
