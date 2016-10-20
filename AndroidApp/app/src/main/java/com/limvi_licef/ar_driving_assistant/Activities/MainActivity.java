@@ -36,6 +36,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
+    private final int MONITORING_RESULTS_MAX = 10;
+
     private DatabaseHelper dbHelper;
     private Intent aware;
     private HandlerThread sensorThread;
@@ -55,6 +57,7 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String status = (String) intent.getExtras().get(Constants.WRITE_MESSAGE);
+            if(results.size() >= MONITORING_RESULTS_MAX) results.clear();
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
