@@ -48,7 +48,7 @@ public class MonotoneSegmentationAlgorithm {
                 lastKey= i;
             }
         }
-        if(values.get(values.size()-1).equals(extrema.get(lastKey))) {
+        if(values.get(values.size()-1).value.equals(extrema.get(lastKey))) {
             extrema.remove(lastKey);
             extrema.put(lastKey, values.get(values.size()-1).value);
         } else {
