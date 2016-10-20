@@ -15,8 +15,8 @@ import com.aware.providers.Locations_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeSpeedRunnable;
+import com.limvi_licef.ar_driving_assistant.tasks.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.User;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
@@ -25,7 +25,8 @@ public class LocationReceiver extends BroadcastReceiver {
 
     public boolean isRegistered;
 
-    private ComputeAlgorithmRunnable runnable;
+    private ComputeSpeedRunnable runnable;
+    private RewriteSpeedRunnable rewriteRunnable;
 
     private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
     private static final String extraData = "data";
@@ -34,7 +35,9 @@ public class LocationReceiver extends BroadcastReceiver {
     public Intent register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeSpeedRunnable(handler, context);
-        runnable.startRunnable();
+        handler.postDelayed(runnable, runnable.DELAY);
+        rewriteRunnable = new RewriteSpeedRunnable(handler, context);
+        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
         return context.registerReceiver(this, broadcastFilter, null, handler);
     }
 

@@ -17,8 +17,9 @@ import com.limvi_licef.ar_driving_assistant.utils.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
-    private static final int DELAY = 1000 * 60;
+public class ComputeAzimuthRunnable implements Runnable {
+
+    public final int DELAY = 1000 * 60;
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
@@ -58,6 +59,10 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
         }
     }
 
+    public void accumulateData(TimestampedDouble d){
+        data.add(d);
+    }
+
     private void saveData(List<TimestampedDouble> processedData) {
         String userId = User.getCurrentUserId(context);
         for(TimestampedDouble td : processedData) {
@@ -73,18 +78,7 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
         return data;
     }
 
-    @Override
-    public void accumulateData(TimestampedDouble d){
-        data.add(d);
-    }
-
-    @Override
-    public void clearData(List<TimestampedDouble> oldData){
+    private void clearData(List<TimestampedDouble> oldData){
         data.removeAll(oldData);
-    }
-
-    @Override
-    public void startRunnable(){
-        handler.postDelayed(this, DELAY);
     }
 }

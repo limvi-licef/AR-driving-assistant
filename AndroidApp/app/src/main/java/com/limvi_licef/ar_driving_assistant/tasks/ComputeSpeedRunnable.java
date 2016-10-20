@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.*;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
@@ -19,8 +18,9 @@ import com.limvi_licef.ar_driving_assistant.utils.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
-    private static final int DELAY = 1000 * 60;
+public class ComputeSpeedRunnable implements Runnable {
+
+    public final int DELAY = 1000 * 60;
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
@@ -63,6 +63,10 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
         }
     }
 
+    public void accumulateData(TimestampedDouble d){
+        data.add(d);
+    }
+
     private void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats) {
         String userId = User.getCurrentUserId(context);
         long firstTimestamp = processedData.get(0).timestamp;
@@ -91,18 +95,7 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
         return data;
     }
 
-    @Override
-    public void accumulateData(TimestampedDouble d){
-        data.add(d);
-    }
-
-    @Override
     public void clearData(List<TimestampedDouble> oldData){
         data.removeAll(oldData);
-    }
-
-    @Override
-    public void startRunnable(){
-        handler.postDelayed(this, DELAY);
     }
 }

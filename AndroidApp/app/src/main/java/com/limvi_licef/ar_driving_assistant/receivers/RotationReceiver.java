@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.limvi_licef.ar_driving_assistant.tasks.RewriteAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAzimuthRunnable;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -20,7 +20,8 @@ public class RotationReceiver implements SensorEventListener {
 
     public boolean isRegistered;
 
-    private ComputeAlgorithmRunnable runnable;
+    private ComputeAzimuthRunnable runnable;
+    private RewriteAzimuthRunnable rewriteRunnable;
 
     private int axisX, axisY;
     private SensorManager sensorManager;
@@ -34,7 +35,9 @@ public class RotationReceiver implements SensorEventListener {
     public void register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeAzimuthRunnable(handler, context);
-        runnable.startRunnable();
+        handler.postDelayed(runnable, runnable.DELAY);
+        rewriteRunnable = new RewriteAzimuthRunnable(handler, context);
+        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
         sensorManager = (SensorManager)context.getSystemService(SENSOR_SERVICE);
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL, handler);
