@@ -50,11 +50,11 @@ public class MainActivity extends Activity {
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
 
-    IntentFilter statusIntentFilter = new IntentFilter(Constants.ACTION_INSERT_DONE);
+    IntentFilter statusIntentFilter = new IntentFilter(Constants.ACTION_WRITE_TO_UI);
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String status = (String) intent.getExtras().get(Constants.INSERT_STATUS);
+            String status = (String) intent.getExtras().get(Constants.WRITE_MESSAGE);
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
