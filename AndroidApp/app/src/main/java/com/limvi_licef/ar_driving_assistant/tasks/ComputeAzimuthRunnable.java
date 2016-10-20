@@ -22,12 +22,13 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
-    private List<TimestampedDouble> data = new ArrayList<>();
+    private List<TimestampedDouble> data;
     private Handler handler;
     private SQLiteDatabase db;
     private Context context;
 
     public ComputeAzimuthRunnable(Handler handler, Context context) {
+        this.data = new ArrayList<>();
         this.handler = handler;
         this.context = context;
         this.db = DatabaseHelper.getHelper(context).getWritableDatabase();
