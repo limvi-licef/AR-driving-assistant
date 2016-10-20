@@ -7,11 +7,13 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Utils;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.*;
+import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
+import com.limvi_licef.ar_driving_assistant.utils.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
-    private List<Utils.TimestampedDouble> data = new ArrayList<>();
+    private List<TimestampedDouble> data = new ArrayList<>();
     private Handler handler;
     private SQLiteDatabase db;
     private Context context;
@@ -36,19 +38,19 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            Utils.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
+            SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
             List<Integer> significantExtrema = returnData.significantExtremaIndex;
 
-            Utils.ExtremaStats extremaStats = Utils.computeExtremaStats(data, significantExtrema);
+            ExtremaStats extremaStats = Statistics.computeExtremaStats(data, significantExtrema);
 
-            List<Utils.TimestampedDouble> processedData = returnData.monotoneValues;
+            List<TimestampedDouble> processedData = returnData.monotoneValues;
             long firstTimestamp = processedData.get(0).timestamp;
             long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
-            String userId = Utils.getCurrentUserId(context);
+            String userId = User.getCurrentUserId(context);
 
             db.beginTransaction();
-            for(Utils.TimestampedDouble td : processedData) {
+            for(TimestampedDouble td : processedData) {
                 ContentValues values = new ContentValues();
                 values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
                 values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
@@ -77,13 +79,13 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
         finally{
             db.endTransaction();
 
-            DatabaseUtils.sendInsertStatusBroadcast(context, insertionStatus);
+            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             handler.postDelayed(this, DELAY);
         }
     }
 
     @Override
-    public void accumulateData(Utils.TimestampedDouble d){
+    public void accumulateData(TimestampedDouble d){
         data.add(d);
     }
 

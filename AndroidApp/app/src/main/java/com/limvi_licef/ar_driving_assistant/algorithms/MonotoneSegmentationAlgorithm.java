@@ -1,12 +1,9 @@
 package com.limvi_licef.ar_driving_assistant.algorithms;
 
-import android.util.Log;
-
-import com.limvi_licef.ar_driving_assistant.Utils;
-import com.limvi_licef.ar_driving_assistant.Utils.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.SegmentationAlgorithmReturnData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,10 +18,10 @@ import java.util.Map;
 
 public class MonotoneSegmentationAlgorithm {
 
-    public static Utils.SegmentationAlgorithmReturnData computeData(List<TimestampedDouble> values, int tolerance) {
+    public static SegmentationAlgorithmReturnData computeData(List<TimestampedDouble> values, int tolerance) {
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
         List<TimestampedDouble> monotoneValues = piecewiseMonotone(values, significantExtrema);
-        return new Utils.SegmentationAlgorithmReturnData(significantExtrema, monotoneValues);
+        return new SegmentationAlgorithmReturnData(significantExtrema, monotoneValues);
     }
 
     private static Map<Integer,Double> computeScaleLabels(List<TimestampedDouble> values) {

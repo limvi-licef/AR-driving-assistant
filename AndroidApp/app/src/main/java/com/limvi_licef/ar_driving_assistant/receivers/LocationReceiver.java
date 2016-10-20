@@ -13,12 +13,13 @@ import android.util.Log;
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeSpeedRunnable;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.User;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 public class LocationReceiver extends BroadcastReceiver {
 
@@ -56,10 +57,10 @@ public class LocationReceiver extends BroadcastReceiver {
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
         location.moveToFirst();
 
-        runnable.accumulateData(new Utils.TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)),
+        runnable.accumulateData(new TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)),
                 location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED))));
 
-        String userId = Utils.getCurrentUserId(context);
+        String userId = User.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);
@@ -73,7 +74,7 @@ public class LocationReceiver extends BroadcastReceiver {
         boolean success = db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave) != -1L;
         location.close();
 
-        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
+        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
                 (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 

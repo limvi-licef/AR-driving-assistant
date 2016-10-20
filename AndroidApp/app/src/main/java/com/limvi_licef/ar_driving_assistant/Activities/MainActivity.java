@@ -21,7 +21,6 @@ import android.widget.ToggleButton;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
 
-import com.limvi_licef.ar_driving_assistant.Settings;
 import com.limvi_licef.ar_driving_assistant.database.*;
 import com.limvi_licef.ar_driving_assistant.R;
 
@@ -31,6 +30,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
+import com.limvi_licef.ar_driving_assistant.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -50,11 +50,11 @@ public class MainActivity extends Activity {
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
 
-    IntentFilter statusIntentFilter = new IntentFilter(Settings.ACTION_INSERT_DONE);
+    IntentFilter statusIntentFilter = new IntentFilter(Constants.ACTION_INSERT_DONE);
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String status = (String) intent.getExtras().get(Settings.INSERT_STATUS);
+            String status = (String) intent.getExtras().get(Constants.INSERT_STATUS);
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
@@ -133,12 +133,12 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
 
         //TODO BUG
-//        Aware.setSetting(this, Settings.STATUS_FUSED_LOCATION, true, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, "fallback_location_timeout", 0, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Settings.FREQUENCY_FUSED_LOCATION, 0.5, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Settings.MAX_FREQUENCY_FUSED_LOCATION, 0, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Settings.ACCURACY_FUSED_LOCATION, 100, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, "location_sensitivity", 0, Settings.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, Constants.STATUS_FUSED_LOCATION, true, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, "fallback_location_timeout", 0, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, Constants.FREQUENCY_FUSED_LOCATION, 0.5, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, Constants.MAX_FREQUENCY_FUSED_LOCATION, 0, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, Constants.ACCURACY_FUSED_LOCATION, 100, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, "location_sensitivity", 0, Constants.FUSED_LOCATION_PACKAGE);
 
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, false);
@@ -148,9 +148,9 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_NETWORK_ACCURACY, 0);
         Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 1);
 
-        Aware.setSetting(this, Settings.STATUS_OPEN_WEATHER, true, Settings.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Settings.FREQUENCY_OPEN_WEATHER, 30, Settings.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Settings.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Settings.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.STATUS_OPEN_WEATHER, true, Constants.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.FREQUENCY_OPEN_WEATHER, 30, Constants.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Constants.OPEN_WEATHER_PACKAGE);
     }
 
     private void setupListeners() {
@@ -206,8 +206,8 @@ public class MainActivity extends Activity {
 
         Aware.startLocations(this);
         Aware.startLinearAccelerometer(this);
-//        Aware.startPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
-        Aware.startPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
+//        Aware.startPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
+        Aware.startPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
     }
 
     private void stopMonitoring() {
@@ -217,8 +217,8 @@ public class MainActivity extends Activity {
         unregisterListeners();
 
         //TODO ??
-//        Aware.stopPlugin(this, Settings.FUSED_LOCATION_PACKAGE);
-//        Aware.stopPlugin(this, Settings.OPEN_WEATHER_PACKAGE);
+//        Aware.stopPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.stopPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
     }
 
 }

@@ -7,11 +7,12 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Utils;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.*;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
+import com.limvi_licef.ar_driving_assistant.utils.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     private static final int TOLERANCE = 0;
 
     private String insertionStatus;
-    private List<Utils.TimestampedDouble> data = new ArrayList<>();
+    private List<TimestampedDouble> data = new ArrayList<>();
     private Handler handler;
     private SQLiteDatabase db;
     private Context context;
@@ -35,11 +36,11 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            List<Utils.TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE).monotoneValues;
-            String userId = Utils.getCurrentUserId(context);
+            List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE).monotoneValues;
+            String userId = User.getCurrentUserId(context);
 
             db.beginTransaction();
-            for(Utils.TimestampedDouble td : processedData) {
+            for(TimestampedDouble td : processedData) {
                 ContentValues values = new ContentValues();
                 values.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
                 values.put(DatabaseContract.RotationData.TIMESTAMP, td.timestamp);
@@ -57,13 +58,13 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
         finally{
             db.endTransaction();
 
-            DatabaseUtils.sendInsertStatusBroadcast(context, insertionStatus);
+            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             handler.postDelayed(this, DELAY);
         }
     }
 
     @Override
-    public void accumulateData(Utils.TimestampedDouble d){
+    public void accumulateData(TimestampedDouble d){
         data.add(d);
     }
 

@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.limvi_licef.ar_driving_assistant.Utils;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAzimuthRunnable;
 
@@ -62,7 +62,7 @@ public class RotationReceiver implements SensorEventListener {
 //            setAxis(context);
 //            SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
 
-            runnable.accumulateData(new Utils.TimestampedDouble(System.currentTimeMillis(), (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
+            runnable.accumulateData(new TimestampedDouble(System.currentTimeMillis(), (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
         }
     }
 

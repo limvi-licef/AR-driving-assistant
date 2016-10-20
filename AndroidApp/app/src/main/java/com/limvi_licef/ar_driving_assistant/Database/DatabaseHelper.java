@@ -1,19 +1,8 @@
 package com.limvi_licef.ar_driving_assistant.database;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {

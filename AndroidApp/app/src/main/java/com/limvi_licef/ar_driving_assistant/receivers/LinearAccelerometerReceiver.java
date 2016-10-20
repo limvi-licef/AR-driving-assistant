@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.Utils;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 
@@ -63,7 +63,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
         axisZ -= offsetZ;
 
         double acceleration = Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
-        runnable.accumulateData(new Utils.TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), acceleration));
+        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), acceleration));
     }
 
     private void defineOffsets(double x, double y , double z){

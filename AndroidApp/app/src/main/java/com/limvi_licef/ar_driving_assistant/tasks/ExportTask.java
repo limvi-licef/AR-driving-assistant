@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
+import com.limvi_licef.ar_driving_assistant.utils.Database;
 
 public class ExportTask extends AsyncTask<Void, Void, String> {
 
@@ -31,7 +31,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        return DatabaseUtils.exportDatabaseAsJSON(db) ? "Database Export Successful" : "Database Export Failure";
+        return Database.exportDatabaseAsJSON(db) ? "Database Export Successful" : "Database Export Failure";
     }
 
     @Override

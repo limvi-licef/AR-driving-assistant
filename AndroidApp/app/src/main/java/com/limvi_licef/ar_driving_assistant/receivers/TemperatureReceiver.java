@@ -10,10 +10,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Utils;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseUtils;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.User;
 
 public class TemperatureReceiver extends BroadcastReceiver {
 
@@ -43,7 +43,7 @@ public class TemperatureReceiver extends BroadcastReceiver {
         ContentValues values = (ContentValues) intent.getExtras().get(extraData);
         if(values == null || values.size() == 0) return;
 
-        String userId = Utils.getCurrentUserId(context);
+        String userId = User.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.TemperatureData.CURRENT_USER_ID, userId);
@@ -58,7 +58,7 @@ public class TemperatureReceiver extends BroadcastReceiver {
 
         boolean success = db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        DatabaseUtils.sendInsertStatusBroadcast(context, DatabaseContract.TemperatureData.TABLE_NAME + " " +
+        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.TemperatureData.TABLE_NAME + " " +
                 (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
     }
 }

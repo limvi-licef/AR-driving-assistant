@@ -1,6 +1,6 @@
 package com.limvi_licef.ar_driving_assistant.tasks;
 
-import com.limvi_licef.ar_driving_assistant.Utils.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 public abstract interface ComputeAlgorithmRunnable extends Runnable {
 

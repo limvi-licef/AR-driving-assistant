@@ -1,15 +1,10 @@
-package com.limvi_licef.ar_driving_assistant.database;
+package com.limvi_licef.ar_driving_assistant.utils;
 
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Settings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,15 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-public class DatabaseUtils {
-
-    /*
-     * Send local broadcast upon inserting to database to show status of insert
-     */
-    public static void sendInsertStatusBroadcast(Context context, String message) {
-        Intent localIntent = new Intent(Settings.ACTION_INSERT_DONE).putExtra(Settings.INSERT_STATUS, message);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-    }
+public abstract class Database {
 
     /*
      *  Dump the database into a json file inside the phone storage
@@ -110,7 +97,7 @@ public class DatabaseUtils {
         return resultSet;
     }
 
-    private static ArrayList<String> getAllTableNames(SQLiteDatabase database){
+    public static ArrayList<String> getAllTableNames(SQLiteDatabase database){
         ArrayList<String> namesArray = new ArrayList<>();
         Cursor c = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         while(c.moveToNext()){
@@ -121,7 +108,7 @@ public class DatabaseUtils {
         return namesArray;
     }
 
-    private static boolean isExternalStorageWritable() {
+    public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }

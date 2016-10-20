@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.Settings;
+import com.limvi_licef.ar_driving_assistant.utils.Constants;
 
 public class UserDialogFragment extends DialogFragment {
 
@@ -25,18 +25,16 @@ public class UserDialogFragment extends DialogFragment {
         idPref = getResources().getString(R.string.user_id_pref);
         final EditText idtext = new EditText(getActivity());
         idtext.setHint(R.string.user_dialog_id_placeholder);
-        SharedPreferences settings = getActivity().getSharedPreferences(Settings.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         idtext.setText(settings.getString(idPref, null));
-//        if(settings.contains(getResources().getString(R.string.user_id_pref))) {
-//            idtext.setText(settings.getString(idPref, ""));
-//        }
+
         return new AlertDialog.Builder(getActivity())
         .setTitle(R.string.user_dialog_title)
         .setNegativeButton(R.string.user_dialog_dismiss, null)
         .setPositiveButton(R.string.user_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(Settings.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
                 editor.putString(idPref, idtext.getText().toString());
                 editor.apply();
             }

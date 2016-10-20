@@ -1,6 +1,6 @@
-package com.limvi_licef.ar_driving_assistant;
+package com.limvi_licef.ar_driving_assistant.utils;
 
-public abstract class Settings {
+public abstract class Constants {
 
     public static final String USER_SHARED_PREFERENCES = "user_shared";
 
@@ -17,6 +17,6 @@ public abstract class Settings {
     public static final String FREQUENCY_OPEN_WEATHER = "plugin_openweather_frequency";
     public static final String API_KEY_OPEN_WEATHER = "api_key_plugin_openweather";
 
-    public static final String ACTION_INSERT_DONE = "ACTION_INSERT_DONE";
-    public static final String INSERT_STATUS = "INSERT_STATUS";
+    public static final String ACTION_WRITE_TO_UI = "ACTION_WRITE_TO_UI";
+    public static final String WRITE_MESSAGE = "WRITE_MESSAGE";
 }
