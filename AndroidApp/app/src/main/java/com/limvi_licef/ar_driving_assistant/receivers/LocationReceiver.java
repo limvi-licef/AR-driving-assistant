@@ -42,7 +42,7 @@ public class LocationReceiver extends BroadcastReceiver {
         if (isRegistered) {
             context.unregisterReceiver(this);
             runnable.stopRunnable();
-            runnable.clearData();
+            runnable.clearAllData();
             isRegistered = false;
             return true;
         }

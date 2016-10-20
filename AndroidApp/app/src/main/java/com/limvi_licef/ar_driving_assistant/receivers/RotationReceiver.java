@@ -45,7 +45,7 @@ public class RotationReceiver implements SensorEventListener {
             sensorManager.unregisterListener(this, rotationSensor);
             isRegistered = false;
             runnable.stopRunnable();
-            runnable.clearData();
+            runnable.clearAllData();
             return true;
         }
         return false;

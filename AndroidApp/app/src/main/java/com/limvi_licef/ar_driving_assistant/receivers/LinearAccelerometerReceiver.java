@@ -37,7 +37,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
             isRegistered = false;
             offsetDefined = false;
             runnable.stopRunnable();
-            runnable.clearData();
+            runnable.clearAllData();
             return true;
         }
         return false;

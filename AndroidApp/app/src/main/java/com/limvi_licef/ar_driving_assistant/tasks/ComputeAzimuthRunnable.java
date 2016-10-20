@@ -36,7 +36,8 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE).monotoneValues;
+            List<TimestampedDouble> newData = getData();
+            List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE).monotoneValues;
             String userId = User.getCurrentUserId(context);
 
             db.beginTransaction();
@@ -48,7 +49,7 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
                 db.insert(DatabaseContract.RotationData.TABLE_NAME, null, values);
             }
             db.setTransactionSuccessful();
-            clearData();
+            clearData(newData);
             insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
         }
         catch (Exception e) {
@@ -63,14 +64,23 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
         }
     }
 
+    private List<TimestampedDouble> getData() {
+        return data;
+    }
+
     @Override
     public void accumulateData(TimestampedDouble d){
         data.add(d);
     }
 
     @Override
-    public void clearData(){
+    public void clearAllData(){
         data.clear();
+    }
+
+    @Override
+    public void clearData(List<TimestampedDouble> oldData){
+        data.removeAll(oldData);
     }
 
     @Override

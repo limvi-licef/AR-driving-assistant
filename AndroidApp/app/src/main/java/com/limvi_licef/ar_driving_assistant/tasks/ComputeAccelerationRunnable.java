@@ -38,10 +38,11 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
     @Override
     public void run() {
         try{
-            SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(data, TOLERANCE);
+            List<TimestampedDouble> newData = getData();
+            SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
             List<Integer> significantExtrema = returnData.significantExtremaIndex;
 
-            ExtremaStats extremaStats = Statistics.computeExtremaStats(data, significantExtrema);
+            ExtremaStats extremaStats = Statistics.computeExtremaStats(newData, significantExtrema);
 
             List<TimestampedDouble> processedData = returnData.monotoneValues;
             long firstTimestamp = processedData.get(0).timestamp;
@@ -69,7 +70,7 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
             db.insert(DatabaseContract.LinearAccelerometerStats.TABLE_NAME, null, stats);
 
             db.setTransactionSuccessful();
-            clearData();
+            clearData(newData);
             insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
         }
         catch (Exception e) {
@@ -84,14 +85,23 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
         }
     }
 
+    private List<TimestampedDouble> getData() {
+        return data;
+    }
+
     @Override
     public void accumulateData(TimestampedDouble d){
         data.add(d);
     }
 
     @Override
-    public void clearData(){
+    public void clearAllData(){
         data.clear();
+    }
+
+    @Override
+    public void clearData(List<TimestampedDouble> oldData){
+        data.removeAll(oldData);
     }
 
     @Override
