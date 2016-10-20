@@ -107,7 +107,7 @@ public final class DatabaseContract {
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
-                SPEED + INTEGER_TYPE + " )";
+                SPEED + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
