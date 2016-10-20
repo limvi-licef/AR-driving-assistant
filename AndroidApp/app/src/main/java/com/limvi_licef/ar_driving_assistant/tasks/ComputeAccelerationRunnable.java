@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Structs;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.*;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
@@ -41,34 +42,11 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
             List<TimestampedDouble> newData = getData();
             SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
             List<Integer> significantExtrema = returnData.significantExtremaIndex;
-
+            List<TimestampedDouble> processedData = returnData.monotoneValues;
             ExtremaStats extremaStats = Statistics.computeExtremaStats(newData, significantExtrema);
 
-            List<TimestampedDouble> processedData = returnData.monotoneValues;
-            long firstTimestamp = processedData.get(0).timestamp;
-            long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
-
-            String userId = User.getCurrentUserId(context);
-
             db.beginTransaction();
-            for(TimestampedDouble td : processedData) {
-                ContentValues values = new ContentValues();
-                values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
-                values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
-                values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.value);
-                db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values);
-            }
-
-            ContentValues stats = new ContentValues();
-            stats.put(DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID, userId);
-            stats.put(DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP, firstTimestamp);
-            stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
-            stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
-            stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_STD_DEVIATION, extremaStats.positiveStandardDeviation);
-            stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_AVERAGE, extremaStats.negativeAverage);
-            stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_STD_DEVIATION, extremaStats.negativeStandardDeviation);
-            db.insert(DatabaseContract.LinearAccelerometerStats.TABLE_NAME, null, stats);
-
+            saveData(processedData, extremaStats);
             db.setTransactionSuccessful();
             clearData(newData);
             insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
@@ -83,6 +61,30 @@ public class ComputeAccelerationRunnable implements ComputeAlgorithmRunnable {
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             handler.postDelayed(this, DELAY);
         }
+    }
+
+    private void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats) {
+        String userId = User.getCurrentUserId(context);
+        long firstTimestamp = processedData.get(0).timestamp;
+        long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
+
+        for(TimestampedDouble td : processedData) {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
+            values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
+            values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.value);
+            db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values);
+        }
+
+        ContentValues stats = new ContentValues();
+        stats.put(DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID, userId);
+        stats.put(DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP, firstTimestamp);
+        stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
+        stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
+        stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+        stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_AVERAGE, extremaStats.negativeAverage);
+        stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_STD_DEVIATION, extremaStats.negativeStandardDeviation);
+        db.insert(DatabaseContract.LinearAccelerometerStats.TABLE_NAME, null, stats);
     }
 
     private List<TimestampedDouble> getData() {

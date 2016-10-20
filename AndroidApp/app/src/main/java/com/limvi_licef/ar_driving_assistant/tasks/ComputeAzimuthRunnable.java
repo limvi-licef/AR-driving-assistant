@@ -38,16 +38,9 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
         try{
             List<TimestampedDouble> newData = getData();
             List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE).monotoneValues;
-            String userId = User.getCurrentUserId(context);
 
             db.beginTransaction();
-            for(TimestampedDouble td : processedData) {
-                ContentValues values = new ContentValues();
-                values.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
-                values.put(DatabaseContract.RotationData.TIMESTAMP, td.timestamp);
-                values.put(DatabaseContract.RotationData.AZIMUTH, td.value);
-                db.insert(DatabaseContract.RotationData.TABLE_NAME, null, values);
-            }
+            saveData(processedData);
             db.setTransactionSuccessful();
             clearData(newData);
             insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
@@ -61,6 +54,17 @@ public class ComputeAzimuthRunnable implements ComputeAlgorithmRunnable {
 
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             handler.postDelayed(this, DELAY);
+        }
+    }
+
+    private void saveData(List<TimestampedDouble> processedData) {
+        String userId = User.getCurrentUserId(context);
+        for(TimestampedDouble td : processedData) {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
+            values.put(DatabaseContract.RotationData.TIMESTAMP, td.timestamp);
+            values.put(DatabaseContract.RotationData.AZIMUTH, td.value);
+            db.insert(DatabaseContract.RotationData.TABLE_NAME, null, values);
         }
     }
 
