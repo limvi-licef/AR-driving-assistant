@@ -55,17 +55,18 @@ public class ComputeSpeedRunnable implements ComputeAlgorithmRunnable {
                 values.put(DatabaseContract.SpeedData.TIMESTAMP, td.timestamp);
                 values.put(DatabaseContract.SpeedData.SPEED, td.value);
                 db.insert(DatabaseContract.SpeedData.TABLE_NAME, null, values);
-
-                ContentValues stats = new ContentValues();
-                stats.put(DatabaseContract.SpeedStats.CURRENT_USER_ID, userId);
-                stats.put(DatabaseContract.SpeedStats.START_TIMESTAMP, firstTimestamp);
-                stats.put(DatabaseContract.SpeedStats.END_TIMESTAMP, lastTimestamp);
-                stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_AVERAGE, extremaStats.positiveAverage);
-                stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_STD_DEVIATION, extremaStats.positiveStandardDeviation);
-                stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_AVERAGE, extremaStats.negativeAverage);
-                stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_STD_DEVIATION, extremaStats.negativeStandardDeviation);
-                db.insert(DatabaseContract.SpeedStats.TABLE_NAME, null, stats);
             }
+
+            ContentValues stats = new ContentValues();
+            stats.put(DatabaseContract.SpeedStats.CURRENT_USER_ID, userId);
+            stats.put(DatabaseContract.SpeedStats.START_TIMESTAMP, firstTimestamp);
+            stats.put(DatabaseContract.SpeedStats.END_TIMESTAMP, lastTimestamp);
+            stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_AVERAGE, extremaStats.positiveAverage);
+            stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+            stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_AVERAGE, extremaStats.negativeAverage);
+            stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_STD_DEVIATION, extremaStats.negativeStandardDeviation);
+            db.insert(DatabaseContract.SpeedStats.TABLE_NAME, null, stats);
+
             db.setTransactionSuccessful();
             clearData();
             insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
