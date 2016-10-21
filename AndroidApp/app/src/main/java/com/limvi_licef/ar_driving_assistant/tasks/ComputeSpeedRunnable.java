@@ -41,7 +41,7 @@ public class ComputeSpeedRunnable implements Runnable {
         List<TimestampedDouble> newData = getData();
         SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
         List<TimestampedDouble> processedData = returnData.monotoneValues;
-        ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, returnData.significantExtremaIndex);
+        ExtremaStats extremaStats = Statistics.computeExtremaStats(newData, returnData.significantExtremaIndex);
 
         try{
             db.beginTransaction();
