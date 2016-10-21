@@ -37,19 +37,21 @@ public class ComputeAzimuthRunnable implements Runnable {
 
     @Override
     public void run() {
-        try{
-            List<TimestampedDouble> newData = getData();
-            List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE).monotoneValues;
+        List<TimestampedDouble> newData = getData();
+        List<TimestampedDouble> processedData =  MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE).monotoneValues;
 
+        try{
             db.beginTransaction();
             saveData(processedData);
             db.setTransactionSuccessful();
             clearData(newData);
             insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
         }
+        catch (IndexOutOfBoundsException e) {
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_empty_data);
+        }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_failure);
-            Log.d("Runnable Exception", "" + e);
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_failure) + " " + e;
         }
         finally{
             db.endTransaction();

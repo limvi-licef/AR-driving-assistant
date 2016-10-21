@@ -38,22 +38,24 @@ public class ComputeSpeedRunnable implements Runnable {
 
     @Override
     public void run() {
-        try{
-            List<TimestampedDouble> newData = getData();
-            SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
-            List<Integer> significantExtrema = returnData.significantExtremaIndex;
-            List<TimestampedDouble> processedData = returnData.monotoneValues;
-            ExtremaStats extremaStats = Statistics.computeExtremaStats(newData, significantExtrema);
+        List<TimestampedDouble> newData = getData();
+        SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
+        List<Integer> significantExtrema = returnData.significantExtremaIndex;
+        List<TimestampedDouble> processedData = returnData.monotoneValues;
+        ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, significantExtrema);
 
+        try{
             db.beginTransaction();
             saveData(processedData, extremaStats);
             db.setTransactionSuccessful();
             clearData(newData);
             insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_success);
         }
+        catch (IndexOutOfBoundsException e) {
+            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_empty_data);
+        }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_failure);
-            Log.d("Runnable Exception", "" + e);
+            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_insert_failure) + " " + e;
         }
         finally{
             db.endTransaction();

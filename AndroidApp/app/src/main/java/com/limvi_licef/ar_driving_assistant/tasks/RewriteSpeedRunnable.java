@@ -40,26 +40,28 @@ public class RewriteSpeedRunnable implements Runnable {
 
     @Override
     public void run() {
+        String userId = User.getCurrentUserId(context);
+        long now = System.currentTimeMillis();
+        long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
+
+        List<Structs.TimestampedDouble> rewriteData = getData(nowMinusMinutes, now, userId);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(rewriteData, TOLERANCE);
+        List<Integer> significantExtrema = returnData.significantExtremaIndex;
+        List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
+        Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, significantExtrema);
+
         try{
-            String userId = User.getCurrentUserId(context);
-            long now = System.currentTimeMillis();
-            long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
-
-            List<Structs.TimestampedDouble> rewriteData = getData(nowMinusMinutes, now, userId);
-            Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(rewriteData, TOLERANCE);
-            List<Integer> significantExtrema = returnData.significantExtremaIndex;
-            List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
-            Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(rewriteData, significantExtrema);
-
             db.beginTransaction();
             deleteData(nowMinusMinutes, now, userId);
             saveData(processedData, extremaStats, userId);
             db.setTransactionSuccessful();
             insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_success);
         }
+        catch (IndexOutOfBoundsException e) {
+            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_empty_data);
+        }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure);
-            Log.d("Runnable Exception", "" + e);
+            insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure) + " " + e;
         }
         finally{
             db.endTransaction();

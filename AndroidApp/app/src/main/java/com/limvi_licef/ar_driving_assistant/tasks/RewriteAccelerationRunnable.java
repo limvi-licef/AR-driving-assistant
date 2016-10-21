@@ -40,26 +40,28 @@ public class RewriteAccelerationRunnable implements Runnable {
 
     @Override
     public void run() {
+        String userId = User.getCurrentUserId(context);
+        long now = System.currentTimeMillis();
+        long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
+
+        List<Structs.TimestampedDouble> rewriteData = getData(nowMinusMinutes, now, userId);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(rewriteData, TOLERANCE);
+        List<Integer> significantExtrema = returnData.significantExtremaIndex;
+        List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
+        Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, significantExtrema);
+
         try{
-            String userId = User.getCurrentUserId(context);
-            long now = System.currentTimeMillis();
-            long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
-
-            List<Structs.TimestampedDouble> rewriteData = getData(nowMinusMinutes, now, userId);
-            Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(rewriteData, TOLERANCE);
-            List<Integer> significantExtrema = returnData.significantExtremaIndex;
-            List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
-            Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(rewriteData, significantExtrema);
-
             db.beginTransaction();
             deleteData(nowMinusMinutes, now, userId);
             saveData(processedData, extremaStats, userId);
             db.setTransactionSuccessful();
             insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_success);
         }
+        catch (IndexOutOfBoundsException e) {
+            insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_empty_data);
+        }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure);
-            Log.d("Runnable Exception", "" + e);
+            insertionStatus = DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure) + " " + e;
         }
         finally{
             db.endTransaction();
@@ -113,5 +115,4 @@ public class RewriteAccelerationRunnable implements Runnable {
                 DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID + " = ? AND " + DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP + " >= ? AND " + DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP + " <= ?",
                 new String[]{userId, String.valueOf(fromTimestamp), String.valueOf(toTimestamp)});
     }
-
 }

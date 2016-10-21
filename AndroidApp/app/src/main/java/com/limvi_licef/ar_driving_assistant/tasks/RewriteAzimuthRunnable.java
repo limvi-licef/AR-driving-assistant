@@ -39,22 +39,23 @@ public class RewriteAzimuthRunnable implements Runnable {
 
     @Override
     public void run() {
+        String userId = User.getCurrentUserId(context);
+        long now = System.currentTimeMillis();
+        long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
+        List<Structs.TimestampedDouble> processedData = MonotoneSegmentationAlgorithm.computeData(getData(nowMinusMinutes, now, userId), TOLERANCE).monotoneValues;
+
         try{
-            String userId = User.getCurrentUserId(context);
-            long now = System.currentTimeMillis();
-            long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
-
-            List<Structs.TimestampedDouble> processedData = MonotoneSegmentationAlgorithm.computeData(getData(nowMinusMinutes, now, userId), TOLERANCE).monotoneValues;
-
             db.beginTransaction();
             deleteData(nowMinusMinutes, now, userId);
             saveData(processedData, userId);
             db.setTransactionSuccessful();
             insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_success);
         }
+        catch (IndexOutOfBoundsException e) {
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_empty_data);
+        }
         catch (Exception e) {
-            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure);
-            Log.d("Runnable Exception", "" + e);
+            insertionStatus = DatabaseContract.RotationData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_failure ) + " " + e;
         }
         finally{
             db.endTransaction();

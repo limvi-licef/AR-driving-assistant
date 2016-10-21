@@ -15,6 +15,8 @@
 
     <string name="database_insert_success"> Insert Success</string>
     <string name="database_insert_failure"> Insert Failure</string>
+    <string name="database_insert_empty_data"> No data to insert</string>
     <string name="database_rewrite_success"> Rewrite Success</string>
     <string name="database_rewrite_failure"> Rewrite Failure</string>
+    <string name="database_rewrite_empty_data"> No data to rewrite</string>
 </resources>
