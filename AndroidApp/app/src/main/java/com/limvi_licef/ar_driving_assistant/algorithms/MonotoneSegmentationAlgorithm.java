@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /*
  * Adapted from https://github.com/lemire/MonotoneSegment
@@ -102,7 +103,7 @@ public class MonotoneSegmentationAlgorithm {
     }
 
     private static List<TimestampedDouble> piecewiseMonotone(List<TimestampedDouble> values, List<Integer> indexes){
-        Map<Integer,TimestampedDouble> monotoneValues = new LinkedHashMap<>();
+        Map<Integer,TimestampedDouble> monotoneValues = new TreeMap<>();
         for(int i = 0; i < indexes.size() - 1; ++ i) {
             Double a = values.get(indexes.get(i)).value;
             Double b = values.get(indexes.get(i+1)).value;
@@ -150,12 +151,7 @@ public class MonotoneSegmentationAlgorithm {
             }
         }
 
-        //reorder values
-        List<TimestampedDouble> returnArray = new ArrayList<>();
-        for(int i = 0; i < monotoneValues.size(); i++){
-            returnArray.add(monotoneValues.get(i));
-        }
-        return returnArray;
+        return new ArrayList<>(monotoneValues.values());
     }
 
 }
