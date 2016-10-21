@@ -44,11 +44,9 @@ public class RewriteAccelerationRunnable implements Runnable {
         long now = System.currentTimeMillis();
         long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
 
-        List<Structs.TimestampedDouble> rewriteData = getData(nowMinusMinutes, now, userId);
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(rewriteData, TOLERANCE);
-        List<Integer> significantExtrema = returnData.significantExtremaIndex;
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(getData(nowMinusMinutes, now, userId), TOLERANCE);
         List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
-        Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, significantExtrema);
+        Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(processedData, returnData.significantExtremaIndex);
 
         try{
             db.beginTransaction();
