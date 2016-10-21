@@ -21,7 +21,7 @@ import java.util.List;
 public class ComputeSpeedRunnable implements Runnable {
 
     public final int DELAY = 1000 * 60;
-    private static final int TOLERANCE = 0;
+    private static final int TOLERANCE = 1;
 
     private String insertionStatus;
     private List<TimestampedDouble> data;
