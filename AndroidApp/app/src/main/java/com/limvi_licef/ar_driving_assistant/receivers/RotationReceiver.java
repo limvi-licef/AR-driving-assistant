@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.RewriteAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAzimuthRunnable;
@@ -20,7 +21,7 @@ public class RotationReceiver implements SensorEventListener {
 
     public boolean isRegistered;
 
-    private ComputeAzimuthRunnable runnable;
+    private ComputeAlgorithmRunnable runnable;
     private RewriteAzimuthRunnable rewriteRunnable;
 
     private int axisX, axisY;
