@@ -10,11 +10,11 @@ import android.util.Log;
 
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
-import com.limvi_licef.ar_driving_assistant.tasks.RewriteAccelerationRunnable;
-import com.limvi_licef.ar_driving_assistant.tasks.RewriteAlgorithmRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAccelerationRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.ComputeAccelerationRunnable;
 
 public class LinearAccelerometerReceiver extends BroadcastReceiver {
 

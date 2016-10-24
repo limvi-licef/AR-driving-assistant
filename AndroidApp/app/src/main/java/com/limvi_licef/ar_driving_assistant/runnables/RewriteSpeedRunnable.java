@@ -1,24 +1,15 @@
-package com.limvi_licef.ar_driving_assistant.tasks;
+package com.limvi_licef.ar_driving_assistant.runnables;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.util.Log;
 
-import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
-import com.limvi_licef.ar_driving_assistant.utils.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
 

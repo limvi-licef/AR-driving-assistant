@@ -10,11 +10,11 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
-import com.limvi_licef.ar_driving_assistant.tasks.RewriteAlgorithmRunnable;
-import com.limvi_licef.ar_driving_assistant.tasks.RewriteAzimuthRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.RewriteAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.tasks.ComputeAzimuthRunnable;
+import com.limvi_licef.ar_driving_assistant.runnables.ComputeAzimuthRunnable;
 
 import static android.content.Context.SENSOR_SERVICE;
 
