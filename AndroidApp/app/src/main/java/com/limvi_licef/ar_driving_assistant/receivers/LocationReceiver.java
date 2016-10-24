@@ -45,6 +45,7 @@ public class LocationReceiver extends BroadcastReceiver {
 
     public boolean unregister(Context context) {
         if (isRegistered) {
+            runnable.run();
             context.unregisterReceiver(this);
             isRegistered = false;
             return true;

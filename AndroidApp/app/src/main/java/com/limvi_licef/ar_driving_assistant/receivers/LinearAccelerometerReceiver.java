@@ -38,6 +38,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
 
     public boolean unregister(Context context) {
         if (isRegistered) {
+            runnable.run();
             context.unregisterReceiver(this);
             isRegistered = false;
             offsetDefined = false;
