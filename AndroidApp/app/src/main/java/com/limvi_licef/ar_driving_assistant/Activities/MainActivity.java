@@ -42,8 +42,6 @@ public class MainActivity extends Activity {
     private Intent aware;
     private HandlerThread sensorThread;
     private Handler sensorHandler;
-    private HandlerThread rotationThread;
-    private Handler rotationHandler;
     private TemperatureReceiver temperatureReceiver;
     private LocationReceiver locationReceiver;
     private LinearAccelerometerReceiver linearAccelerometerReceiver;
@@ -157,29 +155,18 @@ public class MainActivity extends Activity {
     }
 
     private void setupListeners() {
-        rotationThread = new HandlerThread("RotationHandlerThread");
-        rotationThread.start();
-        Looper rotationLooper = rotationThread.getLooper();
-        rotationHandler = new Handler(rotationLooper);
-
-        rotationReceiver = new RotationReceiver();
-
         sensorThread = new HandlerThread("SensorDataHandlerThread");
         sensorThread.start();
         Looper looper = sensorThread.getLooper();
         sensorHandler = new Handler(looper);
 
+        rotationReceiver = new RotationReceiver();
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
         locationReceiver = new LocationReceiver();
         temperatureReceiver = new TemperatureReceiver();
     }
 
     private void stopListenerThreads() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            rotationThread.quitSafely();
-        } else {
-            rotationThread.quit();
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             sensorThread.quitSafely();
         } else {
@@ -188,7 +175,7 @@ public class MainActivity extends Activity {
     }
 
     private void registerListeners(){
-        rotationReceiver.register(this, rotationHandler);
+        rotationReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver.register(this, sensorHandler);
         locationReceiver.register(this, sensorHandler);
         temperatureReceiver.register(this, sensorHandler);
@@ -199,8 +186,6 @@ public class MainActivity extends Activity {
         linearAccelerometerReceiver.unregister(this);
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
-
-        rotationHandler.removeCallbacksAndMessages(null);
         sensorHandler.removeCallbacksAndMessages(null);
     }
 
