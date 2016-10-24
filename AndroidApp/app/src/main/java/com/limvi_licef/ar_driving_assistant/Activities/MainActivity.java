@@ -20,10 +20,8 @@ import android.widget.ToggleButton;
 
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
-
-import com.limvi_licef.ar_driving_assistant.database.*;
 import com.limvi_licef.ar_driving_assistant.R;
-
+import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.fragments.UserDialogFragment;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;

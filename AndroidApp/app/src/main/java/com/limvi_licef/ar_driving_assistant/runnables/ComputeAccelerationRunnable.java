@@ -4,8 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.Handler;
 
-import com.limvi_licef.ar_driving_assistant.utils.Structs.*;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.ExtremaStats;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.User;
 
 import java.util.List;

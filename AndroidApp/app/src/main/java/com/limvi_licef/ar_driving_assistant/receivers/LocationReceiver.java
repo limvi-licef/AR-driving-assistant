@@ -20,8 +20,8 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.User;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.utils.User;
 
 public class LocationReceiver extends BroadcastReceiver {
 

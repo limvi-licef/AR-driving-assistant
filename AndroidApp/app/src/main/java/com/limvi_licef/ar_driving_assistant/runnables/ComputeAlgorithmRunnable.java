@@ -6,10 +6,8 @@ import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;

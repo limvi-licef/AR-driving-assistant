@@ -1,8 +1,8 @@
 package com.limvi_licef.ar_driving_assistant.algorithms;
 
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
-import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.SegmentationAlgorithmReturnData;
+import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 import java.util.ArrayList;
 import java.util.Collection;
