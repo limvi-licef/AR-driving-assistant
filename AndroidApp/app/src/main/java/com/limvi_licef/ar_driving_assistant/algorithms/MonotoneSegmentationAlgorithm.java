@@ -1,5 +1,6 @@
 package com.limvi_licef.ar_driving_assistant.algorithms;
 
+import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.SegmentationAlgorithmReturnData;
 
@@ -21,8 +22,7 @@ public class MonotoneSegmentationAlgorithm {
 
     public static SegmentationAlgorithmReturnData computeData(List<TimestampedDouble> values, int tolerance) {
         List<Integer> significantExtrema = selectSignificantExtrema(values, tolerance);
-        List<TimestampedDouble> monotoneValues = piecewiseMonotone(values, significantExtrema);
-        return new SegmentationAlgorithmReturnData(significantExtrema, monotoneValues);
+        return new SegmentationAlgorithmReturnData(Statistics.computeExtremaStats(values, significantExtrema), piecewiseMonotone(values, significantExtrema));
     }
 
     private static Map<Integer,Double> computeScaleLabels(List<TimestampedDouble> values) {

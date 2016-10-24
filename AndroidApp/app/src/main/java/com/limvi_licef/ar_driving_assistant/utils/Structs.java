@@ -22,11 +22,11 @@ public abstract class Structs {
      * Struct to return both the significant extrema and the processed data from the segmentation algorithm
      */
     public static class SegmentationAlgorithmReturnData {
-        public List<Integer> significantExtremaIndex;
+        public ExtremaStats extremaStats;
         public List<TimestampedDouble> monotoneValues;
 
-        public SegmentationAlgorithmReturnData(List<Integer> significantExtremaIndex, List<TimestampedDouble> monotoneValues) {
-            this.significantExtremaIndex = significantExtremaIndex;
+        public SegmentationAlgorithmReturnData(ExtremaStats extremaStats, List<TimestampedDouble> monotoneValues) {
+            this.extremaStats = extremaStats;
             this.monotoneValues = monotoneValues;
         }
     }

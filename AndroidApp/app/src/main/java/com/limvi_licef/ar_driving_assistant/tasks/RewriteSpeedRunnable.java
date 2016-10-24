@@ -46,13 +46,11 @@ public class RewriteSpeedRunnable implements Runnable {
 
         List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now, userId);
         Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
-        List<Structs.TimestampedDouble> processedData = returnData.monotoneValues;
-        Structs.ExtremaStats extremaStats = Statistics.computeExtremaStats(newData, returnData.significantExtremaIndex);
 
         try{
             db.beginTransaction();
             deleteData(nowMinusMinutes, now, userId);
-            saveData(processedData, extremaStats, userId);
+            saveData(returnData.monotoneValues, returnData.extremaStats, userId);
             db.setTransactionSuccessful();
             insertionStatus = DatabaseContract.SpeedData.TABLE_NAME + " " + context.getResources().getString(R.string.database_rewrite_success);
         }
