@@ -17,6 +17,7 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeSpeedRunnable;
+import com.limvi_licef.ar_driving_assistant.tasks.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.User;
@@ -27,7 +28,7 @@ public class LocationReceiver extends BroadcastReceiver {
     public boolean isRegistered;
 
     private ComputeAlgorithmRunnable runnable;
-    private RewriteSpeedRunnable rewriteRunnable;
+    private RewriteAlgorithmRunnable rewriteRunnable;
 
     private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
     private static final String extraData = "data";

@@ -12,6 +12,7 @@ import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.RewriteAccelerationRunnable;
+import com.limvi_licef.ar_driving_assistant.tasks.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.tasks.ComputeAccelerationRunnable;
 
@@ -23,7 +24,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
     private double offsetY;
     private double offsetZ;
     private ComputeAlgorithmRunnable runnable;
-    private RewriteAccelerationRunnable rewriteRunnable;
+    private RewriteAlgorithmRunnable rewriteRunnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
 
     public Intent register(Context context, Handler handler) {
