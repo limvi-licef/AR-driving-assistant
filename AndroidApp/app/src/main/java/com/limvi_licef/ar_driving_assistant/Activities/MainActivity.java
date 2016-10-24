@@ -26,6 +26,7 @@ import com.limvi_licef.ar_driving_assistant.fragments.UserDialogFragment;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
+import com.limvi_licef.ar_driving_assistant.receivers.SensorReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
@@ -40,10 +41,10 @@ public class MainActivity extends Activity {
     private Intent aware;
     private HandlerThread sensorThread;
     private Handler sensorHandler;
-    private TemperatureReceiver temperatureReceiver;
-    private LocationReceiver locationReceiver;
-    private LinearAccelerometerReceiver linearAccelerometerReceiver;
-    private RotationReceiver rotationReceiver;
+    private SensorReceiver temperatureReceiver;
+    private SensorReceiver locationReceiver;
+    private SensorReceiver linearAccelerometerReceiver;
+    private SensorReceiver rotationReceiver;
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;

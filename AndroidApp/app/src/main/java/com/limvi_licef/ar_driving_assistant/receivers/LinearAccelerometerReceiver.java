@@ -16,7 +16,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnabl
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
-public class LinearAccelerometerReceiver extends BroadcastReceiver {
+public class LinearAccelerometerReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
     private boolean offsetDefined = false;
@@ -27,13 +27,13 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver {
     private RewriteAlgorithmRunnable rewriteRunnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
 
-    public Intent register(Context context, Handler handler) {
+    public void register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeAccelerationRunnable(handler, context);
         handler.postDelayed(runnable, runnable.DELAY);
         rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
         handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
-        return context.registerReceiver(this, broadcastFilter, null, handler);
+        context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

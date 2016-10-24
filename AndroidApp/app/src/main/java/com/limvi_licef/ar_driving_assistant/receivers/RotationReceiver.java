@@ -18,7 +18,7 @@ import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-public class RotationReceiver implements SensorEventListener {
+public class RotationReceiver implements SensorReceiver, SensorEventListener {
 
     public boolean isRegistered;
 

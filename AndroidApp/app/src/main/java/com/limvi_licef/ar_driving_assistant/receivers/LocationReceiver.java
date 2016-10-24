@@ -23,7 +23,7 @@ import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.User;
 
-public class LocationReceiver extends BroadcastReceiver {
+public class LocationReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
 
@@ -34,13 +34,13 @@ public class LocationReceiver extends BroadcastReceiver {
     private static final String extraData = "data";
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
 
-    public Intent register(Context context, Handler handler) {
+    public void register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeSpeedRunnable(handler, context);
         handler.postDelayed(runnable, runnable.DELAY);
         rewriteRunnable = new RewriteSpeedRunnable(handler, context);
         handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
-        return context.registerReceiver(this, broadcastFilter, null, handler);
+        context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {

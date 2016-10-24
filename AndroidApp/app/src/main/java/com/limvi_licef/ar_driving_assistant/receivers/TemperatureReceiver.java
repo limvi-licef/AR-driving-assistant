@@ -15,16 +15,16 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.User;
 
-public class TemperatureReceiver extends BroadcastReceiver {
+public class TemperatureReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
     private static final String broadcastAction = "ACTION_AWARE_PLUGIN_OPENWEATHER";
     private static final String extraData = "openweather";
     private IntentFilter broadcastFilter = new IntentFilter(broadcastAction);
 
-    public Intent register(Context context, Handler handler) {
+    public void register(Context context, Handler handler) {
         isRegistered = true;
-        return context.registerReceiver(this, broadcastFilter, null, handler);
+        context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {
