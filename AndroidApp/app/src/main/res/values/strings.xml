@@ -19,4 +19,9 @@
     <string name="database_rewrite_success"> Rewrite Success</string>
     <string name="database_rewrite_failure"> Rewrite Failure</string>
     <string name="database_rewrite_empty_data"> No data to rewrite</string>
+
+    <string name="export_task_message">Exporting&#8230;</string>
+    <string name="export_task_success">Database Export Successful</string>
+    <string name="export_task_failure">Database Export Failure</string>
+    <string name="export_task_close">Close</string>
 </resources>

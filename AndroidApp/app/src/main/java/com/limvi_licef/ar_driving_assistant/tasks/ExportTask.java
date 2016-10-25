@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
 
@@ -34,13 +35,15 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        this.dialog.setMessage("Exporting...");
+        this.dialog.setMessage(context.getResources().getString(R.string.export_task_message));
         this.dialog.show();
     }
 
     @Override
     protected String doInBackground(Void... params) {
-        return exportDatabaseAsJSON(db) ? "Database Export Successful" : "Database Export Failure";
+        return exportDatabaseAsJSON(db) ?
+                context.getResources().getString(R.string.export_task_success) :
+                context.getResources().getString(R.string.export_task_failure);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
         if (dialog.isShowing()) { dialog.dismiss(); }
         new AlertDialog.Builder(context)
                 .setMessage(result)
-                .setNegativeButton("Close", null)
+                .setNegativeButton(context.getResources().getString(R.string.export_task_close), null)
                 .show();
     }
 
