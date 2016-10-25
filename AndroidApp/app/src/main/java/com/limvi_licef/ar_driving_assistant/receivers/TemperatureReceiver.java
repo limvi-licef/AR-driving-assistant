@@ -13,7 +13,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.User;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class TemperatureReceiver extends BroadcastReceiver implements SensorReceiver {
 
@@ -43,7 +43,7 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
         ContentValues values = (ContentValues) intent.getExtras().get(extraData);
         if(values == null || values.size() == 0) return;
 
-        String userId = User.getCurrentUserId(context);
+        String userId = Preferences.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.TemperatureData.CURRENT_USER_ID, userId);

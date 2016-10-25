@@ -9,7 +9,7 @@ import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgor
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
-import com.limvi_licef.ar_driving_assistant.utils.User;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +31,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
 
     @Override
     public void run() {
-        String userId = User.getCurrentUserId(context);
+        String userId = Preferences.getCurrentUserId(context);
         long now = System.currentTimeMillis();
         long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
 

@@ -20,8 +20,8 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.utils.User;
 
 public class LocationReceiver extends BroadcastReceiver implements SensorReceiver {
 
@@ -64,7 +64,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         runnable.accumulateData(new TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)),
                 location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED))));
 
-        String userId = User.getCurrentUserId(context);
+        String userId = Preferences.getCurrentUserId(context);
 
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);

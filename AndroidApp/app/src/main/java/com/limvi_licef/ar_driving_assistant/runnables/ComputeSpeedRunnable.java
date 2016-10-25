@@ -5,9 +5,9 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.ExtremaStats;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.utils.User;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class ComputeSpeedRunnable extends ComputeAlgorithmRunnable {
 
     @Override
     protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats) {
-        String userId = User.getCurrentUserId(context);
+        String userId = Preferences.getCurrentUserId(context);
         long firstTimestamp = processedData.get(0).timestamp;
         long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
