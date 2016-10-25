@@ -29,7 +29,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
         db =  DatabaseHelper.getHelper(context).getWritableDatabase();
         dialog = new ProgressDialog(context);
         this.context = context;
-        Log.d("Insert Service", "Created Insert Task");
+        Log.d("AsyncTask", "Created Insert Task");
     }
 
     @Override
