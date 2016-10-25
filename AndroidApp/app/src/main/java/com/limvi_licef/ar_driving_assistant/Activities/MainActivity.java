@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
     private final int MONITORING_RESULTS_MAX = 10;
 
     private DatabaseHelper dbHelper;
-    private Intent aware;
     private HandlerThread sensorThread;
     private Handler sensorHandler;
     private SensorReceiver temperatureReceiver;
@@ -66,7 +65,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         setupUIElements();
         dbHelper = DatabaseHelper.getHelper(this);
-        aware = new Intent(this, Aware.class);
         setupSensors();
         setupListeners();
     }
@@ -135,8 +133,6 @@ public class MainActivity extends Activity {
     }
 
     private void setupSensors(){
-        startService(aware);
-
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
 
@@ -197,6 +193,8 @@ public class MainActivity extends Activity {
     }
 
     private void startMonitoring() {
+        this.startService(new Intent(this, Aware.class));
+
         registerListeners();
 
         Aware.startLocations(this);
@@ -210,6 +208,9 @@ public class MainActivity extends Activity {
         Aware.stopLinearAccelerometer(this);
 
         unregisterListeners();
+
+//        TODO update aware once dev branch is done
+//        this.stopService(new Intent(this, Aware.class));
 
         //TODO ??
 //        Aware.stopPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
