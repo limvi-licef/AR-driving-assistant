@@ -41,7 +41,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
             db.beginTransaction();
             saveData(returnData.monotoneValues,  returnData.extremaStats);
             db.setTransactionSuccessful();
-            clearData(newData);
+            resetData();
             insertionStatus = getTableName() + " " + context.getResources().getString(R.string.database_insert_success);
         }
         catch (IndexOutOfBoundsException e) {
@@ -59,16 +59,16 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         }
     }
 
-    public void clearData(List<Structs.TimestampedDouble> oldData){
-        data.removeAll(oldData);
-    }
-
     public void accumulateData(Structs.TimestampedDouble d){
         data.add(d);
     }
 
     public boolean isRunning(){
         return isRunning;
+    }
+
+    private void resetData(){
+        data = new ArrayList<>();
     }
 
     private List<Structs.TimestampedDouble> getData() {
