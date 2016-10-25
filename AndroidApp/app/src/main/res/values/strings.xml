@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">AR-driving-assistant</string>
     <string name="app_title">Welcome to the AR-driving-assistant helper tool!</string>
+
     <string name="monitoring_start">Start Monitoring</string>
     <string name="monitoring_stop">Stop Monitoring</string>
     <string name="monitoring_empty">No results yet</string>
+
     <string name="setup_user">Setup User</string>
     <string name="export_db">Export Database</string>
+    <string name="calibrate_button">Calibrate Sensors</string>
+    <string name="calibrate_acceleration_error">The accelerometer sensor is not calibrated\nAccelerometer monitoring has been disabled</string>
 
     <string name="user_dialog_id_placeholder">ID</string>
     <string name="user_dialog_dismiss">Close</string>
@@ -24,4 +28,10 @@
     <string name="export_task_success">Database Export Successful</string>
     <string name="export_task_failure">Database Export Failure</string>
     <string name="export_task_close">Close</string>
+
+    <string name="calibrate_task_message">Please set the device on a flat surface</string>
+    <string name="calibrate_task_title">Calibrating&#8230;</string>
+    <string name="calibrate_task_success">Calibration Successful</string>
+    <string name="calibrate_task_failure">Error during calibration. Please try again</string>
+    <string name="calibrate_task_close">Close</string>
 </resources>

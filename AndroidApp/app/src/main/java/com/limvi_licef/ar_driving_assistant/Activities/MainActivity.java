@@ -28,6 +28,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.SensorReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
+import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
 
@@ -116,6 +117,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 new ExportTask(MainActivity.this).execute();
+            }
+        });
+        Button calibrateSensor = (Button) findViewById(R.id.calibrate_sensor_button);
+        calibrateSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CalibrateTask(MainActivity.this).execute();
             }
         });
 

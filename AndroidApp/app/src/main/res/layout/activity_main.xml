@@ -18,27 +18,34 @@
         android:text="@string/app_title" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ToggleButton
             android:id="@+id/monitoring_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textOff="@string/monitoring_start"
             android:textOn="@string/monitoring_stop" />
 
         <Button
             android:id="@+id/setup_user_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/setup_user" />
 
         <Button
             android:id="@+id/check_database_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/export_db" />
+
+        <Button
+            android:id="@+id/calibrate_sensor_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/calibrate_button" />
 
     </LinearLayout>
 

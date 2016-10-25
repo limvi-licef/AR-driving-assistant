@@ -4,6 +4,11 @@ public abstract class Constants {
 
     public static final String USER_SHARED_PREFERENCES = "user_shared";
 
+    //linear acceleration offset prefs
+    public static final String OFFSET_X_PREF = "offset_x";
+    public static final String OFFSET_Y_PREF = "offset_y";
+    public static final String OFFSET_Z_PREF = "offset_z";
+
     //google fused location
     public static final String FUSED_LOCATION_PACKAGE = "com.aware.plugin.google.fused_location";
     public static final String STATUS_FUSED_LOCATION = "status_google_fused_location";
