@@ -45,7 +45,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            runnable.run();
+            if(!runnable.isRunning()) runnable.run();
             context.unregisterReceiver(this);
             isRegistered = false;
             return true;

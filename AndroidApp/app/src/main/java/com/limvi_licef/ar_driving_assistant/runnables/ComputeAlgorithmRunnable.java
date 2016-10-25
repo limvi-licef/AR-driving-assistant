@@ -22,6 +22,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     protected SQLiteDatabase db;
     protected Context context;
     private String insertionStatus;
+    private boolean isRunning = false;
 
     ComputeAlgorithmRunnable(Handler handler, Context context) {
         this.data = new ArrayList<>();
@@ -32,6 +33,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
     @Override
     public void run() {
+        isRunning = true;
         List<Structs.TimestampedDouble> newData = getData();
         Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
 
@@ -52,6 +54,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
             db.endTransaction();
 
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
+            isRunning = false;
             handler.postDelayed(this, DELAY);
         }
     }
@@ -62,6 +65,10 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
     public void accumulateData(Structs.TimestampedDouble d){
         data.add(d);
+    }
+
+    public boolean isRunning(){
+        return isRunning;
     }
 
     private List<Structs.TimestampedDouble> getData() {

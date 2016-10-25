@@ -47,7 +47,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            runnable.run();
+            if(!runnable.isRunning()) runnable.run();
             sensorManager.unregisterListener(this, rotationSensor);
             isRegistered = false;
             return true;

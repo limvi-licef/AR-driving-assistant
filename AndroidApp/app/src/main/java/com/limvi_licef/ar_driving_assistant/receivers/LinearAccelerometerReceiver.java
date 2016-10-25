@@ -45,7 +45,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            runnable.run();
+            if(!runnable.isRunning()) runnable.run();
             context.unregisterReceiver(this);
             isRegistered = false;
             return true;
