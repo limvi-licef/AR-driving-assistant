@@ -68,7 +68,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     }
 
     private void resetData(){
-        data = new ArrayList<>();
+        data.clear();
     }
 
     private List<Structs.TimestampedDouble> getData() {
