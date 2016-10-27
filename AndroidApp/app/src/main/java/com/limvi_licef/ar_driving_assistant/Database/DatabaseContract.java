@@ -59,6 +59,8 @@ public final class DatabaseContract {
         public static final String ACCEL_STD_DEVIATION = "AccelerationStandardDeviation";
         public static final String DECEL_AVERAGE = "DecelerationAverage";
         public static final String DECEL_STD_DEVIATION = "DecelerationStandardDeviation";
+        public static final String ACCEL_COUNT = "AccelerationCount";
+        public static final String DECEL_COUNT = "DecelerationCount";
 
         public static final String CREATE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -68,6 +70,8 @@ public final class DatabaseContract {
                 END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 ACCEL_AVERAGE + REAL_TYPE + COMMA_SEP +
                 ACCEL_STD_DEVIATION + REAL_TYPE + COMMA_SEP +
+                ACCEL_COUNT + INTEGER_TYPE + COMMA_SEP +
+                DECEL_COUNT + INTEGER_TYPE + COMMA_SEP +
                 DECEL_AVERAGE + REAL_TYPE + COMMA_SEP +
                 DECEL_STD_DEVIATION + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -120,6 +124,8 @@ public final class DatabaseContract {
         public static final String INCREASING_SPEED_STD_DEVIATION = "IncreasingSpeedStandardDeviation";
         public static final String DECREASING_SPEED_AVERAGE = "DecreasingSpeedAverage";
         public static final String DECREASING_SPEED_STD_DEVIATION = "DecreasingSpeedStandardDeviation";
+        public static final String INCREASING_SPEED_COUNT = "IncreasingSpeedCount";
+        public static final String DECREASING_SPEED_COUNT = "DecreasingSpeedCount";
 
         public static final String CREATE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -129,6 +135,8 @@ public final class DatabaseContract {
                 END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 INCREASING_SPEED_AVERAGE + REAL_TYPE + COMMA_SEP +
                 INCREASING_SPEED_STD_DEVIATION + REAL_TYPE + COMMA_SEP +
+                INCREASING_SPEED_COUNT + INTEGER_TYPE + COMMA_SEP +
+                DECREASING_SPEED_COUNT + INTEGER_TYPE + COMMA_SEP +
                 DECREASING_SPEED_AVERAGE + REAL_TYPE + COMMA_SEP +
                 DECREASING_SPEED_STD_DEVIATION + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;

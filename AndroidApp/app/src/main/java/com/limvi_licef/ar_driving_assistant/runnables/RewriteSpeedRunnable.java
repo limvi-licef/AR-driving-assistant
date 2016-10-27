@@ -38,6 +38,8 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
         stats.put(DatabaseContract.SpeedStats.END_TIMESTAMP, lastTimestamp);
         stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_AVERAGE, extremaStats.positiveAverage);
         stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+        stats.put(DatabaseContract.SpeedStats.INCREASING_SPEED_COUNT, extremaStats.positiveCount);
+        stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_COUNT, extremaStats.negativeCount);
         stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_AVERAGE, extremaStats.negativeAverage);
         stats.put(DatabaseContract.SpeedStats.DECREASING_SPEED_STD_DEVIATION, extremaStats.negativeStandardDeviation);
         db.insert(DatabaseContract.SpeedStats.TABLE_NAME, null, stats);

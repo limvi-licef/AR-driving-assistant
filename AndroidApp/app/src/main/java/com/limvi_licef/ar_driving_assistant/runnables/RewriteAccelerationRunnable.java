@@ -38,6 +38,8 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
         stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
         stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
         stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_STD_DEVIATION, extremaStats.positiveStandardDeviation);
+        stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_COUNT, extremaStats.positiveCount);
+        stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_COUNT, extremaStats.negativeCount);
         stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_AVERAGE, extremaStats.negativeAverage);
         stats.put(DatabaseContract.LinearAccelerometerStats.DECEL_STD_DEVIATION, extremaStats.negativeStandardDeviation);
         db.insert(DatabaseContract.LinearAccelerometerStats.TABLE_NAME, null, stats);

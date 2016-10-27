@@ -51,6 +51,7 @@ public abstract class Statistics {
         Double negativeAverage = calculateAverage(negativeExtrema);
         return new ExtremaStats(positiveAverage, negativeAverage,
                 calculateStandardDeviation(positiveExtrema, positiveAverage),
-                calculateStandardDeviation(negativeExtrema, negativeAverage));
+                calculateStandardDeviation(negativeExtrema, negativeAverage),
+                positiveExtrema.size(), negativeExtrema.size());
     }
 }
