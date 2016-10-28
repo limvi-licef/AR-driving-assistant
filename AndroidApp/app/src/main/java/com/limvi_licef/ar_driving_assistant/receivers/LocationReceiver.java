@@ -32,6 +32,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
     private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
     private static final String extraData = "data";
+    private static final double KM_PER_HOUR_CONVERSION = 3.6; //  m/s to km/h --> 60 * 60 / 1000
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
 
     public void register(Context context, Handler handler) {
@@ -62,7 +63,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         location.moveToFirst();
 
         runnable.accumulateData(new TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)),
-                location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED))));
+                location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED)) * KM_PER_HOUR_CONVERSION));
 
         String userId = Preferences.getCurrentUserId(context);
 
