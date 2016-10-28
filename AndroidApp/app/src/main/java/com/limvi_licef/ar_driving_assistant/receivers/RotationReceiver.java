@@ -31,6 +31,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
     private float[] orientation = new float[3];
     private float[] rMat = new float[16];
     private float[] rMatRemap = new float[16];
+    private long previousTimestamp = 0;
 
     public RotationReceiver() {}
 
@@ -60,6 +61,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             Log.d("Rotation Receiver", "Received event");
+            if(previousTimestamp == System.currentTimeMillis()) return;
             if (event.values.length == 0) return;
 
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
@@ -67,6 +69,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
 //            SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
 
             runnable.accumulateData(new TimestampedDouble(System.currentTimeMillis(), (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
+            previousTimestamp = System.currentTimeMillis();
         }
     }
 

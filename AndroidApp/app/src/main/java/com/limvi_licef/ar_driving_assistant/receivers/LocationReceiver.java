@@ -34,6 +34,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     private static final String extraData = "data";
     private static final double KM_PER_HOUR_CONVERSION = 3.6; //  m/s to km/h --> 60 * 60 / 1000
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
+    private long previousTimestamp = 0;
 
     public void register(Context context, Handler handler) {
         isRegistered = true;
@@ -57,6 +58,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Location Receiver", "Received intent");
+        if(previousTimestamp == System.currentTimeMillis()) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         //get most recent
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
@@ -81,6 +83,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
         Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
                 (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
+        previousTimestamp = System.currentTimeMillis();
     }
 
 }
