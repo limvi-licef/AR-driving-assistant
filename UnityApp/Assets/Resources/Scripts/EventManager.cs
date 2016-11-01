@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
-//TODO Link with actual trigger + trigger type info
 public class EventManager : MonoBehaviour
 {
+
     public delegate void TriggerAction(Event e);
     public static event TriggerAction OnTrigger;
 
@@ -21,7 +21,7 @@ public class EventManager : MonoBehaviour
         m_Events.Add(new Event() { Prefab = "RightWarningDisplay", Sound = "WarningBeep", Color = Color.red, Icon = "warning_icon", Text = "" });
     }
 
-    public void SendEvent(Event e)
+    public static void SendEvent(Event e)
     {
         if (OnTrigger != null)
         {
@@ -30,5 +30,4 @@ public class EventManager : MonoBehaviour
         }
         
     }
-
 }
