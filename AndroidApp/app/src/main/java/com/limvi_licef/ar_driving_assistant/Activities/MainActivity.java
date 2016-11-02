@@ -153,7 +153,6 @@ public class MainActivity extends Activity {
 //        Aware.setSetting(this, Constants.ACCURACY_FUSED_LOCATION, 100, Constants.FUSED_LOCATION_PACKAGE);
 //        Aware.setSetting(this, "location_sensitivity", 0, Constants.FUSED_LOCATION_PACKAGE);
 
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, false);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 0);
@@ -200,8 +199,9 @@ public class MainActivity extends Activity {
     }
 
     private void startMonitoring() {
-        this.startService(new Intent(this, Aware.class));
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
 
+        this.startService(new Intent(this, Aware.class));
         registerListeners();
 
         Aware.startLocations(this);
@@ -211,17 +211,13 @@ public class MainActivity extends Activity {
     }
 
     private void stopMonitoring() {
-        Aware.stopLocations(this);
-        Aware.stopLinearAccelerometer(this);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, false);
 
+        this.stopService(new Intent(this, Aware.class));
         unregisterListeners();
-
-//        TODO update aware once dev branch is done
-//        this.stopService(new Intent(this, Aware.class));
-
-        //TODO ??
+        Aware.stopAWARE();
 //        Aware.stopPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.stopPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
+        Aware.stopPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
     }
 
 }
