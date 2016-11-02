@@ -370,7 +370,7 @@ PlayerSettings:
     WindowsStoreApps:
       AllJoyn: False
       BlockedChatMessages: False
-      Bluetooth: True
+      Bluetooth: False
       Chat: False
       CodeGeneration: False
       EnterpriseAuthentication: False
