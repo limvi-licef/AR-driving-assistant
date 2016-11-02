@@ -30,7 +30,7 @@
             android:textOn="@string/monitoring_stop" />
 
         <Button
-            android:id="@+id/setup_user_button"
+            android:id="@+id/setup_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/setup_user" />

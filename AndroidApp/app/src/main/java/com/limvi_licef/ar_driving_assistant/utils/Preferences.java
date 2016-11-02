@@ -10,12 +10,19 @@ public abstract class Preferences {
     private static final String DEFAULT_ID = "0";
 
     /*
-     * Returns the current user id defined in 'Setup Preferences' button
+     * Returns the current user id defined in 'Setup' Preferences button
      */
     public static String getCurrentUserId(Context context) {
-        String idPref = context.getResources().getString(R.string.user_id_pref);
         SharedPreferences prefs = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        return prefs.getString(idPref, DEFAULT_ID);
+        return prefs.getString(Constants.ID_PREFERENCE, DEFAULT_ID);
+    }
+
+    /*
+     * Returns the ip address defined in 'Setup' Preferences button
+     */
+    public static String getIPAddress(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
+        return prefs.getString(Constants.IP_ADDRESS_PREFERENCE, null);
     }
 
     /*

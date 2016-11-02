@@ -3,6 +3,8 @@ package com.limvi_licef.ar_driving_assistant.utils;
 public abstract class Constants {
 
     public static final String USER_SHARED_PREFERENCES = "user_shared";
+    public static final String ID_PREFERENCE = "user_id";
+    public static final String IP_ADDRESS_PREFERENCE = "user_ip";
 
     //linear acceleration offset prefs
     public static final String OFFSET_X_PREF = "offset_x";

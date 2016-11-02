@@ -6,16 +6,15 @@
     <string name="monitoring_stop">Stop Monitoring</string>
     <string name="monitoring_empty">No results yet</string>
 
-    <string name="setup_user">Setup User</string>
+    <string name="setup_user">Setup</string>
     <string name="export_db">Export Database</string>
     <string name="calibrate_button">Calibrate Sensors</string>
     <string name="calibrate_acceleration_error">The accelerometer sensor is not calibrated\nAccelerometer monitoring has been disabled</string>
 
-    <string name="user_dialog_id_placeholder">ID</string>
-    <string name="user_dialog_dismiss">Close</string>
-    <string name="user_dialog_ok">Save</string>
-    <string name="user_dialog_title">Current User Setup</string>
-    <string name="user_id_pref">user_id</string>
+    <string name="setup_dialog_id_placeholder">ID</string>
+    <string name="setup_dialog_ip_placeholder">HoloLens IP Address</string>
+    <string name="setup_dialog_dismiss">Close</string>
+    <string name="setup_dialog_ok">Save</string>
 
     <string name="database_insert_success"> Insert Success</string>
     <string name="database_insert_failure"> Insert Failure</string>
