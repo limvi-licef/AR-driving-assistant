@@ -26,4 +26,7 @@ public abstract class Constants {
 
     public static final String ACTION_WRITE_TO_UI = "ACTION_WRITE_TO_UI";
     public static final String WRITE_MESSAGE = "WRITE_MESSAGE";
+
+    //HoloLens communication
+    public static final int HOLOLENS_PORT = 12345;
 }

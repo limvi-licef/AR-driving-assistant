@@ -22,6 +22,7 @@ import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
@@ -122,6 +123,14 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 new CalibrateTask(MainActivity.this).execute();
+            }
+        });
+        Button sendEvent = (Button) findViewById(R.id.send_event_button);
+        sendEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
+                eventFragment.show(getFragmentManager(), "eventdialog");
             }
         });
 
