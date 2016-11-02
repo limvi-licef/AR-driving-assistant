@@ -8,6 +8,9 @@ using System.IO;
 
 /*
  * Adapted from https://forums.hololens.com/discussion/comment/9837
+ * Listens on port 12345 for incoming udp packets
+ * Packets must contain a string defining the Event name (see EventManager.cs) and the message to display, each separated by a ';' character
+ * ex: "Information;TextToBeDisplayed"
  */
 
 public class UDPListener : MonoBehaviour
