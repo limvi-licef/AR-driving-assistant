@@ -1,9 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{405E73A1-B904-74D0-87E7-489A3D8B5528}") = "AR-driving-assistant", "Assembly-CSharp.csproj", "{279A41FF-4CDE-F02A-AC30-74E1B32BBB9A}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{B64691E4-BF4F-D156-A912-28D4B0CF91A6}"
 EndProject
-Project("{405E73A1-B904-74D0-87E7-489A3D8B5528}") = "AR-driving-assistant", "Assembly-CSharp-Editor.csproj", "{D44D4B97-F5ED-8C87-A6D7-2C298554D3BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +12,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{279A41FF-4CDE-F02A-AC30-74E1B32BBB9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{279A41FF-4CDE-F02A-AC30-74E1B32BBB9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{279A41FF-4CDE-F02A-AC30-74E1B32BBB9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{279A41FF-4CDE-F02A-AC30-74E1B32BBB9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D44D4B97-F5ED-8C87-A6D7-2C298554D3BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D44D4B97-F5ED-8C87-A6D7-2C298554D3BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D44D4B97-F5ED-8C87-A6D7-2C298554D3BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D44D4B97-F5ED-8C87-A6D7-2C298554D3BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B64691E4-BF4F-D156-A912-28D4B0CF91A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B64691E4-BF4F-D156-A912-28D4B0CF91A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B64691E4-BF4F-D156-A912-28D4B0CF91A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B64691E4-BF4F-D156-A912-28D4B0CF91A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
