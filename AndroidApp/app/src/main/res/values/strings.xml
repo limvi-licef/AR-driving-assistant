@@ -37,6 +37,7 @@
     <string name="send_event_task_button">Send event manually</string>
     <string name="send_event_task_success">Event sent successfully</string>
     <string name="send_event_task_failure">Failed to send event</string>
+    <string name="send_event_task_invalid_ip">Invalid IP Address</string>
     <string name="send_event_task_text_placeholder">Text To Display</string>
     <string name="send_event_dialog_ok">Send</string>
     <string name="send_event_dialog_dismiss">Close</string>

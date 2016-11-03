@@ -16,7 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
-public class SendEventTask extends AsyncTask<String, Void, Boolean> {
+public class SendEventTask extends AsyncTask<String, Void, String> {
 
     private Context context;
     private String message;
@@ -24,27 +24,27 @@ public class SendEventTask extends AsyncTask<String, Void, Boolean> {
 
     public SendEventTask(Context context, String eventName, String message){
         this.context = context;
-        this.message = new StringBuilder().append(eventName).append(delimiter).append(message).append("\r\n").toString();
+        this.message = eventName + delimiter + message + "\r\n";
     }
 
-    protected Boolean doInBackground(String... urls) {
+    protected String doInBackground(String... urls) {
         try {
             InetAddress ipAddress = InetAddress.getByName(Preferences.getIPAddress(context));
             DatagramSocket socket = DatagramChannel.open().socket();
             DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
             socket.send(dp);
             socket.close();
-            return true;
+            return context.getResources().getString(R.string.send_event_task_success);
         } catch (UnknownHostException e) {
             Log.d("EventSender", "" + e.getMessage());
-            return false;
+            return context.getResources().getString(R.string.send_event_task_invalid_ip);
         } catch (IOException e) {
             Log.d("EventSender", "" + e.getMessage());
-            return false;
+            return context.getResources().getString(R.string.send_event_task_failure);
         }
     }
 
-    protected void onPostExecute(Boolean result) {
-        Toast.makeText(context, result ? context.getResources().getString(R.string.send_event_task_success) : context.getResources().getString(R.string.send_event_task_failure), Toast.LENGTH_SHORT).show();
+    protected void onPostExecute(String toast) {
+        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
     }
 }
