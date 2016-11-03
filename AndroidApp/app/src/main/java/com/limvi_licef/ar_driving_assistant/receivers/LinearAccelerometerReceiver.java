@@ -69,7 +69,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisZ -= offsetZ;
 
         double acceleration = Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
-        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), acceleration));
+        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), acceleration, axisX, axisY, axisZ));
         previousTimestamp = System.currentTimeMillis();
     }
 

@@ -5,16 +5,27 @@ import java.util.List;
 public abstract class Structs {
 
     /*
-    * Struct that holds a Double and a timestamp
+    * Struct that holds a Double, a Timestamp and, optionally, axes values
     * Used to pass data through an algorithm but still retain its associated timestamp
     */
     public static class TimestampedDouble {
         public long timestamp;
         public Double value;
+        public double axisX;
+        public double axisY;
+        public double axisZ;
 
         public TimestampedDouble(long timestamp, Double value) {
             this.timestamp = timestamp;
             this.value = value;
+        }
+
+        public TimestampedDouble(long timestamp, Double value, Double axisX, Double axisY, Double axisZ) {
+            this.timestamp = timestamp;
+            this.value = value;
+            this.axisX = axisX;
+            this.axisY = axisY;
+            this.axisZ = axisZ;
         }
     }
 
