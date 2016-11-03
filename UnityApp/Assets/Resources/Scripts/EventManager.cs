@@ -23,10 +23,10 @@ public class EventManager : MonoBehaviour
 
     public static void SendEvent(string name, string message)
     {
-        Event e = m_Events[name];
-        e.Text = message;
-        if (OnTrigger != null)
+        Event e;
+        if (OnTrigger != null && m_Events.TryGetValue(name, out e))
         {
+            e.Text = message;
             OnTabClick();
             OnTrigger(e);
         }
