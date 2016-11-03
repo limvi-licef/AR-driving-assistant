@@ -42,7 +42,7 @@ public class UDPListener : MonoBehaviour
 
         try
         {
-            await socket.BindEndpointAsync(null, "12345");
+            await socket.BindEndpointAsync(null, PORT);
         }
         catch (Exception e)
         {
