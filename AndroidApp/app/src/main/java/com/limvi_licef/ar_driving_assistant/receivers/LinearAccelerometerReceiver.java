@@ -32,6 +32,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     private RewriteAlgorithmRunnable rewriteRunnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
     private long previousTimestamp = 0;
+    private final long MINIMUM_DELAY = 10;
 
     public void register(Context context, Handler handler) {
         if(!getOffsets(context)) return;
@@ -56,7 +57,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Linear Receiver", "Received intent");
-        if(previousTimestamp == System.currentTimeMillis()) return;
+        if(System.currentTimeMillis() - previousTimestamp <= MINIMUM_DELAY) return;
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
