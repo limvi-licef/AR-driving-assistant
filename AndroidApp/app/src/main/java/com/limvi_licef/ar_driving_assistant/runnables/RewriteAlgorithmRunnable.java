@@ -8,8 +8,8 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
+import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

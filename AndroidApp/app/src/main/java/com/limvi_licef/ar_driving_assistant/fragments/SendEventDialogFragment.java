@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;

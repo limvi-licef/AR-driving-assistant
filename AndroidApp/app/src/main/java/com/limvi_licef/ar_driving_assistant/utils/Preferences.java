@@ -3,8 +3,6 @@ package com.limvi_licef.ar_driving_assistant.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.limvi_licef.ar_driving_assistant.R;
-
 public abstract class Preferences {
 
     private static final String DEFAULT_ID = "0";

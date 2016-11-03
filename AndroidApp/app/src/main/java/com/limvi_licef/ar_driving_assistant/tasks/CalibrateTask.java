@@ -13,8 +13,8 @@ import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
-import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
+import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 
 import java.util.ArrayList;
 import java.util.List;
