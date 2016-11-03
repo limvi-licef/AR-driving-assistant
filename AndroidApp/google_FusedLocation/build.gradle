@@ -28,6 +28,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:24.2.1"
     compile 'com.awareframework:aware-core:4.0.642@aar'
     compile "com.koushikdutta.ion:ion:2.1.6"
-    compile "com.google.android.gms:play-services-location:9.6.1"
-    compile "com.google.android.gms:play-services-maps:9.6.1"
+    compile "com.google.android.gms:play-services-location:9.8.0"
+    compile "com.google.android.gms:play-services-maps:9.8.0"
 }
