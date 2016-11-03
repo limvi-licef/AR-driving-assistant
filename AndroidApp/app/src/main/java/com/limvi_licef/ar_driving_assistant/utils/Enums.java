@@ -6,6 +6,6 @@ public abstract class Enums {
      * Event types defined in the UnityApp
      */
     public enum EventTypes {
-        Information, Advice, LeftWarning, RightWarning
+        Information, Advice, Warning, LeftWarning, RightWarning
     }
 }
