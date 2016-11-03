@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
 
     private final int MONITORING_RESULTS_MAX = 10;
 
-    private DatabaseHelper dbHelper;
     private HandlerThread sensorThread;
     private Handler sensorHandler;
     private SensorReceiver temperatureReceiver;
@@ -65,7 +64,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupUIElements();
-        dbHelper = DatabaseHelper.getHelper(this);
         setupSensors();
         setupListeners();
     }
