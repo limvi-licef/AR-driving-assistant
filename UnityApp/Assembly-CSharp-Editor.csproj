@@ -1,20 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{EBDADD49-3052-3DBD-3ED3-2581068B6FC1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +23,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +31,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,93 +45,91 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployPortal.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployPrefs.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployTools.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployWindow.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\BuildSLNUtilities.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\HoloToolkitCommands.cs" />
-    <Compile Include="Assets\HoloToolkit\Build\Editor\XdeGuestLocator.cs" />
-    <Compile Include="Assets\HoloToolkit\Sharing\Editor\SharingMenu.cs" />
-    <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioManagerBaseEditor.cs" />
-    <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioManagerEditor.cs" />
-    <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioMiniManagerEditor.cs" />
-    <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioProfiler.cs" />
-    <Compile Include="Assets\HoloToolkit\Utilities\Editor\ConfigureMenu.cs" />
-    <Compile Include="Assets\HoloToolkit\Utilities\Editor\EditorGUIExtensions.cs" />
-    <Compile Include="Assets\HoloToolkit\Utilities\Editor\EditorGUILayoutExtensions.cs" />
-    <Compile Include="Assets\HoloToolkit\Utilities\Editor\LayerMaskExtensions.cs" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurable.shader" />
-    <None Include="Assets\HoloToolkit\SpatialUnderstanding\Materials\SpatialUnderstandingSurface.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurable.cginc" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurableTransparent.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurable.cginc" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurable.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\StandardFast.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurable.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurableTransparent.shader" />
-    <None Include="Assets\HoloToolkit\SpatialMapping\Shaders\Wireframe.shader" />
-    <None Include="Assets\HoloToolkit\Input\Shaders\CursorShader.shader" />
-    <None Include="Assets\HoloToolkit\SpatialMapping\Shaders\Occlusion.shader" />
-    <None Include="Assets\HoloToolkit\SpatialUnderstanding\Materials\SpatialMappingSurface.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurableTransparent.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\HoloToolkitCommon.cginc" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurableTransparent.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurable.cginc" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurable.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\WindowOcclusion.shader" />
-    <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurable.cginc" />
-    <Reference Include="UnityEditor.Advertisements">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.EditorTestsRunner">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Networking">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.TreeEditor">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.HoloLens">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.HoloLens">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Runtime/UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.VR">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VR">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityVR/Runtime/UnityEngine.VR.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Graphs">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Metro.Extensions">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.Metro.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
-      <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
-    </Reference>
+     <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployPortal.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployPrefs.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployTools.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\BuildDeployWindow.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\BuildSLNUtilities.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\HoloToolkitCommands.cs" />
+     <Compile Include="Assets\HoloToolkit\Build\Editor\XdeGuestLocator.cs" />
+     <Compile Include="Assets\HoloToolkit\Sharing\Editor\SharingMenu.cs" />
+     <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioManagerBaseEditor.cs" />
+     <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioManagerEditor.cs" />
+     <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioMiniManagerEditor.cs" />
+     <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\Editor\UAudioProfiler.cs" />
+     <Compile Include="Assets\HoloToolkit\Utilities\Editor\ConfigureMenu.cs" />
+     <Compile Include="Assets\HoloToolkit\Utilities\Editor\EditorGUIExtensions.cs" />
+     <Compile Include="Assets\HoloToolkit\Utilities\Editor\EditorGUILayoutExtensions.cs" />
+     <Compile Include="Assets\HoloToolkit\Utilities\Editor\LayerMaskExtensions.cs" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurable.shader" />
+     <None Include="Assets\HoloToolkit\SpatialUnderstanding\Materials\SpatialUnderstandingSurface.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurable.cginc" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurableTransparent.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurable.cginc" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurable.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\StandardFast.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurable.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurableTransparent.shader" />
+     <None Include="Assets\HoloToolkit\SpatialMapping\Shaders\Wireframe.shader" />
+     <None Include="Assets\HoloToolkit\Input\Shaders\CursorShader.shader" />
+     <None Include="Assets\HoloToolkit\SpatialMapping\Shaders\Occlusion.shader" />
+     <None Include="Assets\HoloToolkit\SpatialUnderstanding\Materials\SpatialMappingSurface.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\LambertianConfigurableTransparent.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\HoloToolkitCommon.cginc" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\VertexLitConfigurableTransparent.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurable.cginc" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\BlinnPhongConfigurable.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\WindowOcclusion.shader" />
+     <None Include="Assets\HoloToolkit\Utilities\Shaders\UnlitConfigurable.cginc" />
+ <Reference Include="UnityEditor.Advertisements">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.framework">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.EditorTestsRunner">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.UI">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Networking">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.TreeEditor">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.HoloLens">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.HoloLens">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Runtime/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.VR">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.VR">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/UnityExtensions/Unity/UnityVR/Runtime/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Metro.Extensions">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.Metro.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+ <HintPath>C:/Program Files/Unity HoloLens 5.4.0f3-HTP/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{B64691E4-BF4F-D156-A912-28D4B0CF91A6}</Project>
-      <Name>Assembly-CSharp</Name>
-    </ProjectReference>
+      <Project>{B64691E4-BF4F-D156-A912-28D4B0CF91A6}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -145,4 +139,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  
 </Project>
