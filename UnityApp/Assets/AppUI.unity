@@ -3977,7 +3977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   events:
   - name: WarningBeep
-    spatialization: 1
+    spatialization: 2
     roomSize: 3
     minGain: -96
     maxGain: 12
@@ -3998,7 +3998,63 @@ MonoBehaviour:
       looping: 0
       loopTime: 0
       sounds:
-      - sound: {fileID: 8300000, guid: f9ed59bae8133074ab50c17903922d96, type: 3}
+      - sound: {fileID: 8300000, guid: 62ee9ec868f577545a65c2c69f1f9492, type: 3}
+        looping: 0
+        delayCenter: 0
+        delayRandomization: 0
+      crossfadeTime: 0
+      currentClip: 0
+  - name: InformationBeep
+    spatialization: 2
+    roomSize: 3
+    minGain: -96
+    maxGain: 12
+    unityGainDistance: 1
+    bus: {fileID: 0}
+    pitchCenter: 1
+    pitchRandomization: 0
+    volumeCenter: 1
+    volumeRandomization: 0
+    panCenter: 0
+    panRandomization: 0
+    fadeInTime: 0
+    instanceLimit: 0
+    instanceTimeBuffer: 0
+    instanceBehavior: 0
+    container:
+      containerType: 0
+      looping: 0
+      loopTime: 0
+      sounds:
+      - sound: {fileID: 8300000, guid: 89de696724ab31c46b096f70fc97b6ca, type: 3}
+        looping: 0
+        delayCenter: 0
+        delayRandomization: 0
+      crossfadeTime: 0
+      currentClip: 0
+  - name: AdviceBeep
+    spatialization: 2
+    roomSize: 3
+    minGain: -96
+    maxGain: 12
+    unityGainDistance: 1
+    bus: {fileID: 0}
+    pitchCenter: 1
+    pitchRandomization: 0
+    volumeCenter: 1
+    volumeRandomization: 0
+    panCenter: 0
+    panRandomization: 0
+    fadeInTime: 0
+    instanceLimit: 0
+    instanceTimeBuffer: 0
+    instanceBehavior: 0
+    container:
+      containerType: 0
+      looping: 0
+      loopTime: 0
+      sounds:
+      - sound: {fileID: 8300000, guid: b94da147b5c711943afa421fbfb11566, type: 3}
         looping: 0
         delayCenter: 0
         delayRandomization: 0
