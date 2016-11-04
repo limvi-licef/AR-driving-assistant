@@ -1,31 +1,28 @@
 package com.limvi_licef.ar_driving_assistant.utils;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class Structs {
 
     /*
-    * Struct that holds a Double, a Timestamp and, optionally, axes values
-    * Used to pass data through an algorithm but still retain its associated timestamp
+    * Struct that holds a Double, a Timestamp and optional extra data
+    * Used to pass data through an algorithm but still retain its associated timestamp and data
     */
     public static class TimestampedDouble {
         public long timestamp;
         public Double value;
-        public double axisX;
-        public double axisY;
-        public double axisZ;
+        public Map<String, Double> extraData;
 
         public TimestampedDouble(long timestamp, Double value) {
             this.timestamp = timestamp;
             this.value = value;
         }
 
-        public TimestampedDouble(long timestamp, Double value, Double axisX, Double axisY, Double axisZ) {
+        public TimestampedDouble(long timestamp, Double value, Map<String, Double> extraData) {
             this.timestamp = timestamp;
             this.value = value;
-            this.axisX = axisX;
-            this.axisY = axisY;
-            this.axisZ = axisZ;
+            this.extraData = extraData;
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.ExtremaStats;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
@@ -27,10 +28,10 @@ public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
-            values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.value);
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_X, td.axisX);
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, td.axisY);
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, td.axisZ);
+            values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.extraData.get(Constants.ACCELERATION_KEY));
+            values.put(DatabaseContract.LinearAccelerometerData.AXIS_X, td.extraData.get(Constants.AXIS_X_KEY));
+            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, td.extraData.get(Constants.AXIS_Z_KEY));
+            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, td.value);
             db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values);
         }
 
