@@ -171,7 +171,6 @@
      <Compile Include="Assets\HoloToolkit\SpatialMapping\Scripts\SpatialProcessing\SurfaceMeshesToPlanes.cs" />
      <Compile Include="Assets\HoloToolkit\SpatialMapping\Scripts\SpatialProcessing\SurfacePlane.cs" />
      <Compile Include="Assets\HoloToolkit\SpatialMapping\Scripts\TapToPlace.cs" />
-     <Compile Include="Assets\HoloToolkit\SpatialMapping\Scripts\TapToPlaceUI.cs" />
      <Compile Include="Assets\HoloToolkit\SpatialMapping\Tests\Support\PlaneFindingTest.cs" />
      <Compile Include="Assets\HoloToolkit\SpatialMapping\Tests\Support\SpatialProcessingTest.cs" />
      <Compile Include="Assets\HoloToolkit\SpatialSound\Scripts\UAudioManager\ActiveEvent.cs" />
@@ -219,6 +218,7 @@
      <Compile Include="Assets\Resources\Scripts\PopulateDropdownScript.cs" />
      <Compile Include="Assets\Resources\Scripts\SettingsScript.cs" />
      <Compile Include="Assets\Resources\Scripts\ShowEventScript.cs" />
+     <Compile Include="Assets\Resources\Scripts\TapToPlaceUI.cs" />
      <Compile Include="Assets\Resources\Scripts\ToggleContactInfoScript.cs" />
      <Compile Include="Assets\Resources\Scripts\UDPListener.cs" />
      <Compile Include="Assets\Resources\Scripts\UserManager.cs" />
