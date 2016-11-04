@@ -140,7 +140,7 @@ public class MainActivity extends Activity {
 
     private void setupSensors(){
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 400000);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 200000);
 
         //TODO BUG
 //        Aware.setSetting(this, Constants.STATUS_FUSED_LOCATION, true, Constants.FUSED_LOCATION_PACKAGE);
