@@ -29,7 +29,9 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
 
     protected String doInBackground(String... urls) {
         try {
-            InetAddress ipAddress = InetAddress.getByName(Preferences.getIPAddress(context));
+            String ipString = Preferences.getIPAddress(context);
+            if (ipString == null || ipString.isEmpty()) throw  new UnknownHostException();
+            InetAddress ipAddress = InetAddress.getByName(ipString);
             DatagramSocket socket = DatagramChannel.open().socket();
             DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
             socket.send(dp);
