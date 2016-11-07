@@ -30,16 +30,14 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... urls) {
         try {
             String ipString = Preferences.getIPAddress(context);
-            if (ipString == null || ipString.isEmpty()) throw  new UnknownHostException();
+            if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
+
             InetAddress ipAddress = InetAddress.getByName(ipString);
             DatagramSocket socket = DatagramChannel.open().socket();
             DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
             socket.send(dp);
             socket.close();
             return context.getResources().getString(R.string.send_event_task_success);
-        } catch (UnknownHostException e) {
-            Log.d("EventSender", "" + e.getMessage());
-            return context.getResources().getString(R.string.send_event_task_invalid_ip);
         } catch (IOException e) {
             Log.d("EventSender", "" + e.getMessage());
             return context.getResources().getString(R.string.send_event_task_failure);
