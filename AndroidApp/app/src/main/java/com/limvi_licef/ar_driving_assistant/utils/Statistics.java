@@ -49,7 +49,7 @@ public abstract class Statistics {
         for(int i = 0; i < indexes.size() - 1; ++ i) {
             Double a = values.get(indexes.get(i)).value;
             Double b = values.get(indexes.get(i+1)).value;
-            if(Math.abs(a) > Math.abs(b)) {
+            if(a > b) {
                 negativeExtrema.add(a);
             } else {
                 positiveExtrema.add(a);
