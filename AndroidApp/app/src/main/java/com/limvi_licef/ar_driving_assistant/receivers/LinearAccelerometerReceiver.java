@@ -21,6 +21,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnabl
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
+import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 public class LinearAccelerometerReceiver extends BroadcastReceiver implements SensorReceiver {
@@ -81,7 +82,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisZ -= offsetZ;
 
         //Round off timestamp to a tenth of a second
-        long roundedTimestamp = PRECISION * (( values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP) + PRECISION / 2 ) / PRECISION);
+        long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), PRECISION);
         runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));
         runnableAxisY.accumulateData(new TimestampedDouble(roundedTimestamp, axisY));
         runnableAxisZ.accumulateData(new TimestampedDouble(roundedTimestamp, axisZ));

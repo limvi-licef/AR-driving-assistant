@@ -9,6 +9,14 @@ import java.util.List;
 public abstract class Statistics {
 
     /*
+     * Rounds off the given timestamp
+     * precision is in milliseconds
+     */
+    public static long roundOffTimestamp(long timestamp, long precision) {
+        return precision * (( timestamp + precision / 2 ) / precision);
+    }
+
+    /*
      * Returns the average of the list values or 0 if the list is empty
      */
     public static double calculateAverage(List<Double> list) {
@@ -41,7 +49,7 @@ public abstract class Statistics {
         for(int i = 0; i < indexes.size() - 1; ++ i) {
             Double a = values.get(indexes.get(i)).value;
             Double b = values.get(indexes.get(i+1)).value;
-            if(a > b) {
+            if(Math.abs(a) > Math.abs(b)) {
                 negativeExtrema.add(a);
             } else {
                 positiveExtrema.add(a);
