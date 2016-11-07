@@ -28,7 +28,6 @@ public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
-            values.put(DatabaseContract.LinearAccelerometerData.ACCEL, td.extraData.get(Constants.ACCELERATION_KEY));
             values.put(DatabaseContract.LinearAccelerometerData.AXIS_X, td.extraData.get(Constants.AXIS_X_KEY));
             values.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, td.extraData.get(Constants.AXIS_Z_KEY));
             values.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, td.value);

@@ -22,9 +22,6 @@ import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class LinearAccelerometerReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
@@ -72,13 +69,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisY -= offsetY;
         axisZ -= offsetZ;
 
-        double acceleration = Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
-
-        Map<String, Double> extra = new HashMap<>();
-        extra.put(Constants.ACCELERATION_KEY, acceleration);
-        extra.put(Constants.AXIS_X_KEY, axisX);
-        extra.put(Constants.AXIS_Z_KEY, axisZ);
-        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), axisY, extra));
+        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), axisY));
         previousTimestamp = System.currentTimeMillis();
     }
 
