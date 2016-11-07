@@ -14,6 +14,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAzimuthRunnable;
+import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -33,6 +34,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
     private float[] rMatRemap = new float[16];
     private long previousTimestamp = 0;
     private final long MINIMUM_DELAY = 10;
+    private final long PRECISION = 25;
 
     public RotationReceiver() {}
 
@@ -69,7 +71,8 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
 //            setAxis(context);
 //            SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
 
-            runnable.accumulateData(new TimestampedDouble(System.currentTimeMillis(), (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
+            long roundedTimestamp = Statistics.roundOffTimestamp(System.currentTimeMillis(), PRECISION);
+            runnable.accumulateData(new TimestampedDouble(roundedTimestamp, (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
             previousTimestamp = System.currentTimeMillis();
         }
     }

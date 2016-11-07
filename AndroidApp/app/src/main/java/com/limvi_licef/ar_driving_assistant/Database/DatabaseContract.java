@@ -188,7 +188,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + " UNIQUE" + COMMA_SEP +
                 AXIS_X + REAL_TYPE + COMMA_SEP +
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + COMMA_SEP +
