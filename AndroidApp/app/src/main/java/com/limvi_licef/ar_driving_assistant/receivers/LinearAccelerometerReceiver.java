@@ -48,9 +48,8 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         handler.postDelayed(runnableAxisY, runnableAxisY.DELAY);
         runnableAxisZ = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Z);
         handler.postDelayed(runnableAxisZ, runnableAxisZ.DELAY);
-        //TODO FIX REWRITE ACCEL
-//        rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
-//        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
+        rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
+        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 

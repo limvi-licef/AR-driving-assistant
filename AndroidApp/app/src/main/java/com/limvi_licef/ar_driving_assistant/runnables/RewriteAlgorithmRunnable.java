@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public abstract class RewriteAlgorithmRunnable implements Runnable {
-    private static final int REWRITE_MINUTES = 10;
-    private static final int TOLERANCE = 1;
     public final int DELAY = 1000 * 60 * 10;
+    protected static final int REWRITE_MINUTES = 10;
+    protected static final int TOLERANCE = 1;
     protected Handler handler;
     protected SQLiteDatabase db;
     protected Context context;
-    private String insertionStatus;
+    protected String insertionStatus;
 
     public RewriteAlgorithmRunnable(Handler handler, Context context) {
         this.handler = handler;
