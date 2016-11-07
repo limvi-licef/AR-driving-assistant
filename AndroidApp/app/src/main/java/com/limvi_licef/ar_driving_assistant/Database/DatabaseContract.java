@@ -47,7 +47,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
-                TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                TIMESTAMP + DATETIME_TYPE + " UNIQUE" + COMMA_SEP +
                 AXIS_X + REAL_TYPE + COMMA_SEP +
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + " )";
@@ -57,6 +57,7 @@ public final class DatabaseContract {
     public static abstract class LinearAccelerometerStats implements BaseColumns {
         public static final String TABLE_NAME       = "LinearAccelerometerStats";
         public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String AXIS_NAME = "AxisName";
         public static final String START_TIMESTAMP = "StartTimestamp";
         public static final String END_TIMESTAMP = "EndTimestamp";
         public static final String ACCEL_AVERAGE = "AccelerationAverage";
@@ -70,6 +71,7 @@ public final class DatabaseContract {
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                AXIS_NAME + TEXT_TYPE + COMMA_SEP +
                 START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 ACCEL_AVERAGE + REAL_TYPE + COMMA_SEP +

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnable;
@@ -28,25 +29,36 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     private double offsetX;
     private double offsetY;
     private double offsetZ;
-    private ComputeAlgorithmRunnable runnable;
+    private ComputeAlgorithmRunnable runnableAxisX;
+    private ComputeAlgorithmRunnable runnableAxisY;
+    private ComputeAlgorithmRunnable runnableAxisZ;
     private RewriteAlgorithmRunnable rewriteRunnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
     private long previousTimestamp = 0;
     private final long MINIMUM_DELAY = 10;
+    private final long PRECISION = 100;
 
     public void register(Context context, Handler handler) {
         if(!getOffsets(context)) return;
         isRegistered = true;
-        runnable = new ComputeAccelerationRunnable(handler, context);
-        handler.postDelayed(runnable, runnable.DELAY);
-        rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
-        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
+
+        runnableAxisX = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_X);
+        handler.postDelayed(runnableAxisX, runnableAxisX.DELAY);
+        runnableAxisY = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Y);
+        handler.postDelayed(runnableAxisY, runnableAxisY.DELAY);
+        runnableAxisZ = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Z);
+        handler.postDelayed(runnableAxisZ, runnableAxisZ.DELAY);
+        //TODO FIX REWRITE ACCEL
+//        rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
+//        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            if(!runnable.isRunning()) runnable.run();
+            if(!runnableAxisX.isRunning()) runnableAxisX.run();
+            if(!runnableAxisY.isRunning()) runnableAxisY.run();
+            if(!runnableAxisZ.isRunning()) runnableAxisZ.run();
             context.unregisterReceiver(this);
             isRegistered = false;
             return true;
@@ -69,7 +81,11 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisY -= offsetY;
         axisZ -= offsetZ;
 
-        runnable.accumulateData(new TimestampedDouble(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), axisY));
+        //Round off timestamp to a tenth of a second
+        long roundedTimestamp = PRECISION * (( values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP) + PRECISION / 2 ) / PRECISION);
+        runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));
+        runnableAxisY.accumulateData(new TimestampedDouble(roundedTimestamp, axisY));
+        runnableAxisZ.accumulateData(new TimestampedDouble(roundedTimestamp, axisZ));
         previousTimestamp = System.currentTimeMillis();
     }
 

@@ -2,10 +2,10 @@ package com.limvi_licef.ar_driving_assistant.runnables;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.ExtremaStats;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
@@ -14,8 +14,11 @@ import java.util.List;
 
 public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
 
-    public ComputeAccelerationRunnable(Handler handler, Context context) {
+    private final String axisColumnName;
+
+    public ComputeAccelerationRunnable(Handler handler, Context context, String axisColumnName) {
         super(handler, context);
+        this.axisColumnName = axisColumnName;
     }
 
     @Override
@@ -28,14 +31,17 @@ public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_X, td.extraData.get(Constants.AXIS_X_KEY));
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Z, td.extraData.get(Constants.AXIS_Z_KEY));
-            values.put(DatabaseContract.LinearAccelerometerData.AXIS_Y, td.value);
-            db.insert(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values);
+            values.put(axisColumnName, td.value);
+
+            int id = (int) db.insertWithOnConflict(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            if (id == -1) {
+                db.update(DatabaseContract.LinearAccelerometerData.TABLE_NAME, values, "Timestamp=?", new String[] {String.valueOf(td.timestamp)});
+            }
         }
 
         ContentValues stats = new ContentValues();
         stats.put(DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID, userId);
+        stats.put(DatabaseContract.LinearAccelerometerStats.AXIS_NAME, axisColumnName);
         stats.put(DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP, firstTimestamp);
         stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
         stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
@@ -49,6 +55,6 @@ public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
 
     @Override
     protected String getTableName(){
-        return DatabaseContract.LinearAccelerometerData.TABLE_NAME;
+        return DatabaseContract.LinearAccelerometerData.TABLE_NAME + " " + axisColumnName;
     }
 }
