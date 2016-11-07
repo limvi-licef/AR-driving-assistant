@@ -147,7 +147,7 @@ public class MonotoneSegmentationAlgorithm {
             }
             for (Map.Entry<Integer,TimestampedDouble> max : Xmax.entrySet()) {
                 int key = max.getKey();
-                monotoneValues.put(key, new TimestampedDouble((Xmax.get(key).timestamp + Xmin.get(key).timestamp) / 2L , (Xmax.get(key).value + Xmin.get(key).value) / 2.0));
+                monotoneValues.put(key, new TimestampedDouble(Xmin.get(key).timestamp, (Xmax.get(key).value + Xmin.get(key).value) / 2.0));
             }
         }
 
