@@ -6,23 +6,16 @@ import java.util.Map;
 public abstract class Structs {
 
     /*
-    * Struct that holds a Double, a Timestamp and optional extra data
-    * Used to pass data through an algorithm but still retain its associated timestamp and data
+    * Struct that holds a Double and a Timestamp
+    * Used to pass data through an algorithm but still retain its associated timestamp
     */
     public static class TimestampedDouble {
         public long timestamp;
         public Double value;
-        public Map<String, Double> extraData;
 
         public TimestampedDouble(long timestamp, Double value) {
             this.timestamp = timestamp;
             this.value = value;
-        }
-
-        public TimestampedDouble(long timestamp, Double value, Map<String, Double> extraData) {
-            this.timestamp = timestamp;
-            this.value = value;
-            this.extraData = extraData;
         }
     }
 
