@@ -36,7 +36,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
     private long previousTimestamp = 0;
     private final long MINIMUM_DELAY = 10;
-    private final long PRECISION = 100;
+    private final long PRECISION = 50;
 
     public void register(Context context, Handler handler) {
         if(!getOffsets(context)) return;
