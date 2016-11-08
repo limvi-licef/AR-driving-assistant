@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fastdtw.dtw.FastDTW;
@@ -33,6 +34,16 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         this.endTimestamp = stopTimestamp;
         this.label = label;
         this.context = context;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        try {
+            //wait for sensor runnables to save data
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Log.d("TrainingTask", "" + e.getMessage());
+        }
     }
 
     @Override
@@ -88,13 +99,16 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
     }
 
     private String saveNewEvent(SQLiteDatabase db) {
+        db.beginTransaction();
         String userId = Preferences.getCurrentUserId(context);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.TrainingEvents.CURRENT_USER_ID, userId);
         values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, startTimestamp);
         values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, endTimestamp);
         values.put(DatabaseContract.TrainingEvents.LABEL, label);
-        int result = (int)db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        int result = (int) db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        db.setTransactionSuccessful();
+        db.endTransaction();
         return result == -1 ? "Label already exists" : "No Match Found, inserting event to database";
     }
 

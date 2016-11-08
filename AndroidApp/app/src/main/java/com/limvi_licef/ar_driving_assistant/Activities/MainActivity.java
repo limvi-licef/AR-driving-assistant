@@ -160,6 +160,9 @@ public class MainActivity extends Activity {
                             })
                             .show();
                 } else {
+                    linearAccelerometerReceiver.savePrematurely();
+                    rotationReceiver.savePrematurely();
+                    locationReceiver.savePrematurely();
                     new TrainingTask(startTimestamp ,timestamp, label, MainActivity.this).execute();
                 }
             }
