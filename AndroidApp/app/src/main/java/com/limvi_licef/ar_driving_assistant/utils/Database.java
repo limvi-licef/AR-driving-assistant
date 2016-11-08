@@ -30,13 +30,11 @@ public abstract class Database {
     }
 
     public static List<Structs.TimestampedDouble> getSensorData(long fromTimestamp, long toTimestamp, String tableName, String valueColumnName, Context context) {
-        String userId = Preferences.getCurrentUserId(context);
         List<Structs.TimestampedDouble> data = new ArrayList<>();
-        SQLiteDatabase db = DatabaseHelper.getHelper(context).getReadableDatabase();
-        Cursor cursor = db.query(tableName,
+        Cursor cursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(tableName,
                 new String[]{DatabaseContract.CommonSensorFields.USER_ID, DatabaseContract.CommonSensorFields.TIMESTAMP, valueColumnName},
                 DatabaseContract.CommonSensorFields.USER_ID + " = ? AND " + DatabaseContract.CommonSensorFields.TIMESTAMP + " BETWEEN ? AND ?",
-                new String[]{userId, String.valueOf(fromTimestamp), String.valueOf(toTimestamp)}, null, null, "Timestamp ASC");
+                new String[]{Preferences.getCurrentUserId(context), String.valueOf(fromTimestamp), String.valueOf(toTimestamp)}, null, null, "Timestamp ASC");
         int timestampColumnIndex = cursor.getColumnIndexOrThrow(DatabaseContract.LinearAccelerometerData.TIMESTAMP);
         int valueColumnIndex = cursor.getColumnIndexOrThrow(valueColumnName);
         while (cursor.moveToNext()) {
