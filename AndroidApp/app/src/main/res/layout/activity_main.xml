@@ -53,6 +53,13 @@
             android:layout_height="match_parent"
             android:text="@string/send_event_task_button" />
 
+        <ToggleButton
+            android:id="@+id/train_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textOff="@string/training_start"
+            android:textOn="@string/training_stop" />
+
     </LinearLayout>
 
     <ListView

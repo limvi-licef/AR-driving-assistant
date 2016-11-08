@@ -2,6 +2,9 @@
     <string name="app_name">AR-driving-assistant</string>
     <string name="app_title">Welcome to the AR-driving-assistant helper tool!</string>
 
+    <string name="training_start">Start Training</string>
+    <string name="training_stop">Stop Training</string>
+
     <string name="monitoring_start">Start Monitoring</string>
     <string name="monitoring_stop">Stop Monitoring</string>
     <string name="monitoring_empty">No results yet</string>

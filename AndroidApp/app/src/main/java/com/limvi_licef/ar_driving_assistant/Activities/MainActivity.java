@@ -1,8 +1,10 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
@@ -30,6 +33,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.SensorReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
+import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
 
 import java.util.ArrayList;
@@ -128,6 +132,36 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
                 eventFragment.show(getFragmentManager(), "eventdialog");
+            }
+        });
+        final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
+        trainToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            private long startTimestamp;
+            String label;
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
+                long timestamp = System.currentTimeMillis();
+                if (toggled) {
+                    final EditText textField = new EditText(MainActivity.this);
+                    textField.setHint("Label");
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setView(textField)
+                            .setPositiveButton("Start", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    startTimestamp = System.currentTimeMillis();
+                                    label = textField.getText().toString();
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    trainToggle.setChecked(false);
+                                }
+                            })
+                            .show();
+                } else {
+                    new TrainingTask(startTimestamp ,timestamp, label, MainActivity.this).execute();
+                }
             }
         });
 
