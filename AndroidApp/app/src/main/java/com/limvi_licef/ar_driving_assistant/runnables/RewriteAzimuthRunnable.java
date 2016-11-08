@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;
@@ -31,19 +32,8 @@ public class RewriteAzimuthRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String userId) {
-        List<Structs.TimestampedDouble> data = new ArrayList<>();
-        Cursor azimuthCursor = db.query(DatabaseContract.RotationData.TABLE_NAME,
-                new String[]{DatabaseContract.RotationData.CURRENT_USER_ID, DatabaseContract.RotationData.TIMESTAMP,DatabaseContract.RotationData.AZIMUTH},
-                WHERE_CLAUSE,
-                new String[]{userId, String.valueOf(fromTimestamp), String.valueOf(toTimestamp)}, null, null, "Timestamp ASC");
-        int timestampColumnIndex = azimuthCursor.getColumnIndexOrThrow(DatabaseContract.RotationData.TIMESTAMP);
-        int speedColumnIndex = azimuthCursor.getColumnIndexOrThrow(DatabaseContract.RotationData.AZIMUTH);
-        while (azimuthCursor.moveToNext()) {
-            data.add(new Structs.TimestampedDouble(azimuthCursor.getLong(timestampColumnIndex), azimuthCursor.getDouble(speedColumnIndex)));
-        }
-        azimuthCursor.close();
-        return data;
+    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH, context);
     }
 
     @Override

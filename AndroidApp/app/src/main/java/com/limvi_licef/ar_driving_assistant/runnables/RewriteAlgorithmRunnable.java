@@ -35,7 +35,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         long now = System.currentTimeMillis();
         long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
 
-        List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now, userId);
+        List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
         Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
 
         try{
@@ -61,7 +61,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
 
     protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats, String userId);
 
-    protected abstract List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String userId);
+    protected abstract List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp);
 
     protected abstract void deleteData(long fromTimestamp, long toTimestamp, String userId);
 

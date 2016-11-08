@@ -10,6 +10,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
@@ -35,13 +36,13 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
         long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
 
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_X);
-        List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now, userId);
+        List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
         Structs.SegmentationAlgorithmReturnData dataAxisX = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Y);
-        newData = getData(nowMinusMinutes, now, userId);
+        newData = getData(nowMinusMinutes, now);
         Structs.SegmentationAlgorithmReturnData dataAxisY = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Z);
-        newData = getData(nowMinusMinutes, now, userId);
+        newData = getData(nowMinusMinutes, now);
         Structs.SegmentationAlgorithmReturnData dataAxisZ = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
 
         try{
@@ -102,19 +103,8 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String userId) {
-        List<Structs.TimestampedDouble> data = new ArrayList<>();
-        Cursor accelerationCursor = db.query(DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                new String[]{DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, DatabaseContract.LinearAccelerometerData.TIMESTAMP, getCurrentAxis()},
-                WHERE_CLAUSE,
-                new String[]{userId, String.valueOf(fromTimestamp), String.valueOf(toTimestamp)}, null, null, "Timestamp ASC");
-        int timestampColumnIndex = accelerationCursor.getColumnIndexOrThrow(DatabaseContract.LinearAccelerometerData.TIMESTAMP);
-        int accelColumnIndex = accelerationCursor.getColumnIndexOrThrow(getCurrentAxis());
-        while (accelerationCursor.moveToNext()) {
-            data.add(new Structs.TimestampedDouble(accelerationCursor.getLong(timestampColumnIndex), accelerationCursor.getDouble(accelColumnIndex)));
-        }
-        accelerationCursor.close();
-        return data;
+    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, getCurrentAxis(), context);
     }
 
     @Override

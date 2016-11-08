@@ -35,6 +35,11 @@ public final class DatabaseContract {
 
     private DatabaseContract() {}
 
+    public static abstract class CommonSensorFields {
+        public static final String TIMESTAMP = "Timestamp";
+        public static final String USER_ID = "CurrentUserID";
+    }
+
     public static abstract class LinearAccelerometerData implements BaseColumns {
         public static final String TABLE_NAME       = "LinearAccelerometerData";
         public static final String CURRENT_USER_ID = "CurrentUserID";

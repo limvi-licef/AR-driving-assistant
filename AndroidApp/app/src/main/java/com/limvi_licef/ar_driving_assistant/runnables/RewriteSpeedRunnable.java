@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;
@@ -46,19 +47,8 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String userId) {
-        List<Structs.TimestampedDouble> data = new ArrayList<>();
-        Cursor speedCursor = db.query(DatabaseContract.SpeedData.TABLE_NAME,
-                new String[]{DatabaseContract.SpeedData.CURRENT_USER_ID, DatabaseContract.SpeedData.TIMESTAMP,DatabaseContract.SpeedData.SPEED},
-                WHERE_CLAUSE,
-                new String[]{userId, String.valueOf(fromTimestamp), String.valueOf(toTimestamp)}, null, null, "Timestamp ASC");
-        int timestampColumnIndex = speedCursor.getColumnIndexOrThrow(DatabaseContract.SpeedData.TIMESTAMP);
-        int speedColumnIndex = speedCursor.getColumnIndexOrThrow(DatabaseContract.SpeedData.SPEED);
-        while (speedCursor.moveToNext()) {
-            data.add(new Structs.TimestampedDouble(speedCursor.getLong(timestampColumnIndex), speedCursor.getDouble(speedColumnIndex)));
-        }
-        speedCursor.close();
-        return data;
+    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED, context);
     }
 
     @Override
