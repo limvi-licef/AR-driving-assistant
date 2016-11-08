@@ -20,7 +20,8 @@ public final class DatabaseContract {
             SpeedData.CREATE_TABLE,
             SpeedStats.CREATE_TABLE,
             TemperatureData.CREATE_TABLE,
-            RotationData.CREATE_TABLE
+            RotationData.CREATE_TABLE,
+            TrainingEvents.CREATE_TABLE
     };
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
@@ -30,7 +31,8 @@ public final class DatabaseContract {
             SpeedData.DELETE_TABLE,
             SpeedStats.DELETE_TABLE,
             TemperatureData.DELETE_TABLE,
-            RotationData.DELETE_TABLE
+            RotationData.DELETE_TABLE,
+            TrainingEvents.DELETE_TABLE
     };
 
     private DatabaseContract() {}
@@ -198,6 +200,23 @@ public final class DatabaseContract {
                 AXIS_Y + REAL_TYPE + COMMA_SEP +
                 AXIS_Z + REAL_TYPE + COMMA_SEP +
                 AZIMUTH + REAL_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class TrainingEvents implements BaseColumns {
+        public static final String TABLE_NAME       = "TrainingEvents";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
+        public static final String START_TIMESTAMP = "StartTimestamp";
+        public static final String END_TIMESTAMP = "EndTimestamp";
+        public static final String LABEL = "Label";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
+                START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                LABEL + TEXT_TYPE  + " UNIQUE" + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 }
