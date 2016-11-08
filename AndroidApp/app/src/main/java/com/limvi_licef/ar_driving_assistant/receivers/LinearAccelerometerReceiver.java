@@ -56,14 +56,18 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            if(!runnableAxisX.isRunning()) runnableAxisX.run();
-            if(!runnableAxisY.isRunning()) runnableAxisY.run();
-            if(!runnableAxisZ.isRunning()) runnableAxisZ.run();
+            savePrematurely();
             context.unregisterReceiver(this);
             isRegistered = false;
             return true;
         }
         return false;
+    }
+
+    public void savePrematurely(){
+        if(!runnableAxisX.isRunning()) runnableAxisX.run();
+        if(!runnableAxisY.isRunning()) runnableAxisY.run();
+        if(!runnableAxisZ.isRunning()) runnableAxisZ.run();
     }
 
     @Override

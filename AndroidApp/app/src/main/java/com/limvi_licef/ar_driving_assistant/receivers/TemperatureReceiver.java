@@ -38,6 +38,10 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
         return false;
     }
 
+    public void savePrematurely(){
+        throw new UnsupportedOperationException("No runnable is used by this class");
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Temperature Receiver", "Received intent");

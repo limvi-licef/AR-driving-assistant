@@ -6,4 +6,5 @@ import android.os.Handler;
 public interface SensorReceiver {
     void register(Context context, Handler handler);
     boolean unregister(Context context);
+    void savePrematurely();
 }

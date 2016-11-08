@@ -51,12 +51,16 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
 
     public boolean unregister(Context context) {
         if (isRegistered) {
-            if(!runnable.isRunning()) runnable.run();
+            savePrematurely();
             sensorManager.unregisterListener(this, rotationSensor);
             isRegistered = false;
             return true;
         }
         return false;
+    }
+
+    public void savePrematurely(){
+        if(!runnable.isRunning()) runnable.run();
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
