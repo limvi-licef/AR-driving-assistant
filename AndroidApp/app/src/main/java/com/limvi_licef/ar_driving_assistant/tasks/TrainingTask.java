@@ -52,8 +52,23 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         String labelFound = "";
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
 
-        TimeSeries tsAxisX = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, startTimestamp, endTimestamp);
-        TimeSeries tsAxisY = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, startTimestamp, endTimestamp);
+//        TimeSeries tsAxisX = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, startTimestamp, endTimestamp);
+//        TimeSeries tsAxisY = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, startTimestamp, endTimestamp);
+
+        List<Structs.TimestampedDouble> valuesX = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, context);
+        List<Structs.TimestampedDouble> valuesY = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, context);
+//        List<Structs.TimestampedDouble> valuesZ = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
+
+        if(valuesX.size() == 0) {
+            return "No acceleration data found";
+        }
+
+        TimeSeriesBase.Builder b = TimeSeriesBase.builder();
+        for(int i = 0; i < valuesX.size() ;i++) {
+            b.add(i, valuesX.get(i).value, valuesY.get(i).value);
+        }
+        TimeSeries accel = b.build();
+
         TimeSeries tsRotation = createTimeSeriesFromSensor(DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH, startTimestamp, endTimestamp);
 
         Cursor eventCursor = db.query(DatabaseContract.TrainingEvents.TABLE_NAME,
@@ -68,18 +83,26 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             long eventEndTimestamp = eventCursor.getLong(endTimestampColumnIndex);
             String eventLabel = eventCursor.getString(labelColumnIndex);
 
-            TimeSeries eventAxisX = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, eventStartTimestamp, eventEndTimestamp);
-            TimeSeries eventAxisY = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, eventStartTimestamp, eventEndTimestamp);
+//            TimeSeries eventAxisX = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, eventStartTimestamp, eventEndTimestamp);
+//            TimeSeries eventAxisY = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, eventStartTimestamp, eventEndTimestamp);
+
+            List<Structs.TimestampedDouble> eventX = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, context);
+            List<Structs.TimestampedDouble> eventY = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, context);
+//            List<Structs.TimestampedDouble> eventZ = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
+            TimeSeriesBase.Builder c = TimeSeriesBase.builder();
+            for(int i = 0; i < eventX.size() ;i++) {
+                c.add(i, eventX.get(i).value, eventY.get(i).value);
+            }
+            TimeSeries eventAccel = c.build();
+
             TimeSeries eventRotation = createTimeSeriesFromSensor(DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH, eventStartTimestamp, eventEndTimestamp);
 
-            double distanceAxisX = FastDTW.compare(tsAxisX, eventAxisX, 100, Distances.EUCLIDEAN_DISTANCE).getDistance();
-            double distanceAxisY = FastDTW.compare(tsAxisY, eventAxisY, 100, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            double distanceAccel = FastDTW.compare(accel, eventAccel, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
             double distanceRotation = FastDTW.compare(tsRotation, eventRotation, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
             Broadcasts.sendWriteToUIBroadcast(context, "Distance Label : " + eventLabel);
-            Broadcasts.sendWriteToUIBroadcast(context, "Distance Axis X : " + distanceAxisX);
-            Broadcasts.sendWriteToUIBroadcast(context, "Distance Axis Y : " + distanceAxisY);
+            Broadcasts.sendWriteToUIBroadcast(context, "Distance Accel : " + distanceAccel);
             Broadcasts.sendWriteToUIBroadcast(context, "Distance Rotation : " + distanceRotation);
-            if(distanceAxisX < 15 && distanceAxisY < 15 && distanceRotation < 200){
+            if(distanceAccel < 15 && distanceRotation < 200){
                 matchFound = true;
                 labelFound = eventLabel;
                 break;
