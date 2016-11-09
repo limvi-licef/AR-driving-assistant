@@ -72,13 +72,14 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             TimeSeries eventAxisY = createTimeSeriesFromSensor(DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, eventStartTimestamp, eventEndTimestamp);
             TimeSeries eventRotation = createTimeSeriesFromSensor(DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH, eventStartTimestamp, eventEndTimestamp);
 
-            double distanceAxisX = FastDTW.compare(tsAxisX, eventAxisX, 1, Distances.EUCLIDEAN_DISTANCE).getDistance();
-            double distanceAxisY = FastDTW.compare(tsAxisY, eventAxisY, 1, Distances.EUCLIDEAN_DISTANCE).getDistance();
-            double distanceRotation = FastDTW.compare(tsRotation, eventRotation, 1, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            double distanceAxisX = FastDTW.compare(tsAxisX, eventAxisX, 100, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            double distanceAxisY = FastDTW.compare(tsAxisY, eventAxisY, 100, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            double distanceRotation = FastDTW.compare(tsRotation, eventRotation, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            Broadcasts.sendWriteToUIBroadcast(context, "Distance Label : " + eventLabel);
             Broadcasts.sendWriteToUIBroadcast(context, "Distance Axis X : " + distanceAxisX);
             Broadcasts.sendWriteToUIBroadcast(context, "Distance Axis Y : " + distanceAxisY);
             Broadcasts.sendWriteToUIBroadcast(context, "Distance Rotation : " + distanceRotation);
-            if(distanceAxisX > 80 && distanceAxisY > 80 && distanceRotation > 80){
+            if(distanceAxisX < 15 && distanceAxisY < 15 && distanceRotation < 200){
                 matchFound = true;
                 labelFound = eventLabel;
                 break;
@@ -87,7 +88,7 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         eventCursor.close();
 
         if(matchFound) {
-            return labelFound;
+            return "Match Found : " + labelFound;
         } else {
             return saveNewEvent(db);
         }
