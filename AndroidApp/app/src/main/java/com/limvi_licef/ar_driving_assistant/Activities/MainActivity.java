@@ -92,18 +92,6 @@ public class MainActivity extends Activity {
 
     private void setupUIElements() {
 
-        ToggleButton monitoringToggle = (ToggleButton) findViewById(R.id.monitoring_button);
-        monitoringToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
-                if (toggled) {
-                    startMonitoring();
-
-                } else {
-                    stopMonitoring();
-                }
-            }
-        });
         Button setup = (Button) findViewById(R.id.setup_button);
         setup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +123,7 @@ public class MainActivity extends Activity {
             }
         });
         final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
+        trainToggle.setEnabled(false);
         trainToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             private long startTimestamp = 0;
             String label;
@@ -164,9 +153,24 @@ public class MainActivity extends Activity {
                     results.clear();
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
-                    locationReceiver.savePrematurely();
+//                    locationReceiver.savePrematurely();
                     new TrainingTask(startTimestamp ,timestamp, label, MainActivity.this).execute();
                     startTimestamp = 0;
+                }
+            }
+        });
+
+        ToggleButton monitoringToggle = (ToggleButton) findViewById(R.id.monitoring_button);
+        monitoringToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
+                if (toggled) {
+                    startMonitoring();
+                    trainToggle.setEnabled(true);
+
+                } else {
+                    stopMonitoring();
+                    trainToggle.setEnabled(false);
                 }
             }
         });
