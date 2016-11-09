@@ -2,6 +2,7 @@ package com.limvi_licef.ar_driving_assistant.runnables;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
@@ -25,7 +26,7 @@ public class ComputeAzimuthRunnable extends ComputeAlgorithmRunnable {
             values.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.RotationData.TIMESTAMP, td.timestamp);
             values.put(DatabaseContract.RotationData.AZIMUTH, td.value);
-            db.insert(DatabaseContract.RotationData.TABLE_NAME, null, values);
+            db.insertWithOnConflict(DatabaseContract.RotationData.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         }
     }
 
