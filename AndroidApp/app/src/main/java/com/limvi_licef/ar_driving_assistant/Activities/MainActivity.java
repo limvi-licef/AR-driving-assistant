@@ -136,7 +136,7 @@ public class MainActivity extends Activity {
         });
         final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
         trainToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            private long startTimestamp;
+            private long startTimestamp = 0;
             String label;
 
             @Override
@@ -160,10 +160,13 @@ public class MainActivity extends Activity {
                             })
                             .show();
                 } else {
+                    if(startTimestamp == 0) return;
+                    results.clear();
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
                     locationReceiver.savePrematurely();
                     new TrainingTask(startTimestamp ,timestamp, label, MainActivity.this).execute();
+                    startTimestamp = 0;
                 }
             }
         });
