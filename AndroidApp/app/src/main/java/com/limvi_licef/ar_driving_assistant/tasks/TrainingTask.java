@@ -14,9 +14,10 @@ import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
-import static com.limvi_licef.ar_driving_assistant.utils.TimeSeries.createTimeSeriesFromSensor;
+import static com.limvi_licef.ar_driving_assistant.utils.Events.createTimeSeriesFromSensor;
 
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
@@ -91,26 +92,12 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         if(matchFound) {
             return "Match Found : " + labelFound;
         } else {
-            return saveNewEvent(db);
+            return Events.saveNewEvent(context, db, startTimestamp, endTimestamp, label);
         }
     }
 
     @Override
     protected void onPostExecute (String result) {
         Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
-    }
-
-    private String saveNewEvent(SQLiteDatabase db) {
-        db.beginTransaction();
-        String userId = Preferences.getCurrentUserId(context);
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.TrainingEvents.CURRENT_USER_ID, userId);
-        values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, startTimestamp);
-        values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, endTimestamp);
-        values.put(DatabaseContract.TrainingEvents.LABEL, label);
-        int result = (int) db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        return result == -1 ? "Label already exists" : "No Match Found, inserting event to database";
     }
 }
