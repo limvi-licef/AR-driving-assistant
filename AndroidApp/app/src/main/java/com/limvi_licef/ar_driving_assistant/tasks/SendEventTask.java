@@ -20,7 +20,13 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
 
     private Context context;
     private String message;
+    private static final String DEFAULT_EVENT_TYPE = "Information";
     private final static String delimiter = ";";
+
+    public SendEventTask(Context context, String message){
+        this.context = context;
+        this.message = DEFAULT_EVENT_TYPE + delimiter + message + "\r\n";
+    }
 
     public SendEventTask(Context context, String eventName, String message){
         this.context = context;
