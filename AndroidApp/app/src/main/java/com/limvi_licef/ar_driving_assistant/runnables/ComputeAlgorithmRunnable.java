@@ -25,11 +25,30 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     private String insertionStatus;
     private boolean isRunning = false;
 
+    private static class MasterList {
+        private static int runnableCount = 0;
+        private static int runnableDoneCount = 0;
+
+        private static void addToCount(){
+            runnableCount++;
+        }
+
+        private static void notifyRunnableEnd() {
+            runnableDoneCount++;
+
+            if(runnableCount == runnableDoneCount){
+                runnableDoneCount = 0;
+                //run task
+            }
+        }
+    }
+
     ComputeAlgorithmRunnable(Handler handler, Context context) {
         this.data = new ArrayList<>();
         this.handler = handler;
         this.context = context;
         this.db = DatabaseHelper.getHelper(context).getWritableDatabase();
+        MasterList.addToCount();
     }
 
     @Override
@@ -57,6 +76,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             isRunning = false;
             handler.postDelayed(this, DELAY);
+            MasterList.notifyRunnableEnd();
         }
     }
 
