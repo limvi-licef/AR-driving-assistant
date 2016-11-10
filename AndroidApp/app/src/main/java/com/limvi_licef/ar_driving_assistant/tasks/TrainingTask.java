@@ -10,17 +10,13 @@ import android.widget.Toast;
 
 import com.fastdtw.dtw.FastDTW;
 import com.fastdtw.timeseries.TimeSeries;
-import com.fastdtw.timeseries.TimeSeriesBase;
 import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.limvi_licef.ar_driving_assistant.utils.TimeSeries.createTimeSeriesFromSensor;
 
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
@@ -53,9 +49,9 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         TimeSeries accel;
         TimeSeries tsRotation;
         try {
-            accel = createTimeSeriesFromSensor(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            accel = createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            tsRotation = createTimeSeriesFromSensor(startTimestamp, endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            tsRotation = createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
         } catch(IndexOutOfBoundsException e) {
             return "No data from sensor found";
         }
@@ -75,9 +71,9 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             long eventEndTimestamp = eventCursor.getLong(endTimestampColumnIndex);
             String eventLabel = eventCursor.getString(labelColumnIndex);
 
-            TimeSeries eventAccel = createTimeSeriesFromSensor(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            TimeSeries eventAccel = createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            TimeSeries eventRotation = createTimeSeriesFromSensor(eventStartTimestamp, eventEndTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            TimeSeries eventRotation = createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
 
             double distanceAccel = FastDTW.compare(accel, eventAccel, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
             double distanceRotation = FastDTW.compare(tsRotation, eventRotation, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
@@ -116,22 +112,5 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         db.setTransactionSuccessful();
         db.endTransaction();
         return result == -1 ? "Label already exists" : "No Match Found, inserting event to database";
-    }
-
-    private TimeSeries createTimeSeriesFromSensor(long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) {
-        List<List<Structs.TimestampedDouble>> valuesList = new ArrayList<>();
-        for(String column : valueColumnNames) {
-            valuesList.add(Database.getSensorData(startTimestamp, endTimestamp, tableName, column, context));
-        }
-
-        TimeSeriesBase.Builder b = TimeSeriesBase.builder();
-        for(int i = 0; i < valuesList.get(0).size(); i++) {
-            double [] values = new double[valueColumnNames.length];
-            for(int j = 0; j < valueColumnNames.length; j++){
-                values[j] = valuesList.get(j).get(i).value;
-            }
-            b.add(valuesList.get(0).get(i).timestamp, values);
-        }
-        return b.build();
     }
 }
