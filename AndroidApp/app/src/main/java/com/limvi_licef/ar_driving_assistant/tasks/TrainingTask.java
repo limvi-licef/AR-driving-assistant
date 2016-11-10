@@ -1,6 +1,5 @@
 package com.limvi_licef.ar_driving_assistant.tasks;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -37,17 +36,15 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onPreExecute() {
+    protected String doInBackground(Void... params) {
+
         try {
             //wait for sensor runnables to save data
             Thread.sleep(500);
         } catch (InterruptedException e) {
             Log.d("TrainingTask", "" + e.getMessage());
         }
-    }
 
-    @Override
-    protected String doInBackground(Void... params) {
         boolean matchFound = false;
         String labelFound = "";
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
@@ -57,7 +54,7 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
 
         List<Structs.TimestampedDouble> valuesX = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, context);
         List<Structs.TimestampedDouble> valuesY = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, context);
-//        List<Structs.TimestampedDouble> valuesZ = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
+        List<Structs.TimestampedDouble> valuesZ = Database.getSensorData(startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
 
         if(valuesX.size() == 0) {
             return "No acceleration data found";
@@ -65,7 +62,8 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
 
         TimeSeriesBase.Builder b = TimeSeriesBase.builder();
         for(int i = 0; i < valuesX.size() ;i++) {
-            b.add(i, valuesX.get(i).value, valuesY.get(i).value);
+            Log.d("Timeseries","X : " + valuesX.get(i).value + " Y : " + valuesY.get(i).value + " Z : " + valuesZ.get(i).value);
+            b.add(valuesX.get(i).timestamp, valuesX.get(i).value, valuesY.get(i).value, valuesZ.get(i).value);
         }
         TimeSeries accel = b.build();
 
@@ -88,10 +86,10 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
 
             List<Structs.TimestampedDouble> eventX = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_X, context);
             List<Structs.TimestampedDouble> eventY = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Y, context);
-//            List<Structs.TimestampedDouble> eventZ = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
+            List<Structs.TimestampedDouble> eventZ = Database.getSensorData(eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, DatabaseContract.LinearAccelerometerData.AXIS_Z, context);
             TimeSeriesBase.Builder c = TimeSeriesBase.builder();
             for(int i = 0; i < eventX.size() ;i++) {
-                c.add(i, eventX.get(i).value, eventY.get(i).value);
+                c.add(eventX.get(i).timestamp, eventX.get(i).value, eventY.get(i).value,eventZ.get(i).value);
             }
             TimeSeries eventAccel = c.build();
 
