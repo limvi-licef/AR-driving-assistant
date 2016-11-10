@@ -7,6 +7,7 @@ import android.os.Handler;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.tasks.MatchEventTask;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
@@ -25,21 +26,19 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     private String insertionStatus;
     private boolean isRunning = false;
 
-    private static class MasterList {
-        private static int runnableCount = 0;
-        private static int runnableDoneCount = 0;
+    private static int runnableCount = 0;
+    private static int runnableDoneCount = 0;
 
-        private static void addToCount(){
-            runnableCount++;
-        }
+    private void addToCount(){
+        runnableCount++;
+    }
 
-        private static void notifyRunnableEnd() {
-            runnableDoneCount++;
+    private void notifyRunnableEnd() {
+        runnableDoneCount++;
 
-            if(runnableCount == runnableDoneCount){
-                runnableDoneCount = 0;
-                //run task
-            }
+        if(runnableCount == runnableDoneCount){
+            runnableDoneCount = 0;
+            new MatchEventTask(context, SECONDS).execute();
         }
     }
 
@@ -48,7 +47,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         this.handler = handler;
         this.context = context;
         this.db = DatabaseHelper.getHelper(context).getWritableDatabase();
-        MasterList.addToCount();
+        addToCount();
     }
 
     @Override
@@ -76,7 +75,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             isRunning = false;
             handler.postDelayed(this, DELAY);
-            MasterList.notifyRunnableEnd();
+            notifyRunnableEnd();
         }
     }
 
