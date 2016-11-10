@@ -72,7 +72,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     }
 
     private List<Structs.TimestampedDouble> getData() {
-        return data;
+        return new ArrayList<>(data);
     }
 
     protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats);
