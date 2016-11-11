@@ -6,7 +6,9 @@ import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Statistics {
+public final class Statistics {
+
+    private Statistics(){}
 
     /*
      * Rounds off the given timestamp

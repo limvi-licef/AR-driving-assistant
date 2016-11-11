@@ -11,7 +11,9 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Database {
+public final class Database {
+
+    private Database(){}
 
     public static ArrayList<String> getAllTableNames(SQLiteDatabase database){
         ArrayList<String> namesArray = new ArrayList<>();

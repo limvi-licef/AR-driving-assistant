@@ -16,7 +16,9 @@ import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Events {
+public final class Events {
+
+    private Events(){}
 
     private static final String DEFAULT_EVENT_TYPE = "Information";
     private final static String delimiter = ";";

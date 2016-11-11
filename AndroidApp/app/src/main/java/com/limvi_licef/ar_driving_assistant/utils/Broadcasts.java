@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-public abstract class Broadcasts {
+public final class Broadcasts {
+
+    private Broadcasts(){}
 
    /*
     * Send local broadcast with message to write to Main Activity monitoring textview

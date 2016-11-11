@@ -3,7 +3,9 @@ package com.limvi_licef.ar_driving_assistant.utils;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Structs {
+public final class Structs {
+
+    private Structs(){}
 
     /*
     * Struct that holds a Double and a Timestamp

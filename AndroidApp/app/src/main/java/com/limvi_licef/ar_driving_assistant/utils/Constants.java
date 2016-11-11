@@ -1,6 +1,8 @@
 package com.limvi_licef.ar_driving_assistant.utils;
 
-public abstract class Constants {
+public final class Constants {
+
+    private Constants(){}
 
     public static final String USER_SHARED_PREFERENCES = "user_shared";
     public static final String ID_PREFERENCE = "user_id";
