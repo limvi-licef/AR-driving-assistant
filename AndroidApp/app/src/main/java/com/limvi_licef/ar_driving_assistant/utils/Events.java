@@ -1,12 +1,9 @@
 package com.limvi_licef.ar_driving_assistant.utils;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.timeseries.TimeSeriesBase;
-import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -60,7 +57,7 @@ public final class Events {
         Information, Advice, Warning, LeftWarning, RightWarning
     }
 
-    public static class Event {
+    public class Event {
         String label;
         long startTimestamp;
         long endTimestamp;
