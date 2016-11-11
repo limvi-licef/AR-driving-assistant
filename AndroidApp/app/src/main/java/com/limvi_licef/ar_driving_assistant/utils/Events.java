@@ -52,18 +52,4 @@ public final class Events {
         }
         return b.build();
     }
-
-    public static String saveNewEvent(Context context, SQLiteDatabase db, long startTimestamp, long endTimestamp, String label) {
-        db.beginTransaction();
-        String userId = Preferences.getCurrentUserId(context);
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.TrainingEvents.CURRENT_USER_ID, userId);
-        values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, startTimestamp);
-        values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, endTimestamp);
-        values.put(DatabaseContract.TrainingEvents.LABEL, label);
-        int result = (int) db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        return result == -1 ? "Label already exists" : "No Match Found, inserting event to database";
-    }
 }
