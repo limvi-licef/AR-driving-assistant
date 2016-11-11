@@ -1,9 +1,11 @@
 package com.limvi_licef.ar_driving_assistant.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.timeseries.TimeSeriesBase;
+import com.limvi_licef.ar_driving_assistant.R;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -20,17 +22,23 @@ public final class Events {
     private static final String DEFAULT_EVENT_TYPE = "Information";
     private final static String delimiter = ";";
 
-    public static boolean sendEvent(Context context, String eventType, String msgFragment) throws IOException {
-        String message = (eventType != null ? eventType : DEFAULT_EVENT_TYPE) + delimiter + msgFragment + "\r\n";
-        String ipString = Preferences.getIPAddress(context);
-        if (ipString == null || ipString.isEmpty()) return false;
+    public static String sendEvent(Context context, String eventType, String msgFragment) {
+        try {
+            String message = (eventType != null ? eventType : DEFAULT_EVENT_TYPE) + delimiter + msgFragment + "\r\n";
+            String ipString = Preferences.getIPAddress(context);
+            if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 
-        InetAddress ipAddress = InetAddress.getByName(ipString);
-        DatagramSocket socket = DatagramChannel.open().socket();
-        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
-        socket.send(dp);
-        socket.close();
-        return true;
+            InetAddress ipAddress = InetAddress.getByName(ipString);
+            DatagramSocket socket = DatagramChannel.open().socket();
+            DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
+            socket.send(dp);
+            socket.close();
+        } catch (IOException e) {
+            Log.d("EventSender", "" + e.getMessage());
+            return context.getResources().getString(R.string.send_event_task_failure);
+        }
+        return context.getResources().getString(R.string.send_event_task_success);
+    }
     }
 
     public static TimeSeries createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) {

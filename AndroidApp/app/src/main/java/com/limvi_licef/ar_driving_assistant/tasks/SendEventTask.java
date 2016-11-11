@@ -23,14 +23,7 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
     }
 
     protected String doInBackground(String... urls) {
-        try {
-            if (!Events.sendEvent(context, eventType, message))
-                return context.getResources().getString(R.string.send_event_task_invalid_ip);
-            return context.getResources().getString(R.string.send_event_task_success);
-        } catch (IOException e) {
-            Log.d("EventSender", "" + e.getMessage());
-            return context.getResources().getString(R.string.send_event_task_failure);
-        }
+        return Events.sendEvent(context, eventType, message);
     }
 
     protected void onPostExecute(String toast) {
