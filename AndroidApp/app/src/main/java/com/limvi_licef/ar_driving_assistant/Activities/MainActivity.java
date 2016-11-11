@@ -18,7 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
 import com.aware.Aware;
@@ -35,6 +38,7 @@ import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
+import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
 
@@ -127,19 +131,45 @@ public class MainActivity extends Activity {
         trainToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             private long startTimestamp = 0;
             String label;
+            String type;
+            String message;
 
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
                 long timestamp = System.currentTimeMillis();
                 if (toggled) {
-                    final EditText textField = new EditText(MainActivity.this);
-                    textField.setHint("Label");
+
+                    LinearLayout layout = new LinearLayout(MainActivity.this);
+                    layout.setOrientation(LinearLayout.VERTICAL);
+
+                    final EditText labelField = new EditText(MainActivity.this);
+                    labelField.setHint("Label");
+                    layout.addView(labelField);
+
+                    final RadioGroup rg = new RadioGroup(MainActivity.this);
+                    rg.setOrientation(RadioGroup.VERTICAL);
+                    for(Events.EventTypes event : Events.EventTypes.values()){
+                        RadioButton rb = new RadioButton(MainActivity.this);
+                        rg.addView(rb);
+                        rb.setText(event.name());
+                    }
+                    rg.check(rg.getChildAt(0).getId());
+                    layout.addView(rg);
+
+                    final EditText eventText = new EditText(MainActivity.this);
+                    eventText.setHint("Message");
+                    layout.addView(eventText);
+
                     new AlertDialog.Builder(MainActivity.this)
-                            .setView(textField)
+                            .setView(layout)
                             .setPositiveButton("Start", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     startTimestamp = System.currentTimeMillis();
-                                    label = textField.getText().toString();
+                                    label = labelField.getText().toString();
+                                    int index = rg.getCheckedRadioButtonId() % rg.getChildCount();
+                                    RadioButton rb = (RadioButton)rg.getChildAt((index == 0) ? rg.getChildCount()-1 : index-1);
+                                    type = rb.getText().toString();
+                                    message = eventText.getText().toString();
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -153,8 +183,8 @@ public class MainActivity extends Activity {
                     results.clear();
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
-//                    locationReceiver.savePrematurely();
-                    new TrainingTask(startTimestamp ,timestamp, label, MainActivity.this).execute();
+                    locationReceiver.savePrematurely();
+                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
                     startTimestamp = 0;
                 }
             }

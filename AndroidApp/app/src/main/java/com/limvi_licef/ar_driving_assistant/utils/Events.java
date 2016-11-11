@@ -57,12 +57,12 @@ public final class Events {
         Information, Advice, Warning, LeftWarning, RightWarning
     }
 
-    public class Event {
-        String label;
-        long startTimestamp;
-        long endTimestamp;
-        EventTypes type;
-        String message;
+    public static class Event {
+        public String label;
+        public long startTimestamp;
+        public long endTimestamp;
+        public EventTypes type;
+        public String message;
 
         public Event (String label, long startTimestamp, long endTimestamp, EventTypes type, String message) {
             this.label = label;

@@ -14,15 +14,11 @@ import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
-    private final long startTimestamp;
-    private final long endTimestamp;
     private Context context;
-    private String label;
+    private Events.Event event;
 
-    public TrainingTask(long startTimestamp, long stopTimestamp, String label, Context context) {
-        this.startTimestamp = startTimestamp;
-        this.endTimestamp = stopTimestamp;
-        this.label = label;
+    public TrainingTask(Events.Event event, Context context) {
+        this.event = event;
         this.context = context;
     }
 
@@ -37,15 +33,15 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         }
 
         try {
-            Events.createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            Events.createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-            Events.createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
         } catch(IndexOutOfBoundsException e) {
             return "Error inserting event : no data from sensor found";
         }
 
-        return saveNewEvent(startTimestamp, endTimestamp, label);
+        return saveNewEvent(event);
     }
 
     @Override
@@ -53,15 +49,17 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
     }
 
-    private String saveNewEvent(long startTimestamp, long endTimestamp, String label) {
+    private String saveNewEvent(Events.Event event) {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();
         String userId = Preferences.getCurrentUserId(context);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.TrainingEvents.CURRENT_USER_ID, userId);
-        values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, startTimestamp);
-        values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, endTimestamp);
-        values.put(DatabaseContract.TrainingEvents.LABEL, label);
+        values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, event.startTimestamp);
+        values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, event.endTimestamp);
+        values.put(DatabaseContract.TrainingEvents.LABEL, event.label);
+        values.put(DatabaseContract.TrainingEvents.TYPE, event.type.name());
+        values.put(DatabaseContract.TrainingEvents.MESSAGE, event.message);
         int result = (int) db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         db.setTransactionSuccessful();
         db.endTransaction();
