@@ -17,8 +17,6 @@ import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
-import static com.limvi_licef.ar_driving_assistant.utils.Events.createTimeSeriesFromSensor;
-
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
     private final long startTimestamp;
@@ -50,9 +48,9 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         TimeSeries accel;
         TimeSeries tsRotation;
         try {
-            accel = createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            accel = Events.createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            tsRotation = createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            tsRotation = Events.createTimeSeriesFromSensor(context, startTimestamp, endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
         } catch(IndexOutOfBoundsException e) {
             return "No data from sensor found";
         }
@@ -72,9 +70,9 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             long eventEndTimestamp = eventCursor.getLong(endTimestampColumnIndex);
             String eventLabel = eventCursor.getString(labelColumnIndex);
 
-            TimeSeries eventAccel = createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            TimeSeries eventAccel = Events.createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            TimeSeries eventRotation = createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            TimeSeries eventRotation = Events.createTimeSeriesFromSensor(context, eventStartTimestamp, eventEndTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
 
             double distanceAccel = FastDTW.compare(accel, eventAccel, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
             double distanceRotation = FastDTW.compare(tsRotation, eventRotation, 10, Distances.EUCLIDEAN_DISTANCE).getDistance();
