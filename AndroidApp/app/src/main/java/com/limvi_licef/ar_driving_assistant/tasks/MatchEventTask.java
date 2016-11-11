@@ -36,7 +36,7 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
 
             for(long start = startTimestamp, stop = startTimestamp + eventDuration; stop < this.endTimestamp; start += Constants.TIME_BETWEEN_SEGMENTS, stop += Constants.TIME_BETWEEN_SEGMENTS){
 
-                Log.d("DTW", "Segment / From : " + event.startTimestamp + " To : " + event.endTimestamp);
+                Log.d("DTW", "Segment / From : " + start + " To : " + stop);
 
                 TimeSeries eventAccel, eventRotation, eventSpeed, segmentAccel, segmentRotation, segmentSpeed;
                 try {
