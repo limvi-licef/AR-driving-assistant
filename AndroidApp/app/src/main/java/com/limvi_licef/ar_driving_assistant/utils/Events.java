@@ -52,4 +52,27 @@ public final class Events {
         }
         return b.build();
     }
+
+    /*
+     * Event types defined in the UnityApp
+     */
+    public enum EventTypes {
+        Information, Advice, Warning, LeftWarning, RightWarning
+    }
+
+    public static class Event {
+        String label;
+        long startTimestamp;
+        long endTimestamp;
+        EventTypes type;
+        String message;
+
+        public Event (String label, long startTimestamp, long endTimestamp, EventTypes type, String message) {
+            this.label = label;
+            this.startTimestamp = startTimestamp;
+            this.endTimestamp = endTimestamp;
+            this.type = type;
+            this.message = message;
+        }
+    }
 }

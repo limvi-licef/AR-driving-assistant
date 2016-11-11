@@ -12,7 +12,7 @@ import android.widget.RadioGroup;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.tasks.SendEventTask;
-import com.limvi_licef.ar_driving_assistant.utils.Enums;
+import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 public class SendEventDialogFragment extends DialogFragment {
 
@@ -27,7 +27,7 @@ public class SendEventDialogFragment extends DialogFragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         final RadioGroup rg = new RadioGroup(getActivity());
         rg.setOrientation(RadioGroup.VERTICAL);
-        for(Enums.EventTypes event : Enums.EventTypes.values()){
+        for(Events.EventTypes event : Events.EventTypes.values()){
             RadioButton rb = new RadioButton(getActivity());
             rg.addView(rb);
             rb.setText(event.name());
