@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class ComputeAlgorithmRunnable implements Runnable {
 
     private static final int TOLERANCE = 1;
-    private static final int SECONDS = 30;
+    private static final int SECONDS = 60;
     public final int DELAY = 1000 * SECONDS;
     protected List<Structs.TimestampedDouble> data;
     protected Handler handler;
