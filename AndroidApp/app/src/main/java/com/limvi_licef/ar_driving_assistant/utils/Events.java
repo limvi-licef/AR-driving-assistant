@@ -46,9 +46,12 @@ public final class Events {
     public static List<Event> getAllEvents(Context context){
         List<Event> events = new ArrayList<>();
         Cursor eventCursor = DatabaseHelper.getHelper(context).getWritableDatabase().query(DatabaseContract.TrainingEvents.TABLE_NAME,
-                new String[]{DatabaseContract.TrainingEvents.START_TIMESTAMP, DatabaseContract.TrainingEvents.END_TIMESTAMP, DatabaseContract.TrainingEvents.LABEL},
-                DatabaseContract.TrainingEvents.CURRENT_USER_ID + " = ?",
-                new String[]{Preferences.getCurrentUserId(context)}, null, null, null);
+                new String[]{DatabaseContract.TrainingEvents.START_TIMESTAMP,
+                        DatabaseContract.TrainingEvents.END_TIMESTAMP,
+                        DatabaseContract.TrainingEvents.LABEL,
+                        DatabaseContract.TrainingEvents.TYPE,
+                        DatabaseContract.TrainingEvents.MESSAGE},
+                null, null, null, null, null);
         int startTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.START_TIMESTAMP);
         int endTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.END_TIMESTAMP);
         int labelColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.LABEL);
