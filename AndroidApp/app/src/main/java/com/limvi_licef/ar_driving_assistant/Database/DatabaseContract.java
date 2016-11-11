@@ -209,6 +209,8 @@ public final class DatabaseContract {
         public static final String START_TIMESTAMP = "StartTimestamp";
         public static final String END_TIMESTAMP = "EndTimestamp";
         public static final String LABEL = "Label";
+        public static final String TYPE = "Type";
+        public static final String MESSAGE = "Message";
 
         public static final String CREATE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -216,6 +218,8 @@ public final class DatabaseContract {
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                TYPE + TEXT_TYPE + COMMA_SEP +
+                MESSAGE + TEXT_TYPE + COMMA_SEP +
                 LABEL + TEXT_TYPE  + " UNIQUE" + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
