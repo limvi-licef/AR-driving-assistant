@@ -69,6 +69,7 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
             }
         }
         Log.d("DTW", "DTW Done");
+        Broadcasts.sendWriteToUIBroadcast(context, "DTW done");
         return null;
     }
 
