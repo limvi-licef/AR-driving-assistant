@@ -37,15 +37,22 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
             for(long start = startTimestamp, stop = startTimestamp + eventDuration; stop < this.endTimestamp; start += Constants.TIME_BETWEEN_SEGMENTS, stop += Constants.TIME_BETWEEN_SEGMENTS){
 
                 Log.d("DTW", "Segment / From : " + event.startTimestamp + " To : " + event.endTimestamp);
-                TimeSeries eventAccel = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                        DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-                TimeSeries eventRotation = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-                TimeSeries eventSpeed = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
 
-                TimeSeries segmentAccel = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                        DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-                TimeSeries segmentRotation = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-                TimeSeries segmentSpeed = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+                TimeSeries eventAccel, eventRotation, eventSpeed, segmentAccel, segmentRotation, segmentSpeed;
+                try {
+                    eventAccel = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+                            DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
+                    eventRotation = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+                    eventSpeed = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+
+                    segmentAccel = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+                            DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
+                    segmentRotation = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+                    segmentSpeed = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+                } catch(IndexOutOfBoundsException e) {
+                    Log.d("DTW", "No data in segment");
+                    continue;
+                }
 
                 double distanceAccel = FastDTW.compare(eventAccel, segmentAccel, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
                 double distanceRotation = FastDTW.compare(eventRotation, segmentRotation, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();

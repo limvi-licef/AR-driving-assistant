@@ -67,7 +67,7 @@ public final class Events {
         return events;
     }
 
-    public static TimeSeries createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) {
+    public static TimeSeries createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) throws IndexOutOfBoundsException {
         List<List<Structs.TimestampedDouble>> valuesList = new ArrayList<>();
         for(String column : valueColumnNames) {
             valuesList.add(Database.getSensorData(startTimestamp, endTimestamp, tableName, column, context));
