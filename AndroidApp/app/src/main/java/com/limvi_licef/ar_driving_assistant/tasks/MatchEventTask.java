@@ -68,7 +68,7 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
-
+        Log.d("DTW", "DTW Done");
         return null;
     }
 
