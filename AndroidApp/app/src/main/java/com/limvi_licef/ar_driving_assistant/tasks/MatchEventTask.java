@@ -29,6 +29,10 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
+        Double closestAcceleration = null;
+        Double closestRotation = null;
+        Double closestSpeed = null;
+
         for (Events.Event event : Events.getAllEvents(context)) {
             long eventDuration = event.endTimestamp - event.startTimestamp;
             Log.d("DTW", "Event : " + event.label + " From : " + event.startTimestamp + " To : " + event.endTimestamp);
@@ -58,6 +62,10 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
                 double distanceRotation = FastDTW.compare(eventRotation, segmentRotation, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
                 double distanceSpeed = FastDTW.compare(eventSpeed, segmentSpeed, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
 
+                closestAcceleration = (closestAcceleration == null || distanceAccel < closestAcceleration ) ? distanceAccel : closestAcceleration;
+                closestRotation = (closestRotation == null || distanceRotation < closestRotation ) ? distanceRotation : closestRotation;
+                closestSpeed = (closestSpeed == null || distanceSpeed < closestSpeed ) ? distanceSpeed : closestSpeed;
+
                 Log.d("DTW", "Distance Acceleration : " + distanceAccel + " Distance Rotation : " + distanceRotation + " Distance Speed : " + distanceSpeed);
 
                 if(distanceAccel < Constants.ACCELERATION_DISTANCE_CUTOFF && distanceRotation < Constants.ROTATION_DISTANCE_CUTOFF && distanceSpeed < Constants.SPEED_DISTANCE_CUTOFF){
@@ -68,6 +76,7 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
+        Broadcasts.sendWriteToUIBroadcast(context, "Closest Acceleration : " + closestAcceleration + " Closest Rotation : " + closestRotation + " Closest Speed : " + closestSpeed);
         Log.d("DTW", "DTW Done");
         Broadcasts.sendWriteToUIBroadcast(context, "DTW done");
         return null;
