@@ -34,7 +34,7 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
     private float[] rMatRemap = new float[16];
     private long previousTimestamp = 0;
     private final long MINIMUM_DELAY = 10;
-    private final long PRECISION = 25;
+    private final long PRECISION = 100;
 
     public RotationReceiver() {}
 

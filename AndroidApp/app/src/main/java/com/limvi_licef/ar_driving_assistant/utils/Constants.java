@@ -42,6 +42,6 @@ public final class Constants {
     public static final double ACCELERATION_DISTANCE_CUTOFF = 15;
     public static final double ROTATION_DISTANCE_CUTOFF = 200;
     public static final double SPEED_DISTANCE_CUTOFF = 10;
-    public static final double TIME_BETWEEN_SEGMENTS = 50;
+    public static final double TIME_BETWEEN_SEGMENTS = 100;
     public static final int SEARCH_RADIUS = 10;
 }
