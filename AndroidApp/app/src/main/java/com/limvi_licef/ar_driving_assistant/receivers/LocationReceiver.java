@@ -20,6 +20,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
@@ -35,14 +36,13 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     private static final double KM_PER_HOUR_CONVERSION = 3.6; //  m/s to km/h --> 60 * 60 / 1000
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
     private long previousTimestamp = 0;
-    private final long MINIMUM_DELAY = 10;
 
     public void register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeSpeedRunnable(handler, context);
-        handler.postDelayed(runnable, runnable.DELAY);
+        handler.postDelayed(runnable, Config.SensorDataCollection.SHORT_DELAY);
         rewriteRunnable = new RewriteSpeedRunnable(handler, context);
-        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
+        handler.postDelayed(rewriteRunnable, Config.SensorDataCollection.LONG_DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
@@ -63,7 +63,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Location Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         //get most recent
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");

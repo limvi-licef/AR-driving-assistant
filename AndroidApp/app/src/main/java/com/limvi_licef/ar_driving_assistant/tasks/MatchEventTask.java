@@ -9,10 +9,8 @@ import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
-
-import java.util.concurrent.TimeUnit;
 
 public class MatchEventTask extends AsyncTask<Void, Void, Void> {
 
@@ -20,10 +18,15 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
     private final long startTimestamp;
     private final long endTimestamp;
 
-    public MatchEventTask(Context context, int seconds) {
+    /**
+     * Task that tries to match each TrainingEvent to recent sensor data
+     * @param context
+     * @param duration Defines how far back to fetch the sensor data, in milliseconds
+     */
+    public MatchEventTask(Context context, long duration) {
         this.context = context;
         this.endTimestamp = System.currentTimeMillis();
-        this.startTimestamp = endTimestamp - TimeUnit.SECONDS.toMillis(seconds);
+        this.startTimestamp = endTimestamp - duration;
     }
 
     @Override
@@ -38,7 +41,8 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
             Log.d("DTW", "Event : " + event.label + " From : " + event.startTimestamp + " To : " + event.endTimestamp);
             Log.d("DTW", "Duration : " + eventDuration);
 
-            for(long start = startTimestamp, stop = startTimestamp + eventDuration; stop < this.endTimestamp; start += Constants.TIME_BETWEEN_SEGMENTS, stop += Constants.TIME_BETWEEN_SEGMENTS){
+            for(long start = startTimestamp, stop = startTimestamp + eventDuration; stop < this.endTimestamp;
+                            start += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS, stop += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS){
 
                 Log.d("DTW", "Segment / From : " + start + " To : " + stop);
 
@@ -58,9 +62,9 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
                     continue;
                 }
 
-                double distanceAccel = FastDTW.compare(eventAccel, segmentAccel, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
-                double distanceRotation = FastDTW.compare(eventRotation, segmentRotation, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
-                double distanceSpeed = FastDTW.compare(eventSpeed, segmentSpeed, Constants.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
+                double distanceAccel = FastDTW.compare(eventAccel, segmentAccel, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
+                double distanceRotation = FastDTW.compare(eventRotation, segmentRotation, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
+                double distanceSpeed = FastDTW.compare(eventSpeed, segmentSpeed, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
 
                 closestAcceleration = (closestAcceleration == null || distanceAccel < closestAcceleration ) ? distanceAccel : closestAcceleration;
                 closestRotation = (closestRotation == null || distanceRotation < closestRotation ) ? distanceRotation : closestRotation;
@@ -68,7 +72,9 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
 
                 Log.d("DTW", "Distance Acceleration : " + distanceAccel + " Distance Rotation : " + distanceRotation + " Distance Speed : " + distanceSpeed);
 
-                if(distanceAccel < Constants.ACCELERATION_DISTANCE_CUTOFF && distanceRotation < Constants.ROTATION_DISTANCE_CUTOFF && distanceSpeed < Constants.SPEED_DISTANCE_CUTOFF){
+                if(distanceAccel < Config.DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF
+                        && distanceRotation < Config.DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF
+                        && distanceSpeed < Config.DynamicTimeWarping.SPEED_DISTANCE_CUTOFF){
                     Log.d("DTW", "Match Found : " + event.label);
                     matchFound(event);
                 } else {

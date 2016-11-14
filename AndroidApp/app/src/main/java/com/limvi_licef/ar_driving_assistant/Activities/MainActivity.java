@@ -37,14 +37,14 @@ import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
-
-    private final int MONITORING_RESULTS_MAX = 10;
 
     private HandlerThread sensorThread;
     private Handler sensorHandler;
@@ -56,12 +56,12 @@ public class MainActivity extends Activity {
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
 
-    IntentFilter statusIntentFilter = new IntentFilter(Constants.ACTION_WRITE_TO_UI);
+    IntentFilter statusIntentFilter = new IntentFilter(Broadcasts.ACTION_WRITE_TO_UI);
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String status = (String) intent.getExtras().get(Constants.WRITE_MESSAGE);
-            if(results.size() >= MONITORING_RESULTS_MAX) results.clear();
+            String status = (String) intent.getExtras().get(Broadcasts.WRITE_MESSAGE);
+            if(results.size() >= 10) results.clear();
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
@@ -213,25 +213,25 @@ public class MainActivity extends Activity {
     }
 
     private void setupSensors(){
-        Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, true);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, 200000);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_ENABLED);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_FREQUENCY);
 
         //TODO BUG
-//        Aware.setSetting(this, Constants.STATUS_FUSED_LOCATION, true, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, "fallback_location_timeout", 0, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Constants.FREQUENCY_FUSED_LOCATION, 0.5, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Constants.MAX_FREQUENCY_FUSED_LOCATION, 0, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, Constants.ACCURACY_FUSED_LOCATION, 100, Constants.FUSED_LOCATION_PACKAGE);
-//        Aware.setSetting(this, "location_sensitivity", 0, Constants.FUSED_LOCATION_PACKAGE);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.STATUS, Config.AwareSettings.FUSED_LOCATION_ENABLED, Constants.FusedLocationPlugin.PACKAGE_NAME);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.FALLBACK_TIMEOUT, Config.AwareSettings.FUSED_LOCATION_FALLBACK_TIMEOUT, Constants.FusedLocationPlugin.PACKAGE_NAME);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.FREQUENCY, Config.AwareSettings.FUSED_LOCATION_FREQUENCY, Constants.FusedLocationPlugin.PACKAGE_NAME);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.MAX_FREQUENCY, Config.AwareSettings.FUSED_LOCATION_MAX_FREQUENCY, Constants.FusedLocationPlugin.PACKAGE_NAME);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.ACCURACY, Config.AwareSettings.FUSED_LOCATION_ACCURACY, Constants.FusedLocationPlugin.PACKAGE_NAME);
+//        Aware.setSetting(this, Constants.FusedLocationPlugin.LOCATION_SENSITIVITY, Config.AwareSettings.FUSED_LOCATION_SENSITIVITY, Constants.FusedLocationPlugin.PACKAGE_NAME);
 
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, false);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 0);
-        Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 0);
-        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 0);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, Config.AwareSettings.LOCATION_NETWORK_ENABLED);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, Config.AwareSettings.LOCATION_FREQUENCY);
+        Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, Config.AwareSettings.LOCATION_MIN_GPS_ACCURACY);
+        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, Config.AwareSettings.LOCATION_EXPIRATION_TIME);
 
-        Aware.setSetting(this, Constants.STATUS_OPEN_WEATHER, true, Constants.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Constants.FREQUENCY_OPEN_WEATHER, 30, Constants.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Constants.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Constants.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.OpenWeatherPlugin.STATUS_OPEN_WEATHER, Config.AwareSettings.OPENWEATHER_ENABLED, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.OpenWeatherPlugin.FREQUENCY_OPEN_WEATHER, Config.AwareSettings.OPENWEATHER_FREQUENCY, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, Constants.OpenWeatherPlugin.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
     }
 
     private void setupListeners() {
@@ -270,25 +270,25 @@ public class MainActivity extends Activity {
     }
 
     private void startMonitoring() {
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_ENABLED);
 
         this.startService(new Intent(this, Aware.class));
         registerListeners();
 
         Aware.startLocations(this);
         Aware.startLinearAccelerometer(this);
-//        Aware.startPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
-        Aware.startPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
+//        Aware.startPlugin(this, Constants.PACKAGE_NAME);
+        Aware.startPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
     }
 
     private void stopMonitoring() {
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, false);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_DISABLED);
 
         this.stopService(new Intent(this, Aware.class));
         unregisterListeners();
         Aware.stopAWARE();
-//        Aware.stopPlugin(this, Constants.FUSED_LOCATION_PACKAGE);
-        Aware.stopPlugin(this, Constants.OPEN_WEATHER_PACKAGE);
+//        Aware.stopPlugin(this, Constants.PACKAGE_NAME);
+        Aware.stopPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
     }
 
 }

@@ -22,18 +22,17 @@ public final class Events {
 
     private Events(){}
 
-    private static final String DEFAULT_EVENT_TYPE = "Information";
-    private final static String delimiter = ";";
+    private final static String DELIMITER = ";";
 
     public static String sendEvent(Context context, String eventType, String msgFragment) {
         try {
-            String message = (eventType != null ? eventType : DEFAULT_EVENT_TYPE) + delimiter + msgFragment + "\r\n";
+            String message = eventType + DELIMITER + msgFragment + "\r\n";
             String ipString = Preferences.getIPAddress(context);
             if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 
             InetAddress ipAddress = InetAddress.getByName(ipString);
             DatagramSocket socket = DatagramChannel.open().socket();
-            DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Constants.HOLOLENS_PORT);
+            DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Config.HoloLens.HOLOLENS_PORT);
             socket.send(dp);
             socket.close();
         } catch (IOException e) {

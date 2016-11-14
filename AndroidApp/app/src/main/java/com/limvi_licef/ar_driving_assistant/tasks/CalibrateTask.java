@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 
@@ -95,10 +94,10 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
     }
 
     private void saveOffsets(double x, double y, double z){
-        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-        Preferences.putDouble(editor, Constants.OFFSET_X_PREF, x);
-        Preferences.putDouble(editor, Constants.OFFSET_Y_PREF, y);
-        Preferences.putDouble(editor, Constants.OFFSET_Z_PREF, z);
+        SharedPreferences.Editor editor = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+        Preferences.putDouble(editor, Preferences.OFFSET_X_PREF, x);
+        Preferences.putDouble(editor, Preferences.OFFSET_Y_PREF, y);
+        Preferences.putDouble(editor, Preferences.OFFSET_Z_PREF, z);
         editor.apply();
     }
 }

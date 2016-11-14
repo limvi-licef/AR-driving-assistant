@@ -19,7 +19,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeAccelerationRunnabl
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
@@ -36,21 +36,19 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     private RewriteAlgorithmRunnable rewriteRunnable;
     private IntentFilter broadcastFilter = new IntentFilter(LinearAccelerometer.ACTION_AWARE_LINEAR_ACCELEROMETER);
     private long previousTimestamp = 0;
-    private final long MINIMUM_DELAY = 10;
-    private final long PRECISION = 100;
 
     public void register(Context context, Handler handler) {
         if(!getOffsets(context)) return;
         isRegistered = true;
 
         runnableAxisX = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_X);
-        handler.postDelayed(runnableAxisX, runnableAxisX.DELAY);
+        handler.postDelayed(runnableAxisX, Config.SensorDataCollection.SHORT_DELAY);
         runnableAxisY = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Y);
-        handler.postDelayed(runnableAxisY, runnableAxisY.DELAY);
+        handler.postDelayed(runnableAxisY, Config.SensorDataCollection.SHORT_DELAY);
         runnableAxisZ = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-        handler.postDelayed(runnableAxisZ, runnableAxisZ.DELAY);
+        handler.postDelayed(runnableAxisZ, Config.SensorDataCollection.SHORT_DELAY);
         rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
-        handler.postDelayed(rewriteRunnable, rewriteRunnable.DELAY);
+        handler.postDelayed(rewriteRunnable, Config.SensorDataCollection.LONG_DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
@@ -73,7 +71,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Linear Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
@@ -86,7 +84,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisZ -= offsetZ;
 
         //Round off timestamp to a tenth of a second
-        long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), PRECISION);
+        long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), Config.SensorDataCollection.ACCELERATION_PRECISION);
         runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));
         runnableAxisY.accumulateData(new TimestampedDouble(roundedTimestamp, axisY));
         runnableAxisZ.accumulateData(new TimestampedDouble(roundedTimestamp, axisZ));
@@ -94,10 +92,10 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     }
 
     private boolean getOffsets(Context context){
-        SharedPreferences settings = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        offsetX = Preferences.getDouble(settings, Constants.OFFSET_X_PREF, -1);
-        offsetY = Preferences.getDouble(settings, Constants.OFFSET_Y_PREF, -1);
-        offsetZ = Preferences.getDouble(settings, Constants.OFFSET_Z_PREF, -1);
+        SharedPreferences settings = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        offsetX = Preferences.getDouble(settings, Preferences.OFFSET_X_PREF, -1);
+        offsetY = Preferences.getDouble(settings, Preferences.OFFSET_Y_PREF, -1);
+        offsetZ = Preferences.getDouble(settings, Preferences.OFFSET_Z_PREF, -1);
         if(offsetX == -1 || offsetY == -1 || offsetZ == -1){
             Toast t = Toast.makeText(context, context.getResources().getString(R.string.calibrate_acceleration_error), Toast.LENGTH_LONG);
             t.setGravity(Gravity.FILL_HORIZONTAL, 0, 0);

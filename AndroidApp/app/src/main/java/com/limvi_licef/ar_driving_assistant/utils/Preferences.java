@@ -5,24 +5,30 @@ import android.content.SharedPreferences;
 
 public final class Preferences {
 
-    private Preferences(){}
-
+    public static final String USER_SHARED_PREFERENCES = "user_shared";
+    public static final String ID_PREFERENCE = "user_id";
+    public static final String IP_ADDRESS_PREFERENCE = "user_ip";
+    public static final String OFFSET_X_PREF = "offset_x";
+    public static final String OFFSET_Y_PREF = "offset_y";
+    public static final String OFFSET_Z_PREF = "offset_z";
     private static final String DEFAULT_ID = "0";
+
+    private Preferences(){}
 
     /*
      * Returns the current user id defined in 'Setup' Preferences button
      */
     public static String getCurrentUserId(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        return prefs.getString(Constants.ID_PREFERENCE, DEFAULT_ID);
+        SharedPreferences prefs = context.getSharedPreferences(USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return prefs.getString(ID_PREFERENCE, DEFAULT_ID);
     }
 
     /*
      * Returns the ip address defined in 'Setup' Preferences button
      */
     public static String getIPAddress(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(Constants.USER_SHARED_PREFERENCES , Context.MODE_PRIVATE);
-        return prefs.getString(Constants.IP_ADDRESS_PREFERENCE, null);
+        SharedPreferences prefs = context.getSharedPreferences(USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return prefs.getString(IP_ADDRESS_PREFERENCE, null);
     }
 
     /*

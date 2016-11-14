@@ -8,16 +8,13 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public abstract class RewriteAlgorithmRunnable implements Runnable {
-    public final int DELAY = 1000 * 60 * 10;
-    protected static final int REWRITE_MINUTES = 10;
-    protected static final int TOLERANCE = 1;
     protected Handler handler;
     protected SQLiteDatabase db;
     protected Context context;
@@ -33,10 +30,10 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
     public void run() {
         String userId = Preferences.getCurrentUserId(context);
         long now = System.currentTimeMillis();
-        long nowMinusMinutes = now - TimeUnit.MINUTES.toMillis(REWRITE_MINUTES);
+        long nowMinusMinutes = now - Config.SensorDataCollection.LONG_DELAY;
 
         List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -55,7 +52,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
             db.endTransaction();
 
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
-            handler.postDelayed(this, DELAY);
+            handler.postDelayed(this, Config.SensorDataCollection.LONG_DELAY);
         }
     }
 

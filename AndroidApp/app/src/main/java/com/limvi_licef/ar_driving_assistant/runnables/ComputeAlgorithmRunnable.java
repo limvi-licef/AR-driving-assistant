@@ -8,7 +8,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.tasks.MatchEventTask;
-import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;
@@ -16,9 +16,6 @@ import java.util.List;
 
 public abstract class ComputeAlgorithmRunnable implements Runnable {
 
-    private static final int TOLERANCE = 1;
-    private static final int SECONDS = 60;
-    public final int DELAY = 1000 * SECONDS;
     protected List<Structs.TimestampedDouble> data;
     protected Handler handler;
     protected SQLiteDatabase db;
@@ -38,7 +35,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
         if(runnableCount == runnableDoneCount){
             runnableDoneCount = 0;
-            new MatchEventTask(context, SECONDS).execute();
+            new MatchEventTask(context, Config.SensorDataCollection.SHORT_DELAY).execute();
         }
     }
 
@@ -54,7 +51,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     public void run() {
         isRunning = true;
         List<Structs.TimestampedDouble> newData = getData();
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -74,7 +71,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
 //            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             isRunning = false;
-            handler.postDelayed(this, DELAY);
+            handler.postDelayed(this, Config.SensorDataCollection.SHORT_DELAY);
             notifyRunnableEnd();
         }
     }

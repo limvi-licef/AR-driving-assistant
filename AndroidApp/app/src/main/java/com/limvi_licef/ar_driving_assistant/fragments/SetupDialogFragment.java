@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class SetupDialogFragment extends DialogFragment {
 
@@ -29,9 +29,9 @@ public class SetupDialogFragment extends DialogFragment {
 
         idText.setHint(R.string.setup_dialog_id_placeholder);
         ipText.setHint(R.string.setup_dialog_ip_placeholder);
-        SharedPreferences settings = getActivity().getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        idText.setText(settings.getString(Constants.ID_PREFERENCE, null));
-        ipText.setText(settings.getString(Constants.IP_ADDRESS_PREFERENCE, null));
+        SharedPreferences settings = getActivity().getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        idText.setText(settings.getString(Preferences.ID_PREFERENCE, null));
+        ipText.setText(settings.getString(Preferences.IP_ADDRESS_PREFERENCE, null));
 
         layout.addView(idText);
         layout.addView(ipText);
@@ -41,9 +41,9 @@ public class SetupDialogFragment extends DialogFragment {
         .setPositiveButton(R.string.setup_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(Constants.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
-                editor.putString(Constants.ID_PREFERENCE, idText.getText().toString());
-                editor.putString(Constants.IP_ADDRESS_PREFERENCE, ipText.getText().toString());
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+                editor.putString(Preferences.ID_PREFERENCE, idText.getText().toString());
+                editor.putString(Preferences.IP_ADDRESS_PREFERENCE, ipText.getText().toString());
                 editor.apply();
             }
         })

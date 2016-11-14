@@ -13,6 +13,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class TemperatureReceiver extends BroadcastReceiver implements SensorReceiver {
@@ -22,7 +23,6 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
     private static final String extraData = "openweather";
     private IntentFilter broadcastFilter = new IntentFilter(broadcastAction);
     private long previousTimestamp = 0;
-    private final long MINIMUM_DELAY = 10;
 
     public void register(Context context, Handler handler) {
         isRegistered = true;
@@ -45,7 +45,7 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Temperature Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         ContentValues values = (ContentValues) intent.getExtras().get(extraData);
         if(values == null || values.size() == 0) return;
