@@ -32,12 +32,6 @@ public final class Constants {
     //HoloLens communication
     public static final int HOLOLENS_PORT = 12345;
 
-    //Linear accelerometer hashmap keys
-    public static final String ACCELERATION_KEY = "Acceleration";
-    public static final String AXIS_X_KEY = "AxisX";
-    public static final String AXIS_Y_KEY = "AxisY";
-    public static final String AXIS_Z_KEY = "AxisZ";
-
     //Dynamic Time Warping
     public static final double ACCELERATION_DISTANCE_CUTOFF = 15;
     public static final double ROTATION_DISTANCE_CUTOFF = 200;
