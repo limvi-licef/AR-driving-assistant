@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
@@ -38,7 +39,7 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
             Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
         } catch(IndexOutOfBoundsException e) {
-            return "Error inserting event : no data from sensor found";
+            return context.getResources().getString(R.string.training_task_no_data);
         }
 
         return saveNewEvent(event);
@@ -63,6 +64,6 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         int result = (int) db.insertWithOnConflict(DatabaseContract.TrainingEvents.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         db.setTransactionSuccessful();
         db.endTransaction();
-        return result == -1 ? "Error inserting event : the label already exists" : "Inserting event to database";
+        return result == -1 ? context.getResources().getString(R.string.training_task_label_exists) : context.getResources().getString(R.string.training_task_success);
     }
 }

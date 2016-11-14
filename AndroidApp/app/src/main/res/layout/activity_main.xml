@@ -57,8 +57,8 @@
             android:id="@+id/train_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textOff="@string/training_start"
-            android:textOn="@string/training_stop" />
+            android:textOff="@string/training_button_start"
+            android:textOn="@string/training_button_stop" />
 
     </LinearLayout>
 

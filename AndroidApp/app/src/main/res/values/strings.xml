@@ -2,9 +2,6 @@
     <string name="app_name">AR-driving-assistant</string>
     <string name="app_title">Welcome to the AR-driving-assistant helper tool!</string>
 
-    <string name="training_start">Start Training</string>
-    <string name="training_stop">Stop Training</string>
-
     <string name="monitoring_start">Start Monitoring</string>
     <string name="monitoring_stop">Stop Monitoring</string>
     <string name="monitoring_empty">No results yet</string>
@@ -44,4 +41,17 @@
     <string name="send_event_task_text_placeholder">Text To Display</string>
     <string name="send_event_dialog_ok">Send</string>
     <string name="send_event_dialog_dismiss">Close</string>
+
+    <string name="training_button_start">Start Training</string>
+    <string name="training_button_stop">Stop Training</string>
+    <string name="training_task_success">Inserting event to database</string>
+    <string name="training_task_no_data">Error inserting event : no data from sensor found</string>
+    <string name="training_task_label_exists">Error inserting event : the label already exists</string>
+    <string name="training_task_hint_label">Label</string>
+    <string name="training_task_hint_message">Message</string>
+    <string name="training_task_dialog_ok">Start</string>
+    <string name="training_task_dialog_dismiss">Cancel</string>
+
+    <string name="match_event_task_status">Event status : </string>
+    <string name="match_event_task_match_found">Match found : </string>
 </resources>

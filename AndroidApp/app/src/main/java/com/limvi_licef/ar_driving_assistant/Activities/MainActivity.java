@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
                     layout.setOrientation(LinearLayout.VERTICAL);
 
                     final EditText labelField = new EditText(MainActivity.this);
-                    labelField.setHint("Label");
+                    labelField.setHint(getResources().getString(R.string.training_task_hint_label));
                     layout.addView(labelField);
 
                     final RadioGroup rg = new RadioGroup(MainActivity.this);
@@ -157,12 +157,12 @@ public class MainActivity extends Activity {
                     layout.addView(rg);
 
                     final EditText eventText = new EditText(MainActivity.this);
-                    eventText.setHint("Message");
+                    eventText.setHint(getResources().getString(R.string.training_task_hint_message));
                     layout.addView(eventText);
 
                     new AlertDialog.Builder(MainActivity.this)
                             .setView(layout)
-                            .setPositiveButton("Start", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.training_task_dialog_ok), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     startTimestamp = System.currentTimeMillis();
                                     label = labelField.getText().toString();
@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
                                     message = eventText.getText().toString();
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.training_task_dialog_dismiss), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     trainToggle.setChecked(false);
                                 }

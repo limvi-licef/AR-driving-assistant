@@ -7,6 +7,7 @@ import android.util.Log;
 import com.fastdtw.dtw.FastDTW;
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.util.Distances;
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
@@ -89,8 +90,8 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
     }
 
     private void matchFound(Events.Event e){
-        Broadcasts.sendWriteToUIBroadcast(context, "Match found : " + e.label);
+        Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
         String status = Events.sendEvent(context, e.type.name(), e.message);
-        Broadcasts.sendWriteToUIBroadcast(context, "Event status : " + status);
+        Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_status) + status);
     }
 }
