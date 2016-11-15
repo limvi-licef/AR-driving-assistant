@@ -89,7 +89,7 @@ public final class Config {
     public static final class AwareSettings {
 
         public static final boolean ACCELEROMETER_ENABLED = true;
-        public static final double ACCELEROMETER_FREQUENCY = 200000; //in microseconds
+        public static final int ACCELEROMETER_FREQUENCY = 200000; //in microseconds
 
         public static final boolean FUSED_LOCATION_ENABLED = true;
         public static final int FUSED_LOCATION_FALLBACK_TIMEOUT = 0;
