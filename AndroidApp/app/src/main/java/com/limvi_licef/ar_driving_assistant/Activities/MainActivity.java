@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String status = (String) intent.getExtras().get(Broadcasts.WRITE_MESSAGE);
-            if(results.size() >= 10) results.clear();
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
