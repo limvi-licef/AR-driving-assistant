@@ -47,19 +47,21 @@ public final class Events {
         Cursor eventCursor = DatabaseHelper.getHelper(context).getWritableDatabase().query(DatabaseContract.TrainingEvents.TABLE_NAME,
                 new String[]{DatabaseContract.TrainingEvents.START_TIMESTAMP,
                         DatabaseContract.TrainingEvents.END_TIMESTAMP,
+                        DatabaseContract.TrainingEvents.DURATION,
                         DatabaseContract.TrainingEvents.LABEL,
                         DatabaseContract.TrainingEvents.TYPE,
                         DatabaseContract.TrainingEvents.MESSAGE},
                 null, null, null, null, null);
         int startTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.START_TIMESTAMP);
         int endTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.END_TIMESTAMP);
+        int durationColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.DURATION);
         int labelColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.LABEL);
         int typeColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.TYPE);
         int messageColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.MESSAGE);
 
         while (eventCursor.moveToNext()) {
             events.add(new Event(eventCursor.getString(labelColumnIndex), eventCursor.getLong(startTimestampColumnIndex), eventCursor.getLong(endTimestampColumnIndex),
-                    EventTypes.valueOf(eventCursor.getString(typeColumnIndex)),eventCursor.getString(messageColumnIndex)));
+                    eventCursor.getLong(durationColumnIndex), EventTypes.valueOf(eventCursor.getString(typeColumnIndex)), eventCursor.getString(messageColumnIndex)));
         }
 
         eventCursor.close();
@@ -94,13 +96,15 @@ public final class Events {
         public String label;
         public long startTimestamp;
         public long endTimestamp;
+        public long duration;
         public EventTypes type;
         public String message;
 
-        public Event (String label, long startTimestamp, long endTimestamp, EventTypes type, String message) {
+        public Event (String label, long startTimestamp, long endTimestamp, long duration, EventTypes type, String message) {
             this.label = label;
             this.startTimestamp = startTimestamp;
             this.endTimestamp = endTimestamp;
+            this.duration = duration;
             this.type = type;
             this.message = message;
         }

@@ -208,6 +208,7 @@ public final class DatabaseContract {
         public static final String CURRENT_USER_ID = "CurrentUserID";
         public static final String START_TIMESTAMP = "StartTimestamp";
         public static final String END_TIMESTAMP = "EndTimestamp";
+        public static final String DURATION = "Duration";
         public static final String LABEL = "Label";
         public static final String TYPE = "Type";
         public static final String MESSAGE = "Message";
@@ -218,6 +219,7 @@ public final class DatabaseContract {
                 CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 START_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
                 END_TIMESTAMP + DATETIME_TYPE + COMMA_SEP +
+                DURATION + REAL_TYPE + COMMA_SEP +
                 TYPE + TEXT_TYPE + COMMA_SEP +
                 MESSAGE + TEXT_TYPE + COMMA_SEP +
                 LABEL + TEXT_TYPE  + " UNIQUE" + " )";

@@ -38,11 +38,11 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
         Double closestSpeed = null;
 
         for (Events.Event event : Events.getAllEvents(context)) {
-            long eventDuration = event.endTimestamp - event.startTimestamp;
-            Log.d("DTW", "Event : " + event.label + " From : " + event.startTimestamp + " To : " + event.endTimestamp);
-            Log.d("DTW", "Duration : " + eventDuration);
 
-            for(long start = startTimestamp, stop = startTimestamp + eventDuration; stop < this.endTimestamp;
+            Log.d("DTW", "Event : " + event.label + " From : " + event.startTimestamp + " To : " + event.endTimestamp);
+            Log.d("DTW", "Duration : " + event.duration);
+
+            for(long start = startTimestamp, stop = startTimestamp + event.duration; stop < this.endTimestamp;
                             start += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS, stop += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS){
 
                 Log.d("DTW", "Segment / From : " + start + " To : " + stop);
