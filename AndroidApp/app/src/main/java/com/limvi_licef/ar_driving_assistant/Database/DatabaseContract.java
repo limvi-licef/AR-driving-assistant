@@ -21,7 +21,8 @@ public final class DatabaseContract {
             SpeedStats.CREATE_TABLE,
             TemperatureData.CREATE_TABLE,
             RotationData.CREATE_TABLE,
-            TrainingEvents.CREATE_TABLE
+            TrainingEvents.CREATE_TABLE,
+            ResultsDTW.CREATE_TABLE
     };
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
@@ -32,7 +33,8 @@ public final class DatabaseContract {
             SpeedStats.DELETE_TABLE,
             TemperatureData.DELETE_TABLE,
             RotationData.DELETE_TABLE,
-            TrainingEvents.DELETE_TABLE
+            TrainingEvents.DELETE_TABLE,
+            ResultsDTW.DELETE_TABLE
     };
 
     private DatabaseContract() {}
@@ -223,6 +225,29 @@ public final class DatabaseContract {
                 TYPE + TEXT_TYPE + COMMA_SEP +
                 MESSAGE + TEXT_TYPE + COMMA_SEP +
                 LABEL + TEXT_TYPE  + " UNIQUE" + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class ResultsDTW implements BaseColumns {
+        public static final String TABLE_NAME       = "ResultsDTW";
+        public static final String EVENT_LABEL = "EventLabel";
+        public static final String EVENT_DURATION = "EventDuration";
+        public static final String SEGMENT_START = "SegmentStart";
+        public static final String SEGMENT_STOP = "SegmentStop";
+        public static final String DISTANCE_ACCELERATION = "DistanceAcceleration";
+        public static final String DISTANCE_ROTATION = "DistanceRotation";
+        public static final String DISTANCE_SPEED = "DistanceSpeed";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                EVENT_LABEL + TEXT_TYPE + COMMA_SEP +
+                EVENT_DURATION + REAL_TYPE + COMMA_SEP +
+                SEGMENT_START + DATETIME_TYPE + COMMA_SEP +
+                SEGMENT_STOP + DATETIME_TYPE + COMMA_SEP +
+                DISTANCE_ACCELERATION + REAL_TYPE + COMMA_SEP +
+                DISTANCE_ROTATION + REAL_TYPE + COMMA_SEP +
+                DISTANCE_SPEED + REAL_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 }

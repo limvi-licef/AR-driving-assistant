@@ -1,6 +1,8 @@
 package com.limvi_licef.ar_driving_assistant.tasks;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -9,6 +11,7 @@ import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
@@ -39,13 +42,8 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
 
         for (Events.Event event : Events.getAllEvents(context)) {
 
-            Log.d("DTW", "Event : " + event.label + " From : " + event.startTimestamp + " To : " + event.endTimestamp);
-            Log.d("DTW", "Duration : " + event.duration);
-
             for(long start = startTimestamp, stop = startTimestamp + event.duration; stop < this.endTimestamp;
                             start += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS, stop += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS){
-
-                Log.d("DTW", "Segment / From : " + start + " To : " + stop);
 
                 TimeSeries eventAccel, eventRotation, eventSpeed, segmentAccel, segmentRotation, segmentSpeed;
                 try {
@@ -71,20 +69,15 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
                 closestRotation = (closestRotation == null || distanceRotation < closestRotation ) ? distanceRotation : closestRotation;
                 closestSpeed = (closestSpeed == null || distanceSpeed < closestSpeed ) ? distanceSpeed : closestSpeed;
 
-                Log.d("DTW", "Distance Acceleration : " + distanceAccel + " Distance Rotation : " + distanceRotation + " Distance Speed : " + distanceSpeed);
-
                 if(distanceAccel < Config.DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF
                         && distanceRotation < Config.DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF
                         && distanceSpeed < Config.DynamicTimeWarping.SPEED_DISTANCE_CUTOFF){
-                    Log.d("DTW", "Match Found : " + event.label);
                     matchFound(event);
-                } else {
-                    Log.d("DTW", "No match");
                 }
+                saveResults(event, start, stop, distanceAccel, distanceRotation, distanceSpeed);
             }
         }
         Broadcasts.sendWriteToUIBroadcast(context, "Closest Acceleration : " + closestAcceleration + " Closest Rotation : " + closestRotation + " Closest Speed : " + closestSpeed);
-        Log.d("DTW", "DTW Done");
         Broadcasts.sendWriteToUIBroadcast(context, "DTW done");
         return null;
     }
@@ -93,5 +86,21 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
         Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
         String status = Events.sendEvent(context, e.type.name(), e.message);
         Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_status) + status);
+    }
+
+    private void saveResults(Events.Event event, long segmentStart, long segmentStop, double distanceAccel, double distanceRotation, double distanceSpeed) {
+        SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
+        db.beginTransaction();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ResultsDTW.EVENT_LABEL, event.label);
+        values.put(DatabaseContract.ResultsDTW.EVENT_DURATION, event.duration);
+        values.put(DatabaseContract.ResultsDTW.SEGMENT_START, segmentStart);
+        values.put(DatabaseContract.ResultsDTW.SEGMENT_STOP, segmentStop);
+        values.put(DatabaseContract.ResultsDTW.DISTANCE_ACCELERATION, distanceAccel);
+        values.put(DatabaseContract.ResultsDTW.DISTANCE_ROTATION, distanceRotation);
+        values.put(DatabaseContract.ResultsDTW.DISTANCE_SPEED, distanceSpeed);
+        db.insert(DatabaseContract.ResultsDTW.TABLE_NAME, null, values);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 }
