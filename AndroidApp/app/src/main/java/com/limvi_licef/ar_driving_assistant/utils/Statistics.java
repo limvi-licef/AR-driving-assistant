@@ -52,9 +52,9 @@ public final class Statistics {
             Double a = values.get(indexes.get(i)).value;
             Double b = values.get(indexes.get(i+1)).value;
             if(a > b) {
-                negativeExtrema.add(a);
-            } else {
                 positiveExtrema.add(a);
+            } else if (a < b) {
+                negativeExtrema.add(a);
             }
         }
         Double positiveAverage = calculateAverage(positiveExtrema);
