@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
                     locationReceiver.savePrematurely();
-                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
+                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
                     startTimestamp = 0;
                 }
             }

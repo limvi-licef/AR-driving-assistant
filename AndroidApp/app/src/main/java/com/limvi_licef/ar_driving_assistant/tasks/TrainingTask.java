@@ -58,7 +58,7 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         values.put(DatabaseContract.TrainingEvents.CURRENT_USER_ID, userId);
         values.put(DatabaseContract.TrainingEvents.START_TIMESTAMP, event.startTimestamp);
         values.put(DatabaseContract.TrainingEvents.END_TIMESTAMP, event.endTimestamp);
-        values.put(DatabaseContract.TrainingEvents.DURATION, event.endTimestamp - event.startTimestamp);
+        values.put(DatabaseContract.TrainingEvents.DURATION, event.duration);
         values.put(DatabaseContract.TrainingEvents.LABEL, event.label);
         values.put(DatabaseContract.TrainingEvents.TYPE, event.type.name());
         values.put(DatabaseContract.TrainingEvents.MESSAGE, event.message);
