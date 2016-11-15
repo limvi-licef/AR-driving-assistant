@@ -36,7 +36,7 @@ public class MonotoneSegmentationAlgorithm {
         //select extrema
         extrema.put(0, values.get(0).value);
         for(int i = 1; i < values.size() - 1; i++) {
-            if(values.get(i).equals(values.get(i-1))) {
+            if(values.get(i).value.equals(values.get(i-1).value)) {
                 //do nothing
             } else if((values.get(i).value >= values.get(i-1).value) && (values.get(i).value >= values.get(i+1).value)) {
                 extrema.put(i, values.get(i).value);
