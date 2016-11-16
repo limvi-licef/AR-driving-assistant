@@ -83,8 +83,8 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         boolean success = db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave) != -1L;
         location.close();
 
-        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
-                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
+//        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
+//                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
         previousTimestamp = System.currentTimeMillis();
     }
 
