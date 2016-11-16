@@ -39,7 +39,6 @@ import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
-import com.limvi_licef.ar_driving_assistant.utils.Constants;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
@@ -220,9 +219,9 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, Config.AwareSettings.LOCATION_MIN_GPS_ACCURACY);
         Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, Config.AwareSettings.LOCATION_EXPIRATION_TIME);
 
-        Aware.setSetting(this, Constants.OpenWeatherPlugin.STATUS_OPEN_WEATHER, Config.AwareSettings.OPENWEATHER_ENABLED, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Constants.OpenWeatherPlugin.FREQUENCY_OPEN_WEATHER, Config.AwareSettings.OPENWEATHER_FREQUENCY, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
-        Aware.setSetting(this, Constants.OpenWeatherPlugin.API_KEY_OPEN_WEATHER, getResources().getString(R.string.openweather), Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
+        Aware.setSetting(this, com.aware.plugin.openweather.Settings.STATUS_PLUGIN_OPENWEATHER, Config.AwareSettings.OPENWEATHER_ENABLED, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
+        Aware.setSetting(this, com.aware.plugin.openweather.Settings.PLUGIN_OPENWEATHER_FREQUENCY, Config.AwareSettings.OPENWEATHER_FREQUENCY, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
+        Aware.setSetting(this, com.aware.plugin.openweather.Settings.OPENWEATHER_API_KEY, getResources().getString(R.string.openweather), com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
     private void setupListeners() {
@@ -262,22 +261,19 @@ public class MainActivity extends Activity {
 
     private void startMonitoring() {
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_ENABLED);
-
         this.startService(new Intent(this, Aware.class));
         registerListeners();
-
         Aware.startLocations(this);
         Aware.startLinearAccelerometer(this);
-        Aware.startPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
+        Aware.startPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
     private void stopMonitoring() {
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_DISABLED);
-
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, false);
         this.stopService(new Intent(this, Aware.class));
         unregisterListeners();
         Aware.stopAWARE();
-        Aware.stopPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
+        Aware.stopPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
 }

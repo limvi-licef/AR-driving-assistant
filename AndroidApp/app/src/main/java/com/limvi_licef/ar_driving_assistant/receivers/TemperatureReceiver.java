@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
 
+import com.aware.plugin.openweather.Plugin;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
@@ -19,9 +20,7 @@ import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 public class TemperatureReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
-    private static final String broadcastAction = "ACTION_AWARE_PLUGIN_OPENWEATHER";
-    private static final String extraData = "openweather";
-    private IntentFilter broadcastFilter = new IntentFilter(broadcastAction);
+    private IntentFilter broadcastFilter = new IntentFilter(Plugin.ACTION_AWARE_PLUGIN_OPENWEATHER);
     private long previousTimestamp = 0;
 
     public void register(Context context, Handler handler) {
@@ -47,7 +46,7 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
         Log.d("Temperature Receiver", "Received intent");
         if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
-        ContentValues values = (ContentValues) intent.getExtras().get(extraData);
+        ContentValues values = (ContentValues) intent.getExtras().get(Plugin.EXTRA_OPENWEATHER);
         if(values == null || values.size() == 0) return;
 
         String userId = Preferences.getCurrentUserId(context);

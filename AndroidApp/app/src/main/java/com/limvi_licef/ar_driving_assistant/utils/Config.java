@@ -92,7 +92,6 @@ public final class Config {
         public static final int ACCELEROMETER_FREQUENCY = 200000; //in microseconds
 
         public static final boolean LOCATION_GPS_ENABLED = true;
-        public static final boolean LOCATION_GPS_DISABLED = true;
         public static final boolean LOCATION_NETWORK_ENABLED = false;
         public static final int LOCATION_FREQUENCY = 0;
         public static final int LOCATION_MIN_GPS_ACCURACY = 0;
