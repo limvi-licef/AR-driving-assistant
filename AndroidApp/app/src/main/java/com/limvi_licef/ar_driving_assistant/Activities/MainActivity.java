@@ -178,7 +178,6 @@ public class MainActivity extends Activity {
                             .show();
                 } else {
                     if(startTimestamp == 0) return;
-                    results.clear();
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
                     locationReceiver.savePrematurely();
