@@ -30,9 +30,6 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
     private ComputeAlgorithmRunnable runnable;
     private RewriteAlgorithmRunnable rewriteRunnable;
-
-    private static final String broadcastAction = "ACTION_AWARE_LOCATIONS";
-    private static final String extraData = "data";
     private static final double KM_PER_HOUR_CONVERSION = 3.6; //  m/s to km/h --> 60 * 60 / 1000
     private IntentFilter broadcastFilter = new IntentFilter(Locations.ACTION_AWARE_LOCATIONS);
     private long previousTimestamp = 0;

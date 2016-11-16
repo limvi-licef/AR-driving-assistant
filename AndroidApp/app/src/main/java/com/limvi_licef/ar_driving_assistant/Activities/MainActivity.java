@@ -215,14 +215,6 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_ENABLED);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_FREQUENCY);
 
-        //TODO BUG
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.STATUS, Config.AwareSettings.FUSED_LOCATION_ENABLED, Constants.FusedLocationPlugin.PACKAGE_NAME);
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.FALLBACK_TIMEOUT, Config.AwareSettings.FUSED_LOCATION_FALLBACK_TIMEOUT, Constants.FusedLocationPlugin.PACKAGE_NAME);
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.FREQUENCY, Config.AwareSettings.FUSED_LOCATION_FREQUENCY, Constants.FusedLocationPlugin.PACKAGE_NAME);
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.MAX_FREQUENCY, Config.AwareSettings.FUSED_LOCATION_MAX_FREQUENCY, Constants.FusedLocationPlugin.PACKAGE_NAME);
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.ACCURACY, Config.AwareSettings.FUSED_LOCATION_ACCURACY, Constants.FusedLocationPlugin.PACKAGE_NAME);
-//        Aware.setSetting(this, Constants.FusedLocationPlugin.LOCATION_SENSITIVITY, Config.AwareSettings.FUSED_LOCATION_SENSITIVITY, Constants.FusedLocationPlugin.PACKAGE_NAME);
-
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, Config.AwareSettings.LOCATION_NETWORK_ENABLED);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, Config.AwareSettings.LOCATION_FREQUENCY);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, Config.AwareSettings.LOCATION_MIN_GPS_ACCURACY);
@@ -276,7 +268,6 @@ public class MainActivity extends Activity {
 
         Aware.startLocations(this);
         Aware.startLinearAccelerometer(this);
-//        Aware.startPlugin(this, Constants.PACKAGE_NAME);
         Aware.startPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
     }
 
@@ -286,7 +277,6 @@ public class MainActivity extends Activity {
         this.stopService(new Intent(this, Aware.class));
         unregisterListeners();
         Aware.stopAWARE();
-//        Aware.stopPlugin(this, Constants.PACKAGE_NAME);
         Aware.stopPlugin(this, Constants.OpenWeatherPlugin.OPEN_WEATHER_PACKAGE);
     }
 

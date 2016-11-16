@@ -91,13 +91,6 @@ public final class Config {
         public static final boolean ACCELEROMETER_ENABLED = true;
         public static final int ACCELEROMETER_FREQUENCY = 200000; //in microseconds
 
-        public static final boolean FUSED_LOCATION_ENABLED = true;
-        public static final int FUSED_LOCATION_FALLBACK_TIMEOUT = 0;
-        public static final double FUSED_LOCATION_FREQUENCY = 0.5;
-        public static final double FUSED_LOCATION_MAX_FREQUENCY = 0;
-        public static final int FUSED_LOCATION_ACCURACY = 100;
-        public static final int FUSED_LOCATION_SENSITIVITY = 0;
-
         public static final boolean LOCATION_GPS_ENABLED = true;
         public static final boolean LOCATION_GPS_DISABLED = true;
         public static final boolean LOCATION_NETWORK_ENABLED = false;
