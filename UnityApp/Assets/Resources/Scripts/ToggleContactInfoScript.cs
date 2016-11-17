@@ -12,6 +12,7 @@ public class ToggleContactInfoScript : MonoBehaviour {
 
     public void ToggleContactInfo()
     {
+        if(!toggleBool) gameObject.GetComponentInParent<RectTransform>().SetAsLastSibling();
         toggleBool = !toggleBool;
         gameObject.SetActive(toggleBool);
     }

@@ -8,6 +8,7 @@ public class ValidateInputScript : MonoBehaviour {
     public Text Label;
     public Text Placeholder;
     public UserManager UserManager;
+    public Transform Menu;
 
     void Start()
     {
@@ -18,8 +19,13 @@ public class ValidateInputScript : MonoBehaviour {
     {
         if(ValidateID())
         {
-            UserManager.SetUserId(IdDropdown.itemText.text);
+            UserManager.SetUserId(Label.text);
+            UserManager.SetUserAge(67);
+            UserManager.SetUserGender("Homme");
+            UserManager.SetUserAvatar(0);
+            UserManager.DisplayAvatar();
             gameObject.SetActive(false);
+            Menu.SetAsLastSibling();
         }
     }
 
