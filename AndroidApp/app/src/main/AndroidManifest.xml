@@ -20,6 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:keepScreenOn="true"
         tools:replace="android:icon, android:theme" >
         <activity android:name=".activities.MainActivity">
             <intent-filter>
