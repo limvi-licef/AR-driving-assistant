@@ -22,7 +22,8 @@ public final class DatabaseContract {
             TemperatureData.CREATE_TABLE,
             RotationData.CREATE_TABLE,
             TrainingEvents.CREATE_TABLE,
-            ResultsDTW.CREATE_TABLE
+            ResultsDTW.CREATE_TABLE,
+            Users.CREATE_TABLE
     };
 
     public static final String[] SQL_DELETE_TABLE_ARRAY = {
@@ -34,7 +35,8 @@ public final class DatabaseContract {
             TemperatureData.DELETE_TABLE,
             RotationData.DELETE_TABLE,
             TrainingEvents.DELETE_TABLE,
-            ResultsDTW.DELETE_TABLE
+            ResultsDTW.DELETE_TABLE,
+            Users.DELETE_TABLE
     };
 
     private DatabaseContract() {}
@@ -248,6 +250,23 @@ public final class DatabaseContract {
                 DISTANCE_ACCELERATION + REAL_TYPE + COMMA_SEP +
                 DISTANCE_ROTATION + REAL_TYPE + COMMA_SEP +
                 DISTANCE_SPEED + REAL_TYPE + " )";
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class Users implements BaseColumns {
+        public static final String TABLE_NAME       = "Users";
+        public static final String USER_NAME = "UserName";
+        public static final String USER_GENDER = "UserGender";
+        public static final String USER_AGE = "UserAge";
+        public static final String USER_AVATAR = "UserAvatar";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                USER_NAME + TEXT_TYPE + COMMA_SEP +
+                USER_GENDER + TEXT_TYPE + COMMA_SEP +
+                USER_AGE + INTEGER_TYPE + COMMA_SEP +
+                USER_AVATAR + INTEGER_TYPE + " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 }
