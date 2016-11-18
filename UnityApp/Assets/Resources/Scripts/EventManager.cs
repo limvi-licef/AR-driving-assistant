@@ -7,9 +7,6 @@ public class EventManager : MonoBehaviour
     public delegate void TriggerAction(Event e);
     public static event TriggerAction OnTrigger;
 
-    public delegate void TabClickAction();
-    public static event TabClickAction OnTabClick;
-
     private static Dictionary<string, Event> m_Events;
 
     void Start()
@@ -28,7 +25,6 @@ public class EventManager : MonoBehaviour
         if (OnTrigger != null && m_Events.TryGetValue(name, out e))
         {
             e.Text = message;
-            OnTabClick();
             OnTrigger(e);
         }
         
