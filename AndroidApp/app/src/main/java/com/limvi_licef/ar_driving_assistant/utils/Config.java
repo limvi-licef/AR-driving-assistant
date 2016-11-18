@@ -11,6 +11,12 @@ public final class Config {
          * Port that the HoloLens is listening on for receiving new events
          */
         public static final int HOLOLENS_PORT = 12345;
+
+        /**
+         * Constants used to update to counter on the HoloLens
+         */
+        public final static String SPEED_COUNTER_EVENT = "SpeedCounter";
+        public final static String SPEED_UNITS = " km/h";
     }
 
     /**

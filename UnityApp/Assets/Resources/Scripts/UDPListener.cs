@@ -15,11 +15,13 @@ using System.IO;
 
 public class UDPListener : MonoBehaviour
 {
+    public SpeedCounter speedCounter;
 #if !UNITY_EDITOR
     private DatagramSocket socket;
 #endif
 
     private const string PORT = "12345";
+    private const string SPEED_COUNTER = "SpeedCounter";
 
     void Start()
     {
@@ -61,12 +63,20 @@ public class UDPListener : MonoBehaviour
         Stream streamIn = args.GetDataStream().AsStreamForRead();
         StreamReader reader = new StreamReader(streamIn);
         string message = await reader.ReadLineAsync();
-
         string[] tokens = message.Split(';');
+
         UnityEngine.WSA.Application.InvokeOnAppThread(() =>
         {
-            EventManager.SendEvent(tokens[0], tokens[1]);
+            if (tokens[0].Equals(SPEED_COUNTER))
+            {
+                speedCounter.SetSpeed(tokens[1]);
+            }
+            else
+            {
+                EventManager.SendEvent(tokens[0], tokens[1]);
+            }
         }, false);
+
     }
 #endif
 }
