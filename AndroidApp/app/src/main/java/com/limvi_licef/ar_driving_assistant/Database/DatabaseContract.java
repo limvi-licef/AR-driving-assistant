@@ -263,7 +263,7 @@ public final class DatabaseContract {
         public static final String CREATE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
-                USER_NAME + TEXT_TYPE + COMMA_SEP +
+                USER_NAME + TEXT_TYPE + " UNIQUE" +COMMA_SEP +
                 USER_GENDER + TEXT_TYPE + COMMA_SEP +
                 USER_AGE + INTEGER_TYPE + COMMA_SEP +
                 USER_AVATAR + INTEGER_TYPE + " )";
