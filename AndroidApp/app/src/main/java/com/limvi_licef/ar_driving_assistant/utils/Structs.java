@@ -54,4 +54,21 @@ public final class Structs {
             this.negativeCount = negativeCount;
         }
     }
+
+    /**
+     * User class used to User information to the UnityApp
+     */
+    public static class User {
+        public String userName;
+        public int userAge;
+        public String userGender;
+        public int userAvatar;
+
+        public User(String userName, int userAge, String userGender, int userAvatar){
+            this.userName = userName;
+            this.userAge = userAge;
+            this.userGender = userGender;
+            this.userAvatar = userAvatar;
+        }
+    }
 }

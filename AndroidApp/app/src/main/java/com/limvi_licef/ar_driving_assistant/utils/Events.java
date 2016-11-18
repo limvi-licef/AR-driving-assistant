@@ -10,6 +10,8 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -22,11 +24,15 @@ public final class Events {
 
     private Events(){}
 
-    private final static String DELIMITER = ";";
-
-    public static String sendEvent(Context context, String eventType, String msgFragment) {
+    /**
+     * Sends a JSON string to the UnityApp
+     * @param context
+     * @param data the json string to send
+     * @return
+     */
+    public static String sendJson(Context context, JSONObject data) {
         try {
-            String message = eventType + DELIMITER + msgFragment + "\r\n";
+            String message = data.toString();
             String ipString = Preferences.getIPAddress(context);
             if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 

@@ -26,6 +26,9 @@ import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LocationReceiver extends BroadcastReceiver implements SensorReceiver {
 
     public boolean isRegistered;
@@ -85,13 +88,27 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
         boolean success = db.insert(DatabaseContract.LocationData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        //Update speed counter on unity app
-        Events.sendEvent(context, Config.HoloLens.SPEED_COUNTER_EVENT, speed + Config.HoloLens.SPEED_UNITS);
-
+        updateSpeedCounter(context, speed);
         location.close();
 //        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
 //                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
         previousTimestamp = System.currentTimeMillis();
+    }
+
+    /**
+     * Updates the speed counter on the UnityApp
+     * @param context
+     * @param speed
+     */
+    private void updateSpeedCounter(Context context, double speed){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_SPEED);
+            json.put("speedText", speed + Config.HoloLens.JSON_SPEED_UNITS);
+        } catch (JSONException e) {
+            Log.d("Location Receiver", "JSON Initialization Failure");
+        }
+        Events.sendJson(context, json);
     }
 
 }

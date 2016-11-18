@@ -37,6 +37,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
+import com.limvi_licef.ar_driving_assistant.threads.UDPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
@@ -54,6 +55,8 @@ public class MainActivity extends Activity {
 
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
+
+    private UDPListenerThread udpListenerThread = null;
 
     IntentFilter statusIntentFilter = new IntentFilter(Broadcasts.ACTION_WRITE_TO_UI);
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
@@ -78,6 +81,17 @@ public class MainActivity extends Activity {
         unregisterListeners();
         stopListenerThreads();
         super.onDestroy();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        udpListenerThread = new UDPListenerThread(this);
+        udpListenerThread.start();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        udpListenerThread.kill();
     }
 
     @Override
