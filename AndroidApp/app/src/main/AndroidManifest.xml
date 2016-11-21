@@ -198,12 +198,6 @@
             android:exported="true"
             android:readPermission="com.aware.READ_CONTEXT_DATA"
             android:writePermission="com.aware.WRITE_CONTEXT_DATA" />
-        <provider
-            android:name="com.aware.plugin.google.fused_location.Provider"
-            android:authorities="${applicationId}.provider.geofences"
-            android:exported="true"
-            android:readPermission="com.aware.READ_CONTEXT_DATA"
-            android:writePermission="com.aware.WRITE_CONTEXT_DATA" />
     </application>
 
 </manifest>
