@@ -65,6 +65,7 @@ public class UDPListenerThread extends Thread {
                 socket.receive(packet);
                 message = new String(buffer, 0, packet.getLength());
                 try {
+                    Log.d("UDPListener", message);
                     JSONObject request = new JSONObject(message);
                     handleRequest(request);
                 } catch(JSONException e) {
@@ -100,8 +101,16 @@ public class UDPListenerThread extends Thread {
     private void fetchAndSendUsers(){
         List<Structs.User> usersList = getAllUsers(context);
         JSONObject json = new JSONObject();
-        JSONArray users = new JSONArray(usersList);
         try {
+            JSONArray users = new JSONArray();
+            for(Structs.User user : usersList) {
+                JSONObject jsonUser = new JSONObject();
+                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME, user.userName);
+                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE, user.userAge);
+                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER, user.userGender);
+                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, user.userAvatar);
+                users.put(jsonUser);
+            }
             json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_USER);
             json.put(Config.HoloLens.JSON_USERS, users);
         } catch (JSONException ex) {
@@ -125,13 +134,14 @@ public class UDPListenerThread extends Thread {
         } finally {
             JSONObject json = new JSONObject();
             try {
+                JSONObject newUser = new JSONObject();
+                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME));
+                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE));
+                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER));
+                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR));
+
                 json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER);
-                json.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, new Structs.User(
-                                request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME),
-                                request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE),
-                                request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER),
-                                request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR)
-                ));
+                json.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, newUser);
                 json.put(Config.HoloLens.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 Broadcasts.sendWriteToUIBroadcast(context, FETCH_USERS_ERROR);
@@ -184,6 +194,7 @@ public class UDPListenerThread extends Thread {
                     eventCursor.getInt(avatarColumnIndex)));
         }
         eventCursor.close();
+
         return users;
     }
 
