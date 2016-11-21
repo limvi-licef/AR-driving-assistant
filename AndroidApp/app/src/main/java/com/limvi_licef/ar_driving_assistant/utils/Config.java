@@ -23,6 +23,7 @@ public final class Config {
         public static final String JSON_USERS = "users";
 
         public static final String JSON_REQUEST_TYPE_INSERT_USER = "InsertNewUser";
+		public static final String JSON_REQUEST_TYPE_PARAM_NEW_USER = "newUser";
         public static final String JSON_REQUEST_RETURN_VALUES_NAME = "userName";
         public static final String JSON_REQUEST_RETURN_VALUES_AGE = "userAge";
         public static final String JSON_REQUEST_RETURN_VALUES_GENDER = "userGender";

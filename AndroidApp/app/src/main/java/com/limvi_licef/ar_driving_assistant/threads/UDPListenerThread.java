@@ -125,7 +125,13 @@ public class UDPListenerThread extends Thread {
         } finally {
             JSONObject json = new JSONObject();
             try {
-                json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_USER);
+                json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER);
+                json.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, new Structs.User(
+                                request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME),
+                                request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE),
+                                request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER),
+                                request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR)
+                ));
                 json.put(Config.HoloLens.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 Broadcasts.sendWriteToUIBroadcast(context, FETCH_USERS_ERROR);
