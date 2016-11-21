@@ -3,29 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script used to populate the id dropdown on the User panel
+/// </summary>
 public class PopulateDropdownScript : MonoBehaviour {
 
-    public int lowerLimit;
-    public int upperLimit;
+    public UDPSender UDPSender;
     public Text Placeholder;
 
-    void Start () {
-        List<string> list = new List<string>();
-        for(int i = lowerLimit; i <= upperLimit; i++){ list.Add(i.ToString()); }
+    void Start ()
+    {
+        requestUserList();
+    }
+
+    /// <summary>
+    /// Populates the dropdown using a list of Users
+    /// </summary>
+    /// <param name="users"></param>
+    public void Populate(List<UserManager.User> users)
+    {
         var dropdown = GetComponent<Dropdown>();
         dropdown.options.Clear();
-        foreach (string option in list)
+        foreach (UserManager.User u in users)
         {
-            dropdown.options.Add(new Dropdown.OptionData(option));
+            dropdown.options.Add(new Dropdown.OptionData(u.userName));
         }
+    }
 
-        //Unselect first option
-        Dropdown d = gameObject.GetComponent<Dropdown>();
-        d.options.Add(new Dropdown.OptionData() { text = "" });
-        d.value = d.options.Count - 1;
-        d.options.RemoveAt(d.options.Count - 1);
+    public void AddAndSelect (UserManager.User user)
+    {
+        var dropdown = GetComponent<Dropdown>();
+        dropdown.options.Add(new Dropdown.OptionData(user.userName));
+        dropdown.value = dropdown.options.Count - 1;
+    }
 
-        Placeholder.gameObject.SetActive(true);
+    /// <summary>
+    /// Sends a request for all Users
+    /// </summary>
+    private void requestUserList()
+    {
+        JsonClasses.JsonRequest idRequest = new JsonClasses.JsonRequest();
+        idRequest.requestType = JsonClasses.UsersRequest;
+        UDPSender.SendJSON(idRequest);
     }
 
 }

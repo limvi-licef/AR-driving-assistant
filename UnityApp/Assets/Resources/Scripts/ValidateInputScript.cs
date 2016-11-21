@@ -15,28 +15,25 @@ public class ValidateInputScript : MonoBehaviour {
         gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Validates that the user id is valid and sets the current user to that user if so
+    /// </summary>
     public void ValidateInput()
     {
-        if(ValidateID())
+        UserManager.User user = UserManager.FindUser(Label.text);
+
+        if(!String.IsNullOrEmpty(user.userName))
         {
-            UserManager.SetUserId(Label.text);
-            UserManager.SetUserAge(67);
-            UserManager.SetUserGender("Homme");
-            UserManager.SetUserAvatar(0);
+            UserManager.SetCurrentUser(user);
             UserManager.DisplayAvatar();
+            UserManager.DisplayError(""); //clear message
             gameObject.SetActive(false);
             Menu.SetAsLastSibling();
         }
-    }
-
-	bool ValidateID()
-    {
-        if(String.IsNullOrEmpty(Label.text))
+        else
         {
-            Placeholder.color = Color.red;
-            return false;
+            Label.color = Color.red;
+            Label.text = "Invalid ID";
         }
-        return true;
     }
-
 }

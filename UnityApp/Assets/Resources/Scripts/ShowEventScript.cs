@@ -48,7 +48,7 @@ public class ShowEventScript : MonoBehaviour
     {
         welcomeScreen = (Instantiate(Resources.Load("Prefabs/WelcomeScreen"), Vector3.zero, Quaternion.identity) as GameObject);
         welcomeScreen.transform.SetParent(gameObject.transform, false);
-        welcomeScreen.GetComponentInChildren<Text>().text = UserManager.GetUserId();
+        welcomeScreen.GetComponentInChildren<Text>().text = UserManager.userId;
     }
 
 }
