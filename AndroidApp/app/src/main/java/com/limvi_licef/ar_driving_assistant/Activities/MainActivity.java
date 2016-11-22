@@ -27,6 +27,7 @@ import android.widget.ToggleButton;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
@@ -44,7 +45,7 @@ import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements  View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private HandlerThread sensorThread;
     private Handler sensorHandler;
@@ -56,7 +57,14 @@ public class MainActivity extends Activity {
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
 
+    public final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
+
     private UDPListenerThread udpListenerThread = null;
+
+    private long startTimestamp = 0;
+    private String label;
+    private String type;
+    private String message;
 
     /**
      * Writes incoming messages to UI
@@ -69,6 +77,69 @@ public class MainActivity extends Activity {
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
+
+    /**
+     * Called when a button has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.setup_button :
+                SetupDialogFragment setupFragment = SetupDialogFragment.newInstance();
+                setupFragment.show(getFragmentManager(), "setupdialog");
+                break;
+            case R.id.check_database_button :
+                new ExportTask(MainActivity.this).execute();
+                break;
+            case R.id.calibrate_sensor_button :
+                new CalibrateTask(MainActivity.this).execute();
+                break;
+            case R.id.send_event_button :
+                SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
+                eventFragment.show(getFragmentManager(), "eventdialog");
+                break;
+        }
+    }
+
+    /**
+     * Called when the checked state of a compound button has changed.
+     *
+     * @param buttonView The compound button view whose state has changed.
+     * @param isChecked  The new checked state of buttonView.
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.monitoring_button :
+                if (isChecked) {
+                    startMonitoring();
+                    trainToggle.setEnabled(true);
+
+                } else {
+                    stopMonitoring();
+                    trainToggle.setEnabled(false);
+                }
+                break;
+            case R.id.train_button :
+                long timestamp = System.currentTimeMillis();
+                if (isChecked) {
+                    CreateTrainingEventDialogFragment trainingFragment = CreateTrainingEventDialogFragment.newInstance();
+                    trainingFragment.show(getFragmentManager(), "trainingdialog");
+                } else {
+                    if(startTimestamp == 0) return;
+                    
+                    //Save prematurely to have access to data to make sure enough data has been collected during this period
+                    linearAccelerometerReceiver.savePrematurely();
+                    rotationReceiver.savePrematurely();
+                    locationReceiver.savePrematurely();
+                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
+                    startTimestamp = 0;
+                }
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,121 +180,34 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
     }
 
+    public void setTrainingData(long timestamp, String label, String message, String type) {
+        this.startTimestamp = timestamp;
+        this.label = label;
+        this.message = message;
+        this.type = type;
+    }
+
     /**
      * Creates UI buttons
      */
     private void setupUIElements() {
-
         Button setup = (Button) findViewById(R.id.setup_button);
-        setup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SetupDialogFragment setupFragment = SetupDialogFragment.newInstance();
-                setupFragment.show(getFragmentManager(), "setupdialog");
-            }
-        });
+        setup.setOnClickListener(this);
         Button exportDatabase = (Button) findViewById(R.id.check_database_button);
-        exportDatabase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ExportTask(MainActivity.this).execute();
-            }
-        });
+        exportDatabase.setOnClickListener(this);
         Button calibrateSensor = (Button) findViewById(R.id.calibrate_sensor_button);
-        calibrateSensor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new CalibrateTask(MainActivity.this).execute();
-            }
-        });
+        calibrateSensor.setOnClickListener(this);
         Button sendEvent = (Button) findViewById(R.id.send_event_button);
-        sendEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
-                eventFragment.show(getFragmentManager(), "eventdialog");
-            }
-        });
+        sendEvent.setOnClickListener(this);
+
         final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
         trainToggle.setEnabled(false);
-        trainToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            private long startTimestamp = 0;
-            String label;
-            String type;
-            String message;
-
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
-                long timestamp = System.currentTimeMillis();
-                if (toggled) {
-
-                    // Create alert dialog to input Training Event type, label and message
-                    LinearLayout layout = new LinearLayout(MainActivity.this);
-                    layout.setOrientation(LinearLayout.VERTICAL);
-
-                    final EditText labelField = new EditText(MainActivity.this);
-                    labelField.setHint(getResources().getString(R.string.training_task_hint_label));
-                    layout.addView(labelField);
-
-                    final RadioGroup rg = new RadioGroup(MainActivity.this);
-                    rg.setOrientation(RadioGroup.VERTICAL);
-                    for(Events.EventTypes event : Events.EventTypes.values()){
-                        RadioButton rb = new RadioButton(MainActivity.this);
-                        rg.addView(rb);
-                        rb.setText(event.name());
-                    }
-                    rg.check(rg.getChildAt(0).getId());
-                    layout.addView(rg);
-
-                    final EditText eventText = new EditText(MainActivity.this);
-                    eventText.setHint(getResources().getString(R.string.training_task_hint_message));
-                    layout.addView(eventText);
-
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setView(layout)
-                            .setPositiveButton(getResources().getString(R.string.training_task_dialog_ok), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    startTimestamp = System.currentTimeMillis();
-                                    label = labelField.getText().toString();
-                                    int index = rg.getCheckedRadioButtonId() % rg.getChildCount();
-                                    RadioButton rb = (RadioButton)rg.getChildAt((index == 0) ? rg.getChildCount()-1 : index-1);
-                                    type = rb.getText().toString();
-                                    message = eventText.getText().toString();
-                                }
-                            })
-                            .setNegativeButton(getResources().getString(R.string.training_task_dialog_dismiss), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    trainToggle.setChecked(false);
-                                }
-                            })
-                            .show();
-                } else {
-                    if(startTimestamp == 0) return;
-                    //Save prematurely to have access to data to make sure enough data has been collected during this period
-                    linearAccelerometerReceiver.savePrematurely();
-                    rotationReceiver.savePrematurely();
-                    locationReceiver.savePrematurely();
-                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
-                    startTimestamp = 0;
-                }
-            }
-        });
+        trainToggle.setOnCheckedChangeListener(this);
 
         ToggleButton monitoringToggle = (ToggleButton) findViewById(R.id.monitoring_button);
-        monitoringToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean toggled) {
-                if (toggled) {
-                    startMonitoring();
-                    trainToggle.setEnabled(true);
+        monitoringToggle.setOnCheckedChangeListener(this);
 
-                } else {
-                    stopMonitoring();
-                    trainToggle.setEnabled(false);
-                }
-            }
-        });
-
+        //Listview to show broadcast messages in the UI
         ListView resultsView = (ListView) findViewById(R.id.monitoring_result);
         results = new ArrayList<>();
         resultsAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.list_results, results);
@@ -311,5 +295,4 @@ public class MainActivity extends Activity {
         Aware.stopAWARE();
         Aware.stopPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
-
 }
