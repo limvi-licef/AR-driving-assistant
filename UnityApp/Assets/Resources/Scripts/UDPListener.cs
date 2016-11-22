@@ -18,6 +18,8 @@ public class UDPListener : MonoBehaviour
     //Deal with the udp responses
     public SpeedCounter speedCounter;
     public UserManager userManager;
+    public RetroactionScript retroaction;
+
 #if !UNITY_EDITOR
     private DatagramSocket socket;
 #endif
@@ -105,6 +107,7 @@ public class UDPListener : MonoBehaviour
             {
                 JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
                 JsonUtility.FromJsonOverwrite(message, ridesResponse);
+                retroaction.SetRides(ridesResponse.rides);
             }
             else 
             {
