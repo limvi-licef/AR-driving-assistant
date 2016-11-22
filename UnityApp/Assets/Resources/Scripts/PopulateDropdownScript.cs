@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -28,6 +27,12 @@ public class PopulateDropdownScript : MonoBehaviour {
         {
             dropdown.options.Add(new Dropdown.OptionData(u.userName));
         }
+
+        //Unselect first option
+        dropdown.options.Add(new Dropdown.OptionData() { text = "" });
+        dropdown.value = dropdown.options.Count - 1;
+        dropdown.options.RemoveAt(dropdown.options.Count - 1);
+        Placeholder.gameObject.SetActive(true);
     }
 
     public void AddAndSelect (UserManager.User user)
