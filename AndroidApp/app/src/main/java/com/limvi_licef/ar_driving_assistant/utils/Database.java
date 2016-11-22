@@ -15,6 +15,11 @@ public final class Database {
 
     private Database(){}
 
+    /**
+     * Get all the database table names
+     * @param database
+     * @return an arraylist of table name strings
+     */
     public static ArrayList<String> getAllTableNames(SQLiteDatabase database){
         ArrayList<String> namesArray = new ArrayList<>();
         Cursor c = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
@@ -26,11 +31,24 @@ public final class Database {
         return namesArray;
     }
 
+    /**
+     * Checks if the external storage is available to be written to
+     * @return Whether or not the external storage is writable
+     */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    /**
+     * Fetches sensor data associated to given parameters
+     * @param fromTimestamp The start timestamp
+     * @param toTimestamp The end timestamp
+     * @param tableName The table containing the wanted column
+     * @param valueColumnName The column containing the wanted data
+     * @param context
+     * @return a List of TimestampedDouble
+     */
     public static List<Structs.TimestampedDouble> getSensorData(long fromTimestamp, long toTimestamp, String tableName, String valueColumnName, Context context) {
         List<Structs.TimestampedDouble> data = new ArrayList<>();
         Cursor cursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(tableName,

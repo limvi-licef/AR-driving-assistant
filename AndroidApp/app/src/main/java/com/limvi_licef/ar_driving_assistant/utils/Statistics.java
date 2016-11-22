@@ -10,16 +10,20 @@ public final class Statistics {
 
     private Statistics(){}
 
-    /*
+    /**
      * Rounds off the given timestamp
-     * precision is in milliseconds
+     * @param timestamp the timestamp to round
+     * @param precision timestamp precision in milliseconds
+     * @return
      */
     public static long roundOffTimestamp(long timestamp, long precision) {
         return precision * (( timestamp + precision / 2 ) / precision);
     }
 
-    /*
-     * Returns the average of the list values or 0 if the list is empty
+    /**
+     * Calculate the average of the given list
+     * @param list to calculate the average of
+     * @return the average or 0 if list is empty
      */
     public static double calculateAverage(List<Double> list) {
         if(list.isEmpty()) return 0;
@@ -30,8 +34,11 @@ public final class Statistics {
         return sum / list.size();
     }
 
-    /*
-     * Returns the standard deviation of the list using the average or 0 if the list is empty
+    /**
+     * Calculates the standard deviation of the given list
+     * @param list
+     * @param average
+     * @return the standard deviation or 0 if list is empty
      */
     public static double calculateStandardDeviation(List<Double> list, double average) {
         if(list.isEmpty()) return 0;
@@ -42,8 +49,11 @@ public final class Statistics {
         return Math.sqrt(squaredSum / list.size());
     }
 
-    /*
-     * Calculates and returns the average and the standard deviation for both increases and decreases of a list of timestamped extrema
+    /**
+     * Calculates stats about the peaks in the given values list
+     * @param values the list of timestamped values to calculate stats from
+     * @param indexes the significant indexes (peaks indexes)
+     * @return an ExtremaStats object containing the stats
      */
     public static ExtremaStats computeExtremaStats(List<TimestampedDouble> values, List<Integer> indexes){
         List<Double> negativeExtrema = new ArrayList<>();

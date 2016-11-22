@@ -27,6 +27,10 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
     }
 
     //TODO REFACTOR RewriteAlgorithm instead of overriding run() here and using setCurrentAxis
+    /**
+     * Override RewriteAlgorithmRunnable's run method in order to sync the three axes together,
+     * especially in case of insert and delete error on a single axis
+     */
     @Override
     public void run() {
         String userId = Preferences.getCurrentUserId(context);
@@ -80,8 +84,10 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
             values.put(getCurrentAxis(), td.value);
 
+            //Create new row if none exist for this timestamp
             int id = (int) db.insertWithOnConflict(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
             if (id == -1) {
+                //if row exists, add axis data to correct column
                 db.update(DatabaseContract.LinearAccelerometerData.TABLE_NAME, values, "Timestamp=?", new String[] {String.valueOf(td.timestamp)});
             }
         }

@@ -58,6 +58,9 @@ public class MainActivity extends Activity {
 
     private UDPListenerThread udpListenerThread = null;
 
+    /**
+     * Writes incoming messages to UI
+     */
     IntentFilter statusIntentFilter = new IntentFilter(Broadcasts.ACTION_WRITE_TO_UI);
     private final BroadcastReceiver statusReceiver = new BroadcastReceiver() {
         @Override
@@ -106,6 +109,9 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
     }
 
+    /**
+     * Creates UI buttons
+     */
     private void setupUIElements() {
 
         Button setup = (Button) findViewById(R.id.setup_button);
@@ -151,6 +157,7 @@ public class MainActivity extends Activity {
                 long timestamp = System.currentTimeMillis();
                 if (toggled) {
 
+                    // Create alert dialog to input Training Event type, label and message
                     LinearLayout layout = new LinearLayout(MainActivity.this);
                     layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -192,6 +199,7 @@ public class MainActivity extends Activity {
                             .show();
                 } else {
                     if(startTimestamp == 0) return;
+                    //Save prematurely to have access to data to make sure enough data has been collected during this period
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
                     locationReceiver.savePrematurely();
@@ -223,6 +231,9 @@ public class MainActivity extends Activity {
         resultsView.setEmptyView(findViewById(R.id.emptyList));
     }
 
+    /**
+     * Set aware preferences for sensors using Config settings
+     */
     private void setupSensors(){
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_ENABLED);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_FREQUENCY);
@@ -237,6 +248,9 @@ public class MainActivity extends Activity {
         Aware.setSetting(this, com.aware.plugin.openweather.Settings.OPENWEATHER_API_KEY, getResources().getString(R.string.openweather), com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
+    /**
+     * Initialize listeners and listener thread
+     */
     private void setupListeners() {
         sensorThread = new HandlerThread("SensorDataHandlerThread");
         sensorThread.start();
@@ -249,6 +263,9 @@ public class MainActivity extends Activity {
         temperatureReceiver = new TemperatureReceiver();
     }
 
+    /**
+     * Stop thread once message queue is empty
+     */
     private void stopListenerThreads() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             sensorThread.quitSafely();
@@ -257,6 +274,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * Bind listeners to listener thread
+     */
     private void registerListeners(){
         rotationReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver.register(this, sensorHandler);
@@ -272,6 +292,9 @@ public class MainActivity extends Activity {
         sensorHandler.removeCallbacksAndMessages(null);
     }
 
+    /**
+     * Start active monitoring of sensors
+     */
     private void startMonitoring() {
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_ENABLED);
         this.startService(new Intent(this, Aware.class));

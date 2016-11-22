@@ -14,6 +14,9 @@ import com.limvi_licef.ar_driving_assistant.utils.Structs;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Short-running runnable that periodically (1 min) sends all accumulated data to MonotoneSegmentationAlgorithm before saving the data
+ */
 public abstract class ComputeAlgorithmRunnable implements Runnable {
 
     protected List<Structs.TimestampedDouble> data;
@@ -33,6 +36,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     private void notifyRunnableEnd() {
         runnableDoneCount++;
 
+        //launch task once all runnables are finished running
         if(runnableCount == runnableDoneCount){
             runnableDoneCount = 0;
             new MatchEventTask(context, Config.SensorDataCollection.SHORT_DELAY).execute();
@@ -50,11 +54,14 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     @Override
     public void run() {
         isRunning = true;
+
+        //send accumulated data through algorithm
         List<Structs.TimestampedDouble> newData = getData();
         Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
+            //save algorithm returned data
             saveData(returnData.monotoneValues,  returnData.extremaStats);
             db.setTransactionSuccessful();
             resetData();

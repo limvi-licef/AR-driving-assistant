@@ -26,8 +26,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
+/**
+ * Thread that listens for json messages from the Unity app
+ */
 public class UDPListenerThread extends Thread {
 
     private static final String UNKNOWN_REQUEST = "Received Unknown Request";
@@ -84,6 +86,11 @@ public class UDPListenerThread extends Thread {
         }
     }
 
+    /**
+     * Redirects the request to appropriate method
+     * @param request
+     * @throws JSONException
+     */
     private void handleRequest(JSONObject request) throws JSONException{
         String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
         Log.d("UDPListener", "Received request : " + requestType);
@@ -98,6 +105,9 @@ public class UDPListenerThread extends Thread {
         }
     }
 
+    /**
+     * Fetches the users list and returns it to Unity app
+     */
     private void fetchAndSendUsers(){
         List<Structs.User> usersList = getAllUsers(context);
         JSONObject json = new JSONObject();
@@ -119,6 +129,10 @@ public class UDPListenerThread extends Thread {
         Events.sendJson(context, json);
     }
 
+    /**
+     * Writes new user to database and send it back to Unity app if insertion is successful
+     * @param request request containing the new user's data
+     */
     private void insertNewUser(JSONObject request){
         boolean status = true;
         try {
@@ -150,6 +164,10 @@ public class UDPListenerThread extends Thread {
         }
     }
 
+    /**
+     * Fetches an user's last known rides and send them to the Unity app
+     * @param request the request containing the user id
+     */
     private void fetchAndSendLastKnownRides(JSONObject request){
         String status = "";
         List<String> rides = new ArrayList<>();
@@ -176,6 +194,11 @@ public class UDPListenerThread extends Thread {
         }
     }
 
+    /**
+     * Fetches all users
+     * @param context
+     * @return users
+     */
     private List<Structs.User> getAllUsers(Context context){
         List<Structs.User> users = new ArrayList<>();
         Cursor eventCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.Users.TABLE_NAME,
@@ -198,6 +221,11 @@ public class UDPListenerThread extends Thread {
         return users;
     }
 
+    /**
+     * Fetches an user's last known rides
+     * @param id the user id to
+     * @return a list of strings containing dates
+     */
     private List<String> getUserLastKnownRides(String id) {
         List<String> rides = new ArrayList<>();
         Cursor ridesCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.LocationData.TABLE_NAME,
@@ -210,6 +238,8 @@ public class UDPListenerThread extends Thread {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(timestamp);
             String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
+
+            //add only unique dates
             if (!date.equals(lastDate)) {
                 rides.add(date);
             }

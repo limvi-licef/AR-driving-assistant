@@ -30,6 +30,11 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         this.endTimestamp = endTimestamp;
     }
 
+    /**
+     * Compare the event to recent sensor data and try to find a match
+     * A new set of TimeSeries to compare is generated each Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS
+     * @param event The event to process
+     */
     public void processEvent(Events.Event event) {
         Double closestAcceleration = null;
         Double closestRotation = null;
@@ -54,6 +59,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
                 continue;
             }
 
+            //Find Euclidean distance between each time series
             double distanceAccel = FastDTW.compare(eventAccel, segmentAccel, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
             double distanceRotation = FastDTW.compare(eventRotation, segmentRotation, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
             double distanceSpeed = FastDTW.compare(eventSpeed, segmentSpeed, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
@@ -62,6 +68,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             closestRotation = (closestRotation == null || distanceRotation < closestRotation ) ? distanceRotation : closestRotation;
             closestSpeed = (closestSpeed == null || distanceSpeed < closestSpeed ) ? distanceSpeed : closestSpeed;
 
+            //Match is considered found if within particular distance
             if(distanceAccel < Config.DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF
                     && distanceRotation < Config.DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF
                     && distanceSpeed < Config.DynamicTimeWarping.SPEED_DISTANCE_CUTOFF){
@@ -73,6 +80,10 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         Broadcasts.sendWriteToUIBroadcast(context, "DTW done");
     }
 
+    /**
+     * Send event to Unity app when a match is found
+     * @param e The event to send
+     */
     private void matchFound(Events.Event e){
         Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
         String status;
@@ -88,6 +99,15 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_status) + status);
     }
 
+    /**
+     * Save algorithm results
+     * @param event
+     * @param segmentStart
+     * @param segmentStop
+     * @param distanceAccel
+     * @param distanceRotation
+     * @param distanceSpeed
+     */
     private void saveResults(Events.Event event, long segmentStart, long segmentStop, double distanceAccel, double distanceRotation, double distanceSpeed) {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();

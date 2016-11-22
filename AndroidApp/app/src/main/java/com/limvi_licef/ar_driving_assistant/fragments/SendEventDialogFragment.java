@@ -14,6 +14,9 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.tasks.SendEventTask;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 
+/**
+ * DialogFragment used to send Event to Unity app
+ */
 public class SendEventDialogFragment extends DialogFragment {
 
     public static SendEventDialogFragment newInstance() {

@@ -20,6 +20,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 
+/**
+ * Export the entire database as a json file
+ * The device needs to be rebooted for the file to be visible
+ */
 public class ExportTask extends AsyncTask<Void, Void, String> {
 
     private ProgressDialog dialog;
@@ -49,6 +53,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute (String result) {
         if (dialog.isShowing()) { dialog.dismiss(); }
+        //display alert when done
         new AlertDialog.Builder(context)
                 .setMessage(result)
                 .setNegativeButton(context.getResources().getString(R.string.export_task_close), null)
@@ -56,8 +61,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
     }
 
     /*
-     *  Dump the database into a json file inside the phone storage
-     * The json file will only be visible after the device is rebooted
+     * Dump the database into a json file inside the phone storage
      */
     private boolean exportDatabaseAsJSON(SQLiteDatabase database){
 
@@ -89,6 +93,7 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
     {
         JSONObject databaseJSON = new JSONObject();
 
+        //Translate every table to json
         for(String tableName : Database.getAllTableNames(database)){
             JSONArray tableArray = tableToJSON(database, tableName);
             try {
@@ -101,6 +106,12 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
         return databaseJSON;
     }
 
+    /**
+     * Translates the param tableName to a jsonArray
+     * @param database
+     * @param tableName
+     * @return
+     */
     private static JSONArray tableToJSON(SQLiteDatabase database, String tableName){
 
         String searchQuery = "SELECT  * FROM " + tableName;

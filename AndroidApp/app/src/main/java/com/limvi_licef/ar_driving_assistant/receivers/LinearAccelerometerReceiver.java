@@ -41,6 +41,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         if(!getOffsets(context)) return;
         isRegistered = true;
 
+        //Create a runnable to handle each axis separately
         runnableAxisX = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_X);
         handler.postDelayed(runnableAxisX, Config.SensorDataCollection.SHORT_DELAY);
         runnableAxisY = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Y);
@@ -79,11 +80,12 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         double axisY = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1);
         double axisZ = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2);
 
+        //apply offset
         axisX -= offsetX;
         axisY -= offsetY;
         axisZ -= offsetZ;
 
-        //Round off timestamp to a tenth of a second
+        //Round off timestamp avoid clutter
         long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), Config.SensorDataCollection.ACCELERATION_PRECISION);
         runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));
         runnableAxisY.accumulateData(new TimestampedDouble(roundedTimestamp, axisY));
@@ -91,6 +93,11 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         previousTimestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Gets the axis offsets from SharedPreferences
+     * @param context
+     * @return Whether or not the Accelerometer has been calibrated
+     */
     private boolean getOffsets(Context context){
         SharedPreferences settings = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         offsetX = Preferences.getDouble(settings, Preferences.OFFSET_X_PREF, -1);

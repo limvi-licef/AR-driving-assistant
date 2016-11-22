@@ -67,16 +67,17 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         Log.d("Location Receiver", "Received intent");
         if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
-        //get most recent
+        //fetch most recent location
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
         location.moveToFirst();
 
+        //Convert location speed to km/h
         double speed = location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED)) * KM_PER_HOUR_CONVERSION;
-
+        //accumulate speed data
         runnable.accumulateData(new TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)), speed));
 
         String userId = Preferences.getCurrentUserId(context);
-
+        //save location
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);
         valuesToSave.put(DatabaseContract.LocationData.TIMESTAMP, location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)));

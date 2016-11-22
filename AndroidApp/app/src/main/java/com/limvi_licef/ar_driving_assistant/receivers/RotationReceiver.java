@@ -70,7 +70,9 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
 
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
 
+            //Round off timestamp to avoid clutter
             long roundedTimestamp = Statistics.roundOffTimestamp(System.currentTimeMillis(), Config.SensorDataCollection.ROTATION_PRECISION);
+            //calculate Azimuth and send it to runnable
             runnable.accumulateData(new TimestampedDouble(roundedTimestamp, (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
             previousTimestamp = System.currentTimeMillis();
         }

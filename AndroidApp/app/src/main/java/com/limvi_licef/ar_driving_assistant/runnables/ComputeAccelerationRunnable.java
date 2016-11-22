@@ -33,8 +33,10 @@ public class ComputeAccelerationRunnable extends ComputeAlgorithmRunnable {
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
             values.put(axisColumnName, td.value);
 
+            //Create new row if none exist for this timestamp
             int id = (int) db.insertWithOnConflict(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
             if (id == -1) {
+                //if row exists, add axis data to correct column
                 db.update(DatabaseContract.LinearAccelerometerData.TABLE_NAME, values, "Timestamp=?", new String[] {String.valueOf(td.timestamp)});
             }
         }

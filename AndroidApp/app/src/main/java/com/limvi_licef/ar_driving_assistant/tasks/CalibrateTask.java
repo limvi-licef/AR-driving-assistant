@@ -20,8 +20,11 @@ import java.util.List;
 
 import static android.content.Context.SENSOR_SERVICE;
 
+/**
+ * Task to calibrate the linear accelerometer sensor since each axis is off even when the device is still
+ * To calibrate, an average of each axis is calculated in order to save an offset to be used when receiving data
+ */
 public class CalibrateTask extends AsyncTask<Void, Void, String> implements SensorEventListener {
-
 
     private final int SLEEP_TIME = 2000;
     private ProgressDialog dialog;
@@ -54,6 +57,7 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
     @Override
     protected String doInBackground(Void... params) {
         try {
+            //let the sensor stabilize for 2 seconds first
             Thread.sleep(SLEEP_TIME);
             sensorDataX.clear();
             sensorDataY.clear();
@@ -71,6 +75,7 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
     protected void onPostExecute (String result) {
         sensorManager.unregisterListener(this, linearAccelerationSensor);
         if(result.equals(context.getResources().getString(R.string.calibrate_task_success))) {
+            //save offset averages
             saveOffsets(Statistics.calculateAverage(sensorDataX), Statistics.calculateAverage(sensorDataY), Statistics.calculateAverage(sensorDataZ));
         }
         sensorDataX.clear();
@@ -85,6 +90,7 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
+    //Accumulate axis data
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             sensorDataX.add((double)event.values[0]);
@@ -93,6 +99,12 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
         }
     }
 
+    /**
+     * Save axis offsets to SharedPreferences
+     * @param x
+     * @param y
+     * @param z
+     */
     private void saveOffsets(double x, double y, double z){
         SharedPreferences.Editor editor = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
         Preferences.putDouble(editor, Preferences.OFFSET_X_PREF, x);

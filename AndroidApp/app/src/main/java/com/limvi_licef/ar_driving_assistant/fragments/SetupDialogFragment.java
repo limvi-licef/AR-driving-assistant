@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
+/**
+ * DialogFragment used to input current user ID and HoloLens Ip address
+ */
 public class SetupDialogFragment extends DialogFragment {
 
     public static SetupDialogFragment newInstance() {

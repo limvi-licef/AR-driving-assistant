@@ -48,6 +48,11 @@ public final class Events {
         return context.getResources().getString(R.string.send_event_task_success);
     }
 
+    /**
+     * Fetches all TrainingEvents in the database
+     * @param context
+     * @return
+     */
     public static List<Event> getAllEvents(Context context){
         List<Event> events = new ArrayList<>();
         Cursor eventCursor = DatabaseHelper.getHelper(context).getWritableDatabase().query(DatabaseContract.TrainingEvents.TABLE_NAME,
@@ -74,6 +79,16 @@ public final class Events {
         return events;
     }
 
+    /**
+     * Creates a TimeSeries using given parameters
+     * @param context
+     * @param startTimestamp the timestamp from which to fetch data
+     * @param endTimestamp the timestamp to which to fetch data
+     * @param tableName the table containing the columns
+     * @param valueColumnNames the varargs strings defining the columns to be used to create the time series
+     * @return
+     * @throws IndexOutOfBoundsException
+     */
     public static TimeSeries createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) throws IndexOutOfBoundsException {
         List<List<Structs.TimestampedDouble>> valuesList = new ArrayList<>();
         for(String column : valueColumnNames) {

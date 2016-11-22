@@ -14,6 +14,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+/**
+ * Send an event to the Unity app
+ */
 public class SendEventTask extends AsyncTask<String, Void, String> {
 
     private Context context;
