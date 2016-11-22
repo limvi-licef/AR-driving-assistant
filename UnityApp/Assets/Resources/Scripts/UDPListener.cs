@@ -15,6 +15,7 @@ using System.IO;
 /// </remarks>
 public class UDPListener : MonoBehaviour
 {
+    //Deal with the udp responses
     public SpeedCounter speedCounter;
     public UserManager userManager;
 #if !UNITY_EDITOR
@@ -71,9 +72,9 @@ public class UDPListener : MonoBehaviour
         {
             if (response.requestType.Equals(JsonClasses.SpeedResponse))
             {
-                JsonClasses.JsonResponseSpeed speed = new JsonClasses.JsonResponseSpeed();
-                JsonUtility.FromJsonOverwrite(message, speed);
-                speedCounter.SetSpeed(speed.speedText);
+                JsonClasses.JsonResponseSpeed speedResponse = new JsonClasses.JsonResponseSpeed();
+                JsonUtility.FromJsonOverwrite(message, speedResponse);
+                speedCounter.SetSpeed(speedResponse.speedText);
             }
             else if (response.requestType.Equals(JsonClasses.EventResponse))
             {
@@ -83,17 +84,17 @@ public class UDPListener : MonoBehaviour
             }
             else if (response.requestType.Equals(JsonClasses.UsersResponse))
             {
-                JsonClasses.JsonResponseUsers users = new JsonClasses.JsonResponseUsers();
-                JsonUtility.FromJsonOverwrite(message, users);
-                userManager.Users = users.users;
+                JsonClasses.JsonResponseUsers usersResponse = new JsonClasses.JsonResponseUsers();
+                JsonUtility.FromJsonOverwrite(message, usersResponse);
+                userManager.Users = usersResponse.users;
             }
             else if (response.requestType.Equals(JsonClasses.NewUserResponse))
             {
-                JsonClasses.JsonResponseInsert insert = new JsonClasses.JsonResponseInsert();
-                JsonUtility.FromJsonOverwrite(message, insert);
-                if(insert.status)
+                JsonClasses.JsonResponseInsert insertResponse = new JsonClasses.JsonResponseInsert();
+                JsonUtility.FromJsonOverwrite(message, insertResponse);
+                if(insertResponse.status)
                 {
-                    userManager.AddNewUser(insert.newUser);
+                    userManager.AddNewUser(insertResponse.newUser);
                 }
                 else
                 {
@@ -102,8 +103,8 @@ public class UDPListener : MonoBehaviour
             }
             else if (response.requestType.Equals(JsonClasses.RidesResponse))
             {
-                JsonClasses.JsonResponseLastKnown rides = new JsonClasses.JsonResponseLastKnown();
-                JsonUtility.FromJsonOverwrite(message, rides);
+                JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
+                JsonUtility.FromJsonOverwrite(message, ridesResponse);
             }
             else 
             {
