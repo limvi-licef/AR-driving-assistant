@@ -7,15 +7,23 @@ public class RetroactionScript : MonoBehaviour {
     public UDPSender UDPSender;
     public UserManager UserManager;
 
+    private Text textZone;
+    private readonly string title = "Derniers Trajets";
+
+    void Start()
+    {
+        textZone = GetComponentInChildren<Text>();
+    }
+
     void OnEnable()
     {
+        textZone.text = title;
         requestRides();
     }
 
     public void SetRides(List<string> rides)
     {
-        var textZone = GetComponentInChildren<Text>();
-        textZone.text = "\\n";
+        textZone.text += "\n\n";
         foreach(string line in rides)
         {
             textZone.text += line;
