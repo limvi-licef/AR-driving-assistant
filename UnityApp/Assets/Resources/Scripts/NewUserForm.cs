@@ -8,6 +8,8 @@ using System.Linq;
 /// </summary>
 public class NewUserForm : MonoBehaviour {
 
+    private static readonly string defaultUser = "Utilisateur ";
+
     public UDPSender UDPSender;
     public Button sendButton;
     public InputField IdField;
@@ -16,7 +18,7 @@ public class NewUserForm : MonoBehaviour {
     public ToggleGroup AvatarRadio;
 
 	void Start () {
-        //Disable this until the user clicks on the new user button
+        //Disable this gameobject until the user clicks on the new user button
         gameObject.SetActive(false);
         sendButton.onClick.AddListener(() => SendForm());
     }
@@ -24,9 +26,12 @@ public class NewUserForm : MonoBehaviour {
     void OnEnable()
     {
         //HoloLens only : Auto generated user Id since there is no keyboard
-        IdField.text = "Utilisateur " + UserManager.UserCount;
+        IdField.text = defaultUser + UserManager.UserCount;
     }
 
+    /// <summary>
+    /// Sends a new user insert request using the data in each fields
+    /// </summary>
     public void SendForm()
     {
         JsonClasses.JsonRequestNewUser newUserRequest = new JsonClasses.JsonRequestNewUser();

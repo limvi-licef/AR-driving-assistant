@@ -7,7 +7,7 @@ using System.IO;
 #endif
 
 /// <summary>
-/// Listens on port 12345 for incoming udp packets and redirects requests to the adequate class
+/// Listens on port 12345 for incoming udp packets and redirects messages to the adequate method
 /// </summary>
 /// <remarks>
 /// Adapted from https://forums.hololens.com/discussion/comment/9837
@@ -39,6 +39,9 @@ public class UDPListener : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Bind listener socket to port
+    /// </summary>
 #if !UNITY_EDITOR
     private async void Server()
     {
@@ -62,14 +65,16 @@ public class UDPListener : MonoBehaviour
     private async void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender,
         Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
     {
-        //Read the message that was received from the UDP echo client.
+        //Read the json message that was received from the Android client
         Stream streamIn = args.GetDataStream().AsStreamForRead();
         StreamReader reader = new StreamReader(streamIn);
         string message = await reader.ReadLineAsync();
-        Debug.Log(message);
+        
+        //Deserialize json
         JsonClasses.JsonResponse response = new JsonClasses.JsonResponse();
         JsonUtility.FromJsonOverwrite(message, response);
 
+        //Handle json message
         UnityEngine.WSA.Application.InvokeOnAppThread(() =>
         {
             if (response.requestType.Equals(JsonClasses.SpeedResponse))
@@ -108,10 +113,6 @@ public class UDPListener : MonoBehaviour
                 JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
                 JsonUtility.FromJsonOverwrite(message, ridesResponse);
                 retroaction.SetRides(ridesResponse.rides);
-            }
-            else 
-            {
-                Debug.Log("UNKNOWN RESPONSE TYPE");
             }
         }, false);
 

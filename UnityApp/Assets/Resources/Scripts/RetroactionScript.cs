@@ -2,6 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script to manage the retroaction results text field
+/// </summary>
 public class RetroactionScript : MonoBehaviour {
 
     public UDPSender UDPSender;
@@ -21,6 +24,10 @@ public class RetroactionScript : MonoBehaviour {
         requestRides();
     }
 
+    /// <summary>
+    /// Adds the last known ride dates to the gameobject's children text field
+    /// </summary>
+    /// <param name="rides">The ride dates to display</param>
     public void SetRides(List<string> rides)
     {
         textZone.text += "\n\n";
@@ -30,6 +37,9 @@ public class RetroactionScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sends a request to fetch the last known ride dates from the Andrdoi app
+    /// </summary>
     private void requestRides ()
     {
         JsonClasses.JsonRequestLastKnownRides ridesRequest = new JsonClasses.JsonRequestLastKnownRides();

@@ -32,6 +32,10 @@ public class UDPSender : MonoBehaviour {
         set { port = value; }
     }
 
+    /// <summary>
+    /// Connects to the Android app and send json
+    /// </summary>
+    /// <param name="jsonString">The json string to send</param>
 #if !UNITY_EDITOR
     private async void ConnectAndSend(string jsonString)
     {
@@ -43,6 +47,10 @@ public class UDPSender : MonoBehaviour {
     }
 #endif
 
+    /// <summary>
+    /// Send async json request
+    /// </summary>
+    /// <param name="json">The json request to send</param>
     public void SendJSON(JsonClasses.JsonRequest json)
     {
 #if !UNITY_EDITOR

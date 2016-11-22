@@ -2,6 +2,9 @@
 using HoloToolkit.Unity;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script to manage the way events are displayed to the user
+/// </summary>
 public class ShowEventScript : MonoBehaviour
 {
     GameObject eventDisplay;
@@ -20,6 +23,10 @@ public class ShowEventScript : MonoBehaviour
         EventManager.OnTrigger -= ShowEvent;
     }
 
+    /// <summary>
+    /// Show an event on the application screen for DisplayTime seconds
+    /// </summary>
+    /// <param name="e">The event to show</param>
     void ShowEvent(Event e)
     {
         if(eventDisplay) { Destroy(eventDisplay); }
@@ -27,6 +34,10 @@ public class ShowEventScript : MonoBehaviour
         Destroy(eventDisplay, DisplayTime);
     }
 
+    /// <summary>
+    /// Instantiate the event received in param
+    /// </summary>
+    /// <param name="e">The event to instantiate</param>
     void SetupEvent(Event e)
     {
         eventDisplay = (Instantiate(Resources.Load("Prefabs/" + e.Prefab), Vector3.zero, Quaternion.identity) as GameObject);
@@ -37,6 +48,9 @@ public class ShowEventScript : MonoBehaviour
         UAudioManager.Instance.PlayEvent(e.Sound, this.gameObject.GetComponent<AudioSource>());
     }
 
+    /// <summary>
+    /// Displays a welcome screen for DisplayTime seconds each time the application screen is displayed
+    /// </summary>
     public void ShowWelcomeScreen()
     {
         if (welcomeScreen) { Destroy(welcomeScreen); }
@@ -44,6 +58,9 @@ public class ShowEventScript : MonoBehaviour
         Destroy(welcomeScreen, DisplayTime);
     }
 
+    /// <summary>
+    /// Instantiate the welcome screen
+    /// </summary>
     void SetupWelcomeScreen()
     {
         welcomeScreen = (Instantiate(Resources.Load("Prefabs/WelcomeScreen"), Vector3.zero, Quaternion.identity) as GameObject);

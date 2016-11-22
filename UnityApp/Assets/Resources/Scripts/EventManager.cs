@@ -7,6 +7,9 @@ public class EventManager : MonoBehaviour
     public delegate void TriggerAction(Event e);
     public static event TriggerAction OnTrigger;
 
+    /// <summary>
+    /// Defines the Events to be shown to the user
+    /// </summary>
     private static Dictionary<string, Event> m_Events;
 
     void Start()
@@ -19,6 +22,11 @@ public class EventManager : MonoBehaviour
         m_Events["RightWarning"] = new Event() { Prefab = "RightWarningDisplay", Sound = "WarningBeep", Color = Color.red, Icon = "warning_icon", Text = "" };
     }
 
+    /// <summary>
+    /// Fires a delegate action when a new event is received
+    /// </summary>
+    /// <param name="name">The name of the event to be shown</param>
+    /// <param name="message">The message to be displayed during the event</param>
     public static void SendEvent(string name, string message)
     {
         Event e;

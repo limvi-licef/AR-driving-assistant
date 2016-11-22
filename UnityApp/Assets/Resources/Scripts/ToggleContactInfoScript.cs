@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Script to toggle gameObject on and off
+/// </summary>
 public class ToggleContactInfoScript : MonoBehaviour {
 
     bool toggleBool = false;

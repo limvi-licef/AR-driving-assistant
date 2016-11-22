@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Ensures the hologram is constantly facing the user
+/// </summary>
+/// <remarks>
+/// For HoloLens
+/// </remarks>
 public class AlwaysLookAtCamera : MonoBehaviour {
 
     public Camera cam;

@@ -35,6 +35,10 @@ public class PopulateDropdownScript : MonoBehaviour {
         Placeholder.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Add a user to the id dropdown and selects it
+    /// </summary>
+    /// <param name="user">The user to add</param>
     public void AddAndSelect (UserManager.User user)
     {
         var dropdown = GetComponent<Dropdown>();
@@ -43,7 +47,7 @@ public class PopulateDropdownScript : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sends a request for all Users
+    /// Sends a request to fetch all Users
     /// </summary>
     private void requestUserList()
     {
