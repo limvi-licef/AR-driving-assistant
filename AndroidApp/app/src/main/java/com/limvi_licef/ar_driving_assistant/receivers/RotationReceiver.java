@@ -27,12 +27,10 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
     private ComputeAlgorithmRunnable runnable;
     private RewriteAlgorithmRunnable rewriteRunnable;
 
-    private int axisX, axisY;
     private SensorManager sensorManager;
     private Sensor rotationSensor;
     private float[] orientation = new float[3];
     private float[] rMat = new float[16];
-    private float[] rMatRemap = new float[16];
     private long previousTimestamp = 0;
 
     public RotationReceiver() {}
@@ -71,42 +69,10 @@ public class RotationReceiver implements SensorReceiver, SensorEventListener {
             if (event.values.length == 0) return;
 
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
-//            setAxis(context);
-//            SensorManager.remapCoordinateSystem(rMat, axisX, axisY, rMatRemap);
 
             long roundedTimestamp = Statistics.roundOffTimestamp(System.currentTimeMillis(), Config.SensorDataCollection.ROTATION_PRECISION);
             runnable.accumulateData(new TimestampedDouble(roundedTimestamp, (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360));
             previousTimestamp = System.currentTimeMillis();
-        }
-    }
-
-    private void setAxis(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int screenRotation = wm.getDefaultDisplay().getRotation();
-
-        switch (screenRotation) {
-            case Surface.ROTATION_0:
-                axisX = SensorManager.AXIS_X;
-                axisY = SensorManager.AXIS_Y;
-                break;
-
-            case Surface.ROTATION_90:
-                axisX = SensorManager.AXIS_Y;
-                axisY = SensorManager.AXIS_MINUS_X;
-                break;
-
-            case Surface.ROTATION_180:
-                axisX = SensorManager.AXIS_MINUS_X;
-                axisY = SensorManager.AXIS_MINUS_Y;
-                break;
-
-            case Surface.ROTATION_270:
-                axisX = SensorManager.AXIS_MINUS_Y;
-                axisY = SensorManager.AXIS_X;
-                break;
-
-            default:
-                break;
         }
     }
 }
