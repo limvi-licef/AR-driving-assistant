@@ -43,7 +43,7 @@ public class RetroactionScript : MonoBehaviour {
     private void requestRides ()
     {
         JsonClasses.JsonRequestLastKnownRides ridesRequest = new JsonClasses.JsonRequestLastKnownRides();
-        ridesRequest.requestType = JsonClasses.NewUserRequest;
+        ridesRequest.requestType = JsonClasses.LastKnownRidesRequest;
         ridesRequest.userId = UserManager.userId;
         UDPSender.SendJSON(ridesRequest);
     }
