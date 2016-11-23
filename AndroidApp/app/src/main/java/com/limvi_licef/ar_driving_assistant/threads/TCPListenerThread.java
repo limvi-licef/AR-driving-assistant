@@ -37,9 +37,12 @@ import java.util.Locale;
  */
 public class TCPListenerThread extends Thread {
 
+    /**
+     * Error messages send to UI in case of error
+     */
     private static final String UNKNOWN_REQUEST = "Received Unknown Request";
-    private static final String THREAD_END = "UDP Listener Ended";
-    private static final String THREAD_EXCEPTION = "UDP Listener Exception ";
+    private static final String THREAD_END = "TCP Listener Ended";
+    private static final String THREAD_EXCEPTION = "TCP Listener Exception ";
     private static final String RETURN_ERROR = "There was an error while returning data";
     private static final String SEND_ERROR = "There was an error while sending data";
     private static final String FETCH_USERS_ERROR = "There was an error while fetching all Users";
@@ -75,7 +78,7 @@ public class TCPListenerThread extends Thread {
                 message = inFromClient.readLine();
 
                 try {
-                    Log.d("UDPListener", message);
+                    Log.d("TCP", message);
                     JSONObject request = new JSONObject(message);
                     handleRequest(request);
                 } catch(JSONException e) {
@@ -106,7 +109,7 @@ public class TCPListenerThread extends Thread {
      */
     private void handleRequest(JSONObject request) throws JSONException{
         String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
-        Log.d("UDPListener", "Received request : " + requestType);
+        Log.d("TCP", "Received request : " + requestType);
         JSONObject json;
         if(requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_USERS)) {
             json = fetchUsers();
@@ -283,7 +286,7 @@ public class TCPListenerThread extends Thread {
     public static String sendJson(Context context, JSONObject data) {
         try {
             String message = data.toString();
-            Log.d("UDP", message);
+            Log.d("TCP", message);
             String ipString = Preferences.getIPAddress(context);
             if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 
