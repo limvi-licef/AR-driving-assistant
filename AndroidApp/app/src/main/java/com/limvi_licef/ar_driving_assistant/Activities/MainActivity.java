@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     private ArrayList<String> results;
     private ArrayAdapter<String> resultsAdapter;
 
-    public final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
+    public ToggleButton trainToggle;
 
     private UDPListenerThread udpListenerThread = null;
 
@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
                     trainingFragment.show(getFragmentManager(), "trainingdialog");
                 } else {
                     if(startTimestamp == 0) return;
-                    
+
                     //Save prematurely to have access to data to make sure enough data has been collected during this period
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
@@ -200,7 +200,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         Button sendEvent = (Button) findViewById(R.id.send_event_button);
         sendEvent.setOnClickListener(this);
 
-        final ToggleButton trainToggle = (ToggleButton) findViewById(R.id.train_button);
+        trainToggle = (ToggleButton) findViewById(R.id.train_button);
         trainToggle.setEnabled(false);
         trainToggle.setOnCheckedChangeListener(this);
 
