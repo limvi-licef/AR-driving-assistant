@@ -180,6 +180,14 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
     }
 
+    /**
+     * Sets the data necessary to create a new TrainingEvent
+     * Used by CreateTrainingEventDialogFragment to return data
+     * @param timestamp event start timestamp
+     * @param label event label
+     * @param message event message
+     * @param type event type
+     */
     public void setTrainingData(long timestamp, String label, String message, String type) {
         this.startTimestamp = timestamp;
         this.label = label;
