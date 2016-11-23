@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using HoloToolkit.Unity;
 using System.Collections.Generic;
 
 /// <summary>

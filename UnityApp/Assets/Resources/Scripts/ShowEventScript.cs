@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using HoloToolkit.Unity;
 using UnityEngine.UI;
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
+    using HoloToolkit.Unity;
+#endif
 
 /// <summary>
 /// Script to manage the way events are displayed to the user
@@ -45,7 +47,9 @@ public class ShowEventScript : MonoBehaviour
         eventDisplay.GetComponentInChildren<Text>().text = e.Text;
         eventDisplay.GetComponentInChildren<RawImage>().texture = Resources.Load("Images/" + e.Icon) as Texture;
         eventDisplay.GetComponentInChildren<RawImage>().color = e.Color;
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
         UAudioManager.Instance.PlayEvent(e.Sound, this.gameObject.GetComponent<AudioSource>());
+#endif
     }
 
     /// <summary>

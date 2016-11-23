@@ -25,8 +25,10 @@ public class NewUserForm : MonoBehaviour {
 
     void OnEnable()
     {
+#if UNITY_WSA_10_0
         //HoloLens only : Auto generated user Id since there is no keyboard
         IdField.text = defaultUser + UserManager.UserCount;
+#endif
     }
 
     /// <summary>
