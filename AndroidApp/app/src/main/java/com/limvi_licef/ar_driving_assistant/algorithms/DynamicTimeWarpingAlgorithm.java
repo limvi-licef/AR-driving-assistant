@@ -11,6 +11,7 @@ import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.threads.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
@@ -92,7 +93,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_EVENT);
             json.put(Config.HoloLens.JSON_EVENT_TYPE, e.type.name());
             json.put(Config.HoloLens.JSON_EVENT_MESSAGE, e.message);
-            status = Events.sendJson(context, json);
+            status = TCPListenerThread.sendJson(context, json);
         } catch (JSONException ex) {
             status = context.getResources().getString(R.string.send_event_task_failure);
         }

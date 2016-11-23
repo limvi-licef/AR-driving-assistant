@@ -1,75 +1,97 @@
 ﻿using UnityEngine;
-using System;
+using System.Collections;
+using System.Threading;
+using System.Net.Sockets;
 using System.IO;
-
-#if !UNITY_EDITOR
-    using Windows.Networking.Sockets;
-#endif
+using System.Net;
 
 /// <summary>
-/// Listens on port 12345 for incoming udp packets and redirects messages to the adequate method
+/// TCP listener for Unity on Android
 /// </summary>
-/// <remarks>
-/// Adapted from https://forums.hololens.com/discussion/comment/9837
-/// Packets must contain a json string that respect the classes in JsonClasses.cs
-/// </remarks>
-public class UDPListener : MonoBehaviour
-{
-    //Deal with the udp responses
+public class TCPListenerAndroid : MonoBehaviour {
+
+    //Deal with the tcp responses
     public SpeedCounter speedCounter;
     public UserManager userManager;
     public RetroactionScript retroaction;
 
-#if !UNITY_EDITOR
-    private DatagramSocket socket;
-#endif
+#if UNITY_ANDROID
 
-    public static readonly string PORT = "12345";
+    public static readonly int PORT = 12345;
+
+    string msg = "";
+    Thread mThread;
+    bool mRunning;
+    TcpListener tcp_Listener = null;
 
     void Start()
     {
-        Debug.Log(Application.platform);
-#if !UNITY_EDITOR
-        Server();
-#endif
+        mRunning = true;
+        ThreadStart ts = new ThreadStart(Server);
+        mThread = new Thread(ts);
+        mThread.Start();
+        print("Thread done...");
     }
 
-    void Update()
+    public void stopListening()
     {
-
+        mRunning = false;
     }
 
-    /// <summary>
-    /// Bind listener socket to port
-    /// </summary>
-#if !UNITY_EDITOR
-    private async void Server()
+    void Server()
     {
-        socket = new DatagramSocket();
-        socket.MessageReceived += Socket_MessageReceived;
-
         try
         {
-            await socket.BindEndpointAsync(null, PORT);
+            tcp_Listener = new TcpListener(IPAddress.Any, PORT);
+            tcp_Listener.Start();
+            print("Server Start");
+            while (mRunning)
+            {
+                // check if new connections are pending, if not, be nice and sleep 100ms
+                if (!tcp_Listener.Pending())
+                {
+                    Thread.Sleep(100);
+                }
+                else
+                {
+                    print("1");
+                    TcpClient client = tcp_Listener.AcceptTcpClient();
+                    print("2");
+                    NetworkStream ns = client.GetStream();
+                    print("3");
+                    StreamReader reader = new StreamReader(ns);
+                    print("4");
+                    msg = reader.ReadLine();
+                    print(msg);
+
+                    HandleRequest(msg);
+
+                    reader.Close();
+                    client.Close();
+                }
+            }
         }
-        catch (Exception e)
+        catch (ThreadAbortException)
         {
-            Debug.Log(e.ToString());
-            Debug.Log(SocketError.GetStatus(e.HResult).ToString());
-            return;
+            print("exception");
+        }
+        finally
+        {
+            mRunning = false;
+            tcp_Listener.Stop();
         }
     }
-#endif
 
-#if !UNITY_EDITOR
-    private async void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender,
-        Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
+    void OnApplicationQuit()
     {
-        //Read the json message that was received from the Android client
-        Stream streamIn = args.GetDataStream().AsStreamForRead();
-        StreamReader reader = new StreamReader(streamIn);
-        string message = await reader.ReadLineAsync();
-        
+        // stop listening thread
+        stopListening();
+        // wait fpr listening thread to terminate (max. 500ms)
+        mThread.Join(500);
+    }
+
+    void HandleRequest(string message)
+    {
         //Deserialize json
         JsonClasses.JsonResponse response = new JsonClasses.JsonResponse();
         JsonUtility.FromJsonOverwrite(message, response);
@@ -99,7 +121,7 @@ public class UDPListener : MonoBehaviour
             {
                 JsonClasses.JsonResponseInsert insertResponse = new JsonClasses.JsonResponseInsert();
                 JsonUtility.FromJsonOverwrite(message, insertResponse);
-                if(insertResponse.status)
+                if (insertResponse.status)
                 {
                     userManager.AddNewUser(insertResponse.newUser);
                 }
@@ -115,7 +137,7 @@ public class UDPListener : MonoBehaviour
                 retroaction.SetRides(ridesResponse.rides);
             }
         }, false);
-
     }
 #endif
 }
+

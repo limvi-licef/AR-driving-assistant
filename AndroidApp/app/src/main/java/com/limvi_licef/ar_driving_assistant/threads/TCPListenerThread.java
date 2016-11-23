@@ -6,20 +6,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,19 +35,22 @@ import java.util.Locale;
 /**
  * Thread that listens for json messages from the Unity app
  */
-public class UDPListenerThread extends Thread {
+public class TCPListenerThread extends Thread {
 
     private static final String UNKNOWN_REQUEST = "Received Unknown Request";
     private static final String THREAD_END = "UDP Listener Ended";
     private static final String THREAD_EXCEPTION = "UDP Listener Exception ";
+    private static final String RETURN_ERROR = "There was an error while returning data";
+    private static final String SEND_ERROR = "There was an error while sending data";
     private static final String FETCH_USERS_ERROR = "There was an error while fetching all Users";
+    private static final String INSERT_USER_ERROR = "There was an error while inserting a new user";
     private static final String FETCH_RIDES_ERROR = "There was an error while fetching user rides";
 
-    private DatagramSocket socket;
+    private ServerSocket serverSocket;
     private Context context;
     private boolean running;
 
-    public UDPListenerThread(Context context) {
+    public TCPListenerThread(Context context) {
         super();
         this.context= context;
     }
@@ -57,15 +65,15 @@ public class UDPListenerThread extends Thread {
         running = true;
 
         try {
-            socket = new DatagramSocket(Config.HoloLens.HOLOLENS_PORT);
+            serverSocket = new ServerSocket(Config.HoloLens.HOLOLENS_PORT);
 
             while(running){
-                byte[] buffer = new byte[1024];
 
                 // receive request
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                socket.receive(packet);
-                message = new String(buffer, 0, packet.getLength());
+                Socket connectionSocket = serverSocket.accept();
+                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+                message = inFromClient.readLine();
+
                 try {
                     Log.d("UDPListener", message);
                     JSONObject request = new JSONObject(message);
@@ -73,6 +81,7 @@ public class UDPListenerThread extends Thread {
                 } catch(JSONException e) {
                     Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
                 }
+                connectionSocket.close();
             }
             Broadcasts.sendWriteToUIBroadcast(context, THREAD_END);
         } catch (SocketException e) {
@@ -80,37 +89,45 @@ public class UDPListenerThread extends Thread {
         } catch (IOException e) {
             Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
         } finally {
-            if(socket != null){
-                socket.close();
+            if(serverSocket != null){
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
+                }
             }
         }
     }
 
     /**
      * Redirects the request to appropriate method
-     * @param request
+     * @param request the request to process
      * @throws JSONException
      */
     private void handleRequest(JSONObject request) throws JSONException{
         String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
         Log.d("UDPListener", "Received request : " + requestType);
+        JSONObject json;
         if(requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_USERS)) {
-            fetchAndSendUsers();
+            json = fetchUsers();
         } else if (requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_INSERT_USER)) {
-            insertNewUser(request);
+            json = insertNewUser(request);
         } else if (requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_LAST_KNOWN)) {
-            fetchAndSendLastKnownRides(request);
+            json = fetchAndSendLastKnownRides(request);
         } else {
             Broadcasts.sendWriteToUIBroadcast(context, UNKNOWN_REQUEST);
+            return;
         }
+        sendJson(context, json);
     }
 
     /**
-     * Fetches the users list and returns it to Unity app
+     * Fetches the users list
+     * @return the response json
      */
-    private void fetchAndSendUsers(){
+    private JSONObject fetchUsers(){
         List<Structs.User> usersList = getAllUsers(context);
-        JSONObject json = new JSONObject();
+        JSONObject jsonResponse = new JSONObject();
         try {
             JSONArray users = new JSONArray();
             for(Structs.User user : usersList) {
@@ -121,20 +138,22 @@ public class UDPListenerThread extends Thread {
                 jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, user.userAvatar);
                 users.put(jsonUser);
             }
-            json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_USER);
-            json.put(Config.HoloLens.JSON_USERS, users);
+            jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_USER);
+            jsonResponse.put(Config.HoloLens.JSON_USERS, users);
         } catch (JSONException ex) {
             Broadcasts.sendWriteToUIBroadcast(context, FETCH_USERS_ERROR);
         }
-        Events.sendJson(context, json);
+        return jsonResponse;
     }
 
     /**
      * Writes new user to database and send it back to Unity app if insertion is successful
      * @param request request containing the new user's data
+     * @return the response json
      */
-    private void insertNewUser(JSONObject request){
+    private JSONObject insertNewUser(JSONObject request){
         boolean status = true;
+        JSONObject jsonResponse;
         try {
             SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
             ContentValues user = new ContentValues();
@@ -146,7 +165,7 @@ public class UDPListenerThread extends Thread {
         } catch(JSONException e) {
             status = false;
         } finally {
-            JSONObject json = new JSONObject();
+            jsonResponse = new JSONObject();
             try {
                 JSONObject newUser = new JSONObject();
                 newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME));
@@ -154,23 +173,29 @@ public class UDPListenerThread extends Thread {
                 newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER));
                 newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR));
 
-                json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER);
-                json.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, newUser);
-                json.put(Config.HoloLens.JSON_RETURN_STATUS, status);
+                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER);
+                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, newUser);
+                jsonResponse.put(Config.HoloLens.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
-                Broadcasts.sendWriteToUIBroadcast(context, FETCH_USERS_ERROR);
+                if(!status) {
+                    Broadcasts.sendWriteToUIBroadcast(context, INSERT_USER_ERROR);
+                } else {
+                    Broadcasts.sendWriteToUIBroadcast(context, RETURN_ERROR);
+                }
             }
-            Events.sendJson(context, json);
         }
+        return jsonResponse;
     }
 
     /**
      * Fetches an user's last known rides and send them to the Unity app
-     * @param request the request containing the user id
+     * @param request the request containing the user id to look for
+     * @return the response json
      */
-    private void fetchAndSendLastKnownRides(JSONObject request){
+    private JSONObject fetchAndSendLastKnownRides(JSONObject request){
         String status = "";
         List<String> rides = new ArrayList<>();
+        JSONObject jsonResponse;
         try {
             String userId = request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME);
             rides = getUserLastKnownRides(userId);
@@ -182,16 +207,16 @@ public class UDPListenerThread extends Thread {
         } catch (JSONException e) {
             status = Config.HoloLens.JSON_LAST_KNOWN_ERROR_MESSAGE;
         } finally {
-            JSONObject json = new JSONObject();
+            jsonResponse = new JSONObject();
             try {
-                json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_RIDES);
-                json.put(Config.HoloLens.JSON_RIDES, rides);
-                json.put(Config.HoloLens.JSON_RETURN_STATUS, status);
+                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_RIDES);
+                jsonResponse.put(Config.HoloLens.JSON_RIDES, rides);
+                jsonResponse.put(Config.HoloLens.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 Broadcasts.sendWriteToUIBroadcast(context, FETCH_RIDES_ERROR);
             }
-            Events.sendJson(context, json);
         }
+        return jsonResponse;
     }
 
     /**
@@ -228,10 +253,10 @@ public class UDPListenerThread extends Thread {
      */
     private List<String> getUserLastKnownRides(String id) {
         List<String> rides = new ArrayList<>();
-        Cursor ridesCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.LocationData.TABLE_NAME,
-                new String[]{DatabaseContract.LocationData.TIMESTAMP},
-                DatabaseContract.LocationData.CURRENT_USER_ID + " = ?", new String[]{"" + id}, null, null, "timestamp ASC");
-        int timestampColumnIndex = ridesCursor.getColumnIndexOrThrow(DatabaseContract.LocationData.TIMESTAMP);
+        Cursor ridesCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+                new String[]{DatabaseContract.LinearAccelerometerData.TIMESTAMP},
+                DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID + " = ?", new String[]{"" + id}, null, null, "timestamp ASC");
+        int timestampColumnIndex = ridesCursor.getColumnIndexOrThrow(DatabaseContract.LinearAccelerometerData.TIMESTAMP);
         String lastDate = "";
         while (ridesCursor.moveToNext()) {
             long timestamp = ridesCursor.getLong(timestampColumnIndex);
@@ -247,5 +272,33 @@ public class UDPListenerThread extends Thread {
         }
         ridesCursor.close();
         return rides;
+    }
+
+    /**
+     * Sends a JSON string to the UnityApp
+     * @param context
+     * @param data the json string to send
+     * @return
+     */
+    public static String sendJson(Context context, JSONObject data) {
+        try {
+            String message = data.toString();
+            Log.d("UDP", message);
+            String ipString = Preferences.getIPAddress(context);
+            if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
+
+            InetAddress ipAddress = InetAddress.getByName(ipString);
+            Socket socket = new Socket(ipAddress, Config.HoloLens.HOLOLENS_PORT);
+            DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
+            outToServer.write(message.getBytes("UTF-8"));
+            outToServer.flush();
+            outToServer.close();
+            socket.close();
+        } catch (IOException e) {
+            Log.d("EventSender", "" + e.getMessage());
+            Broadcasts.sendWriteToUIBroadcast(context, SEND_ERROR);
+            return context.getResources().getString(R.string.send_event_task_failure);
+        }
+        return context.getResources().getString(R.string.send_event_task_success);
     }
 }

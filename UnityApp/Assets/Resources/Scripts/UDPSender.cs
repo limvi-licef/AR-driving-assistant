@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-#if !UNITY_EDITOR
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
     using Windows.Networking.Sockets;
     using Windows.Storage.Streams;
 #endif
@@ -12,13 +12,9 @@ using System.IO;
 /// </summary>
 public class UDPSender : MonoBehaviour {
 
-#if !UNITY_EDITOR
-    private DatagramSocket socket;
-#endif
-
     //default ip address for android hotspot
     private string ip = "192.168.43.1";
-    private string port = UDPListener.PORT;
+    private string port = TCPListenerHoloLens.PORT;
 
     public string IP
     {
@@ -32,18 +28,29 @@ public class UDPSender : MonoBehaviour {
         set { port = value; }
     }
 
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
     /// <summary>
     /// Connects to the Android app and send json
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
-#if !UNITY_EDITOR
     private async void ConnectAndSend(string jsonString)
     {
-        socket = new DatagramSocket();
+        StreamSocket socket = new StreamSocket();
         await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port);
         DataWriter writer = new DataWriter(socket.OutputStream);
         writer.WriteString(jsonString);
         await writer.StoreAsync();
+    }
+#endif
+
+#if UNITY_ANDROID
+    /// <summary>
+    /// Connects to the Android app and send json
+    /// </summary>
+    /// <param name="jsonString">The json string to send</param>
+    private void ConnectAndSend(string jsonString)
+    {
+        //DO ANDROID TCP
     }
 #endif
 
@@ -53,10 +60,13 @@ public class UDPSender : MonoBehaviour {
     /// <param name="json">The json request to send</param>
     public void SendJSON(JsonClasses.JsonRequest json)
     {
-#if !UNITY_EDITOR
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
+        ConnectAndSend(JsonUtility.ToJson(json));
+#endif
+#if UNITY_ANDROID
         ConnectAndSend(JsonUtility.ToJson(json));
 #endif
     }
-	
+
 
 }

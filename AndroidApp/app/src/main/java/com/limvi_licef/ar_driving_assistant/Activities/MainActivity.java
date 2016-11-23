@@ -1,10 +1,8 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -17,11 +15,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
 import com.aware.Aware;
@@ -38,7 +32,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
-import com.limvi_licef.ar_driving_assistant.threads.UDPListenerThread;
+import com.limvi_licef.ar_driving_assistant.threads.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
@@ -59,7 +53,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
 
     public ToggleButton trainToggle;
 
-    private UDPListenerThread udpListenerThread = null;
+    private TCPListenerThread tcpListenerThread = null;
 
     private long startTimestamp = 0;
     private String label;
@@ -157,15 +151,17 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         super.onDestroy();
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
-        udpListenerThread = new UDPListenerThread(this);
-        udpListenerThread.start();
+        tcpListenerThread = new TCPListenerThread(this);
+        tcpListenerThread.start();
     }
 
+    @Override
     protected void onPause() {
         super.onPause();
-        udpListenerThread.kill();
+        tcpListenerThread.kill();
     }
 
     @Override

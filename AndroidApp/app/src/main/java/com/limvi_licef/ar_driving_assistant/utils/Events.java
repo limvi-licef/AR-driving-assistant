@@ -2,51 +2,18 @@ package com.limvi_licef.ar_driving_assistant.utils;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.timeseries.TimeSeriesBase;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Events {
 
     private Events(){}
-
-    /**
-     * Sends a JSON string to the UnityApp
-     * @param context
-     * @param data the json string to send
-     * @return
-     */
-    public static String sendJson(Context context, JSONObject data) {
-        try {
-            String message = data.toString();
-            String ipString = Preferences.getIPAddress(context);
-            if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
-
-            InetAddress ipAddress = InetAddress.getByName(ipString);
-            DatagramSocket socket = DatagramChannel.open().socket();
-            DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Config.HoloLens.HOLOLENS_PORT);
-            socket.send(dp);
-            socket.close();
-        } catch (IOException e) {
-            Log.d("EventSender", "" + e.getMessage());
-            return context.getResources().getString(R.string.send_event_task_failure);
-        }
-        return context.getResources().getString(R.string.send_event_task_success);
-    }
 
     /**
      * Fetches all TrainingEvents in the database

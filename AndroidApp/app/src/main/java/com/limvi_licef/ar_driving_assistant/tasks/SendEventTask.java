@@ -2,17 +2,14 @@ package com.limvi_licef.ar_driving_assistant.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.threads.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * Send an event to the Unity app
@@ -38,7 +35,7 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             return context.getResources().getString(R.string.send_event_task_failure);
         }
-        return Events.sendJson(context, json);
+        return TCPListenerThread.sendJson(context, json);
     }
 
     protected void onPostExecute(String toast) {

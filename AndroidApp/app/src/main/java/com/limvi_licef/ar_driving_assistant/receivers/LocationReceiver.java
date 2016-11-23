@@ -12,17 +12,14 @@ import android.util.Log;
 
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
-import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
-import com.limvi_licef.ar_driving_assistant.tasks.SendEventTask;
-import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
+import com.limvi_licef.ar_driving_assistant.threads.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
@@ -109,7 +106,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         } catch (JSONException e) {
             Log.d("Location Receiver", "JSON Initialization Failure");
         }
-        Events.sendJson(context, json);
+        TCPListenerThread.sendJson(context, json);
     }
 
 }
