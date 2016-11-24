@@ -2,6 +2,10 @@
 using System;
 using System.IO;
 
+#if UNITY_ANDROID
+    using System.Net.Sockets;
+#endif
+
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
     using Windows.Networking.Sockets;
     using Windows.Storage.Streams;
@@ -14,7 +18,7 @@ public class TCPSender : MonoBehaviour {
 
     //default ip address for android hotspot
     private string ip = Config.Communication.DEFAULT_IP;
-    private string port = Config.Communication.PORT.ToString();
+    private int port = Config.Communication.PORT;
 
     public string IP
     {
@@ -22,7 +26,7 @@ public class TCPSender : MonoBehaviour {
         set { ip = value; }
     }
 
-    public string Port
+    public int Port
     {
         get { return port; }
         set { port = value; }
@@ -36,7 +40,7 @@ public class TCPSender : MonoBehaviour {
     private async void ConnectAndSend(string jsonString)
     {
         StreamSocket socket = new StreamSocket();
-        await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port);
+        await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port.ToString());
         DataWriter writer = new DataWriter(socket.OutputStream);
         writer.WriteString(jsonString);
         await writer.StoreAsync();
@@ -50,7 +54,13 @@ public class TCPSender : MonoBehaviour {
 #if UNITY_ANDROID
     private void ConnectAndSend(string jsonString)
     {
-        //DO ANDROID TCP
+        TcpClient client = new TcpClient();
+        client.Connect(IP, Port);
+        NetworkStream stream = client.GetStream();
+        StreamWriter writer = new StreamWriter(stream);
+        writer.Write(jsonString);
+        writer.Close();
+        client.Close();
     }
 #endif
 
