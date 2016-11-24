@@ -8,8 +8,6 @@ using System.Linq;
 /// </summary>
 public class NewUserForm : MonoBehaviour {
 
-    private static readonly string defaultUser = "Utilisateur ";
-
     public UDPSender UDPSender;
     public Button sendButton;
     public InputField IdField;
@@ -27,7 +25,7 @@ public class NewUserForm : MonoBehaviour {
     {
 #if UNITY_WSA_10_0
         //HoloLens only : Auto generated user Id since there is no keyboard
-        IdField.text = defaultUser + UserManager.UserCount;
+        IdField.text = Config.HoloLensOnly.DEFAULT_USER_PREFIX + UserManager.UserCount;
 #endif
     }
 
@@ -37,7 +35,7 @@ public class NewUserForm : MonoBehaviour {
     public void SendForm()
     {
         JsonClasses.JsonRequestNewUser newUserRequest = new JsonClasses.JsonRequestNewUser();
-        newUserRequest.requestType = JsonClasses.NewUserRequest;
+        newUserRequest.requestType = Config.Communication.NEW_USER_REQUEST;
         newUserRequest.userName = IdField.text;
         newUserRequest.userAge = int.Parse(AgeField.text);
         newUserRequest.userGender = GenderRadio.ActiveToggles().First().name;

@@ -52,7 +52,7 @@ public class PopulateDropdownScript : MonoBehaviour {
     private void requestUserList()
     {
         JsonClasses.JsonRequest idRequest = new JsonClasses.JsonRequest();
-        idRequest.requestType = JsonClasses.UsersRequest;
+        idRequest.requestType = Config.Communication.USERS_REQUEST;
         UDPSender.SendJSON(idRequest);
     }
 

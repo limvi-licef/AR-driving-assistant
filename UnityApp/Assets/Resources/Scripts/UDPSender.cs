@@ -13,8 +13,8 @@ using System.IO;
 public class UDPSender : MonoBehaviour {
 
     //default ip address for android hotspot
-    private string ip = "192.168.43.1";
-    private string port = TCPListenerHoloLens.PORT;
+    private string ip = Config.Communication.DEFAULT_IP;
+    private string port = Config.Communication.PORT.ToString();
 
     public string IP
     {
@@ -28,11 +28,11 @@ public class UDPSender : MonoBehaviour {
         set { port = value; }
     }
 
-#if UNITY_WSA_10_0 && !UNITY_EDITOR
     /// <summary>
     /// Connects to the Android app and send json
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
     private async void ConnectAndSend(string jsonString)
     {
         StreamSocket socket = new StreamSocket();
@@ -43,11 +43,11 @@ public class UDPSender : MonoBehaviour {
     }
 #endif
 
-#if UNITY_ANDROID
     /// <summary>
     /// Connects to the Android app and send json
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
+#if UNITY_ANDROID
     private void ConnectAndSend(string jsonString)
     {
         //DO ANDROID TCP

@@ -13,8 +13,6 @@ public class ShowEventScript : MonoBehaviour
     GameObject welcomeScreen;
     public UserManager UserManager;
 
-    private const float DisplayTime = 5f;
-
     void OnEnable()
     {
         EventManager.OnTrigger += ShowEvent;
@@ -33,7 +31,7 @@ public class ShowEventScript : MonoBehaviour
     {
         if(eventDisplay) { Destroy(eventDisplay); }
         SetupEvent(e);
-        Destroy(eventDisplay, DisplayTime);
+        Destroy(eventDisplay, Config.EVENT_DISPLAY_TIME);
     }
 
     /// <summary>
@@ -59,7 +57,7 @@ public class ShowEventScript : MonoBehaviour
     {
         if (welcomeScreen) { Destroy(welcomeScreen); }
         SetupWelcomeScreen();
-        Destroy(welcomeScreen, DisplayTime);
+        Destroy(welcomeScreen, Config.EVENT_DISPLAY_TIME);
     }
 
     /// <summary>

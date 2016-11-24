@@ -24,8 +24,6 @@ public class TCPListenerHoloLens : MonoBehaviour
     private Windows.Networking.Sockets.StreamSocketListener socketListener;
 #endif
 
-    public static readonly string PORT = "12345";
-
     void Start()
     {
         Debug.Log(Application.platform);
@@ -45,15 +43,12 @@ public class TCPListenerHoloLens : MonoBehaviour
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
     private async void Server()
     {
-        Debug.Log("SERVER 1");
         socketListener = new Windows.Networking.Sockets.StreamSocketListener();
-        Debug.Log("SERVER 2");
         socketListener.ConnectionReceived += SocketListener_ConnectionReceived;
 
         try
         {
-            Debug.Log("SERVER 3");
-            await socketListener.BindServiceNameAsync(PORT); 
+            await socketListener.BindServiceNameAsync(Config.Communication.PORT.ToString()); 
         }
         catch (Exception e)
         {
@@ -69,17 +64,11 @@ public class TCPListenerHoloLens : MonoBehaviour
                 Windows.Networking.Sockets.StreamSocketListener sender, 
                 Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)
     {
-        Debug.Log("MESSAGE RECEIVED 1");
-
         //Read the json message that was received from the Android client
         Stream streamIn = args.Socket.InputStream.AsStreamForRead();
-        Debug.Log("MESSAGE RECEIVED 2");
         StreamReader reader = new StreamReader(streamIn);
-        Debug.Log("MESSAGE RECEIVED 3");
         string message = await reader.ReadLineAsync();
-        Debug.Log("MESSAGE RECEIVED 4");
 
-        Debug.Log(message);
         // Do nothing if empty message
         if(String.IsNullOrEmpty(message)) 
         {
@@ -89,35 +78,30 @@ public class TCPListenerHoloLens : MonoBehaviour
         //Deserialize json
         JsonClasses.JsonResponse response = new JsonClasses.JsonResponse();
         JsonUtility.FromJsonOverwrite(message, response);
-        Debug.Log("MESSAGE RECEIVED 5");
 
         //Handle json message
         UnityEngine.WSA.Application.InvokeOnAppThread(() =>
         {
-            if (response.requestType.Equals(JsonClasses.SpeedResponse))
+            if (response.requestType.Equals(Config.Communication.SPEED_RESPONSE))
             {
-                Debug.Log("MESSAGE RECEIVED SPEED");
                 JsonClasses.JsonResponseSpeed speedResponse = new JsonClasses.JsonResponseSpeed();
                 JsonUtility.FromJsonOverwrite(message, speedResponse);
                 speedCounter.SetSpeed(speedResponse.speedText);
             }
-            else if (response.requestType.Equals(JsonClasses.EventResponse))
+            else if (response.requestType.Equals(Config.Communication.EVENT_RESPONSE))
             {
-                Debug.Log("MESSAGE RECEIVED EVENT");
                 JsonClasses.JsonResponseEvent eventResponse = new JsonClasses.JsonResponseEvent();
                 JsonUtility.FromJsonOverwrite(message, eventResponse);
                 EventManager.SendEvent(eventResponse.eventType, eventResponse.message);
             }
-            else if (response.requestType.Equals(JsonClasses.UsersResponse))
+            else if (response.requestType.Equals(Config.Communication.USERS_RESPONSE))
             {
-                Debug.Log("MESSAGE RECEIVED USERS");
                 JsonClasses.JsonResponseUsers usersResponse = new JsonClasses.JsonResponseUsers();
                 JsonUtility.FromJsonOverwrite(message, usersResponse);
                 userManager.Users = usersResponse.users;
             }
-            else if (response.requestType.Equals(JsonClasses.NewUserResponse))
+            else if (response.requestType.Equals(Config.Communication.NEW_USER_RESPONSE))
             {
-                Debug.Log("MESSAGE RECEIVED NEW USER");
                 JsonClasses.JsonResponseInsert insertResponse = new JsonClasses.JsonResponseInsert();
                 JsonUtility.FromJsonOverwrite(message, insertResponse);
                 if(insertResponse.status)
@@ -126,12 +110,11 @@ public class TCPListenerHoloLens : MonoBehaviour
                 }
                 else
                 {
-                    userManager.DisplayError("Impossible de créer un nouvel utilisateur");
+                    userManager.DisplayError(Config.ErrorMessages.NEW_USER_FAILURE);
                 }
             }
-            else if (response.requestType.Equals(JsonClasses.RidesResponse))
+            else if (response.requestType.Equals(Config.Communication.RIDES_RESPONSE))
             {
-                Debug.Log("MESSAGE RECEIVED RIDES");
                 JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
                 JsonUtility.FromJsonOverwrite(message, ridesResponse);
                 retroaction.SetRides(ridesResponse.rides);

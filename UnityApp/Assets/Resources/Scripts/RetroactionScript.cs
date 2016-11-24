@@ -11,7 +11,6 @@ public class RetroactionScript : MonoBehaviour {
     public UserManager UserManager;
 
     private Text textZone;
-    private readonly string title = "Derniers Trajets";
 
     void Start()
     {
@@ -20,7 +19,7 @@ public class RetroactionScript : MonoBehaviour {
 
     void OnEnable()
     {
-        textZone.text = title;
+        textZone.text = Config.LAST_KNOWN_RIDES_TITLE;
         requestRides();
     }
 
@@ -43,7 +42,7 @@ public class RetroactionScript : MonoBehaviour {
     private void requestRides ()
     {
         JsonClasses.JsonRequestLastKnownRides ridesRequest = new JsonClasses.JsonRequestLastKnownRides();
-        ridesRequest.requestType = JsonClasses.LastKnownRidesRequest;
+        ridesRequest.requestType = Config.Communication.LAST_KNOWN_RIDES_REQUEST;
         ridesRequest.userId = UserManager.userId;
         UDPSender.SendJSON(ridesRequest);
     }

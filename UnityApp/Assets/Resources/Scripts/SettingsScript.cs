@@ -14,7 +14,7 @@ public class SettingsScript : MonoBehaviour {
 
     void Start()
     {
-        AudioListener.volume = 0.5f;
+        AudioListener.volume = Config.DEFAULT_VOLUME;
     }
 
     void Update()

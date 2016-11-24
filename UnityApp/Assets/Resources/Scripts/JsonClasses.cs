@@ -11,19 +11,6 @@ using System.Collections.Generic;
 /// </remarks>
 public class JsonClasses : MonoBehaviour {
 
-    /// <summary>
-    /// Variables needed to communicate with the Android app
-    /// The values must match those in Config.java in HoloLens class
-    /// </summary>
-    public static readonly string SpeedResponse = "speedCounter";
-    public static readonly string EventResponse = "event";
-    public static readonly string UsersResponse = "userList";
-    public static readonly string NewUserResponse = "newUser";
-    public static readonly string RidesResponse = "userRidesList";
-    public static readonly string UsersRequest = "GetUsersList";
-    public static readonly string NewUserRequest = "InsertNewUser";
-    public static readonly string LastKnownRidesRequest = "GetLastKnownRides";
-
     [Serializable]
 	public class JsonRequest
     {

@@ -33,7 +33,7 @@ public class ValidateInputScript : MonoBehaviour {
         else
         {
             Label.color = Color.red;
-            UserManager.DisplayError("Invalid ID");
+            UserManager.DisplayError(Config.ErrorMessages.INVALID_ID);
         }
     }
 }

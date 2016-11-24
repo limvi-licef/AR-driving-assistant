@@ -17,8 +17,6 @@ public class TCPListenerAndroid : MonoBehaviour {
 
 #if UNITY_ANDROID
 
-    public static readonly int PORT = 12345;
-
     string msg = "";
     Thread mThread;
     bool mRunning;
@@ -30,7 +28,6 @@ public class TCPListenerAndroid : MonoBehaviour {
         ThreadStart ts = new ThreadStart(Server);
         mThread = new Thread(ts);
         mThread.Start();
-        print("Thread done...");
     }
 
     public void stopListening()
@@ -42,9 +39,8 @@ public class TCPListenerAndroid : MonoBehaviour {
     {
         try
         {
-            tcp_Listener = new TcpListener(IPAddress.Any, PORT);
+            tcp_Listener = new TcpListener(IPAddress.Any, Config.Communication.PORT);
             tcp_Listener.Start();
-            print("Server Start");
             while (mRunning)
             {
                 // check if new connections are pending, if not, be nice and sleep 100ms
@@ -54,16 +50,10 @@ public class TCPListenerAndroid : MonoBehaviour {
                 }
                 else
                 {
-                    print("1");
                     TcpClient client = tcp_Listener.AcceptTcpClient();
-                    print("2");
                     NetworkStream ns = client.GetStream();
-                    print("3");
                     StreamReader reader = new StreamReader(ns);
-                    print("4");
                     msg = reader.ReadLine();
-                    print(msg);
-
                     HandleRequest(msg);
 
                     reader.Close();
@@ -97,25 +87,25 @@ public class TCPListenerAndroid : MonoBehaviour {
         JsonUtility.FromJsonOverwrite(message, response);
 
         //Handle json message
-        if (response.requestType.Equals(JsonClasses.SpeedResponse))
+        if (response.requestType.Equals(Config.Communication.SPEED_RESPONSE))
         {
             JsonClasses.JsonResponseSpeed speedResponse = new JsonClasses.JsonResponseSpeed();
             JsonUtility.FromJsonOverwrite(message, speedResponse);
             speedCounter.SetSpeed(speedResponse.speedText);
         }
-        else if (response.requestType.Equals(JsonClasses.EventResponse))
+        else if (response.requestType.Equals(Config.Communication.EVENT_RESPONSE))
         {
             JsonClasses.JsonResponseEvent eventResponse = new JsonClasses.JsonResponseEvent();
             JsonUtility.FromJsonOverwrite(message, eventResponse);
             EventManager.SendEvent(eventResponse.eventType, eventResponse.message);
         }
-        else if (response.requestType.Equals(JsonClasses.UsersResponse))
+        else if (response.requestType.Equals(Config.Communication.USERS_RESPONSE))
         {
             JsonClasses.JsonResponseUsers usersResponse = new JsonClasses.JsonResponseUsers();
             JsonUtility.FromJsonOverwrite(message, usersResponse);
             userManager.Users = usersResponse.users;
         }
-        else if (response.requestType.Equals(JsonClasses.NewUserResponse))
+        else if (response.requestType.Equals(Config.Communication.NEW_USER_RESPONSE))
         {
             JsonClasses.JsonResponseInsert insertResponse = new JsonClasses.JsonResponseInsert();
             JsonUtility.FromJsonOverwrite(message, insertResponse);
@@ -125,10 +115,10 @@ public class TCPListenerAndroid : MonoBehaviour {
             }
             else
             {
-                userManager.DisplayError("Impossible de créer un nouvel utilisateur");
+                userManager.DisplayError(Config.ErrorMessages.NEW_USER_FAILURE);
             }
         }
-        else if (response.requestType.Equals(JsonClasses.RidesResponse))
+        else if (response.requestType.Equals(Config.Communication.RIDES_RESPONSE))
         {
             JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
             JsonUtility.FromJsonOverwrite(message, ridesResponse);
