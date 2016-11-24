@@ -90,6 +90,8 @@ public class UserManager : MonoBehaviour {
     /// <returns>The requested user or null if not found</returns>
     public User FindUser(string userName)
     {
+        if (users == null) { return null; }
+
         foreach(User user in users)
         {
             if(user.userName.Equals(userName))

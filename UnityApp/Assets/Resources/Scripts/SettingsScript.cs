@@ -19,8 +19,10 @@ public class SettingsScript : MonoBehaviour {
 
     void Update()
     {
-        //Update UI scale
+#if UNITY_WSA_10_0
+        //HoloLens only : Update UI scale
         UI.transform.localScale = new Vector3(SizeSlider.value, SizeSlider.value, UI.transform.localScale.z);
+#endif
     }
 
     /// <summary>

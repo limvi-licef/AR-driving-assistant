@@ -22,7 +22,7 @@ public class ValidateInputScript : MonoBehaviour {
     {
         UserManager.User user = UserManager.FindUser(Label.text);
 
-        if(!String.IsNullOrEmpty(user.userName))
+        if(user != null && !String.IsNullOrEmpty(user.userName))
         {
             UserManager.SetCurrentUser(user);
             UserManager.DisplayAvatar();
@@ -33,7 +33,7 @@ public class ValidateInputScript : MonoBehaviour {
         else
         {
             Label.color = Color.red;
-            Label.text = "Invalid ID";
+            UserManager.DisplayError("Invalid ID");
         }
     }
 }
