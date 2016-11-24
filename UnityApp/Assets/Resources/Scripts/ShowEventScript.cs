@@ -48,6 +48,10 @@ public class ShowEventScript : MonoBehaviour
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
         UAudioManager.Instance.PlayEvent(e.Sound, this.gameObject.GetComponent<AudioSource>());
 #endif
+#if UNITY_ANDROID
+        var audioClip = Resources.Load("Sounds/" + e.Sound) as AudioClip;
+        AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+#endif
     }
 
     /// <summary>
