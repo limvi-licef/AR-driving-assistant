@@ -8,7 +8,7 @@ using System.Linq;
 /// </summary>
 public class NewUserForm : MonoBehaviour {
 
-    public UDPSender UDPSender;
+    public TCPSender TCPSender;
     public Button sendButton;
     public InputField IdField;
     public Text AgeField;
@@ -40,7 +40,7 @@ public class NewUserForm : MonoBehaviour {
         newUserRequest.userAge = int.Parse(AgeField.text);
         newUserRequest.userGender = GenderRadio.ActiveToggles().First().name;
         newUserRequest.userAvatar = int.Parse(AvatarRadio.ActiveToggles().First().name);
-        UDPSender.SendJSON(newUserRequest);
+        TCPSender.SendJSON(newUserRequest);
     }
 
 }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 public class RetroactionScript : MonoBehaviour {
 
-    public UDPSender UDPSender;
+    public TCPSender TCPSender;
     public UserManager UserManager;
 
     private Text textZone;
@@ -44,6 +44,6 @@ public class RetroactionScript : MonoBehaviour {
         JsonClasses.JsonRequestLastKnownRides ridesRequest = new JsonClasses.JsonRequestLastKnownRides();
         ridesRequest.requestType = Config.Communication.LAST_KNOWN_RIDES_REQUEST;
         ridesRequest.userId = UserManager.userId;
-        UDPSender.SendJSON(ridesRequest);
+        TCPSender.SendJSON(ridesRequest);
     }
 }

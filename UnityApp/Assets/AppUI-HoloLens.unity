@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d4e685eae88441af17e470f580f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UDPSender: {fileID: 1753665251}
+  TCPSender: {fileID: 1753665251}
   Placeholder: {fileID: 969490328}
 --- !u!1 &124413663
 GameObject:
@@ -1579,7 +1579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7e70b412e6bc543837c6957373f0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UDPSender: {fileID: 1753665251}
+  TCPSender: {fileID: 1753665251}
   sendButton: {fileID: 975000826}
   IdField: {fileID: 353073615}
   AgeField: {fileID: 657028535}
@@ -3006,7 +3006,7 @@ RectTransform:
   m_Children:
   - {fileID: 23834543}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -3036,7 +3036,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIComponent: {fileID: 23834542}
-  DistanceToCamera: 2
 --- !u!65 &694119151
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6186,7 +6185,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &1302892592
 GameObject:
   m_ObjectHideFlags: 0
@@ -7467,7 +7466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba645708e17a754eb60308f5a5170cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UDPSender: {fileID: 1753665251}
+  TCPSender: {fileID: 1753665251}
   UserManager: {fileID: 1753665249}
 --- !u!1 &1513687335
 GameObject:
@@ -8374,7 +8373,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!114 &1753665244
 MonoBehaviour:
   m_ObjectHideFlags: 0

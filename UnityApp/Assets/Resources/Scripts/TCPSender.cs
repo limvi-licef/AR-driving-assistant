@@ -10,7 +10,7 @@ using System.IO;
 /// <summary>
 /// Sends UDP packets containing json requests
 /// </summary>
-public class UDPSender : MonoBehaviour {
+public class TCPSender : MonoBehaviour {
 
     //default ip address for android hotspot
     private string ip = Config.Communication.DEFAULT_IP;

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 public class PopulateDropdownScript : MonoBehaviour {
 
-    public UDPSender UDPSender;
+    public TCPSender TCPSender;
     public Text Placeholder;
 
     void Start ()
@@ -53,7 +53,7 @@ public class PopulateDropdownScript : MonoBehaviour {
     {
         JsonClasses.JsonRequest idRequest = new JsonClasses.JsonRequest();
         idRequest.requestType = Config.Communication.USERS_REQUEST;
-        UDPSender.SendJSON(idRequest);
+        TCPSender.SendJSON(idRequest);
     }
 
 }
