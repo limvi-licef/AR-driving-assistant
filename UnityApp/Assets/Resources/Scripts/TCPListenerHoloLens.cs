@@ -19,6 +19,7 @@ public class TCPListenerHoloLens : MonoBehaviour
     public SpeedCounter speedCounter;
     public UserManager userManager;
     public RetroactionScript retroaction;
+    public TCPSender TCPSender;
 
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
     private Windows.Networking.Sockets.StreamSocketListener socketListener;
@@ -64,6 +65,9 @@ public class TCPListenerHoloLens : MonoBehaviour
                 Windows.Networking.Sockets.StreamSocketListener sender, 
                 Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)
     {
+        //save ip address in case it is different from default
+        TCPSender.IP = args.Socket.Information.RemoteAddress.ToString();
+
         //Read the json message that was received from the Android client
         Stream streamIn = args.Socket.InputStream.AsStreamForRead();
         StreamReader reader = new StreamReader(streamIn);

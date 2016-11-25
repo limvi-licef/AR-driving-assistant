@@ -14,6 +14,7 @@ public class TCPListenerAndroid : MonoBehaviour {
     public SpeedCounter speedCounter;
     public UserManager userManager;
     public RetroactionScript retroaction;
+    public TCPSender TCPSender;
 
 #if UNITY_ANDROID
 
@@ -51,6 +52,8 @@ public class TCPListenerAndroid : MonoBehaviour {
                 else
                 {
                     TcpClient client = tcp_Listener.AcceptTcpClient();
+                    //save ip address in case it is different from default
+                    TCPSender.IP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                     NetworkStream ns = client.GetStream();
                     StreamReader reader = new StreamReader(ns);
                     msg = reader.ReadLine();
