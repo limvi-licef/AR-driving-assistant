@@ -67,6 +67,7 @@ public class JsonClasses : MonoBehaviour {
     [Serializable]
     public class JsonResponseLastKnown : JsonResponse
     {
+        public string status;
         public List<string> rides;
     }
 }

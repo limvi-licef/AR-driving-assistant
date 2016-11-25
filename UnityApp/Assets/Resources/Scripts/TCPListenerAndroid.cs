@@ -122,7 +122,14 @@ public class TCPListenerAndroid : MonoBehaviour {
         {
             JsonClasses.JsonResponseLastKnown ridesResponse = new JsonClasses.JsonResponseLastKnown();
             JsonUtility.FromJsonOverwrite(message, ridesResponse);
-            retroaction.SetRides(ridesResponse.rides);
+            if (ridesResponse.status.Equals(Config.Communication.LAST_KNOWN_RIDES_SUCCESS))
+            {
+                retroaction.SetRides(ridesResponse.rides);
+            }
+            else
+            {
+                retroaction.SetErrorText(ridesResponse.status);
+            }
         }
     }
 #endif

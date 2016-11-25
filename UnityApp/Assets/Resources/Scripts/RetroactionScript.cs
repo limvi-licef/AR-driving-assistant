@@ -15,12 +15,12 @@ public class RetroactionScript : MonoBehaviour {
     void Start()
     {
         textZone = GetComponentInChildren<Text>();
+        SetDefaultText();
     }
 
     void OnEnable()
     {
-        textZone.text = Config.LAST_KNOWN_RIDES_TITLE;
-        requestRides();
+        RequestRides();
     }
 
     /// <summary>
@@ -29,21 +29,41 @@ public class RetroactionScript : MonoBehaviour {
     /// <param name="rides">The ride dates to display</param>
     public void SetRides(List<string> rides)
     {
-        textZone.text += "\n\n";
+        SetDefaultText();
         foreach(string line in rides)
         {
-            textZone.text += line;
+            textZone.text += line + "\n";
         }
     }
 
     /// <summary>
-    /// Sends a request to fetch the last known ride dates from the Andrdoi app
+    /// Displays an error message in the text zone if the request failed
     /// </summary>
-    private void requestRides ()
+    /// <param name="message">The message  to display</param>
+    public void SetErrorText(string message)
+    {
+        SetDefaultText();
+        textZone.text = message;
+    }
+
+    /// <summary>
+    /// Resets the text zone to its default state
+    /// </summary>
+    private void SetDefaultText()
+    {
+        textZone.text = Config.LAST_KNOWN_RIDES_TITLE;
+        textZone.text += "\n\n";
+    }
+
+    /// <summary>
+    /// Sends a request to fetch the last known ride dates from the Android app
+    /// </summary>
+    private void RequestRides ()
     {
         JsonClasses.JsonRequestLastKnownRides ridesRequest = new JsonClasses.JsonRequestLastKnownRides();
         ridesRequest.requestType = Config.Communication.LAST_KNOWN_RIDES_REQUEST;
         ridesRequest.userId = UserManager.userId;
         TCPSender.SendJSON(ridesRequest);
     }
+
 }

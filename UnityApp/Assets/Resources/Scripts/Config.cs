@@ -59,6 +59,7 @@ public static class Config {
         public const string USERS_REQUEST = "GetUsersList";
         public const string NEW_USER_REQUEST = "InsertNewUser";
         public const string LAST_KNOWN_RIDES_REQUEST = "GetLastKnownRides";
+        public const string LAST_KNOWN_RIDES_SUCCESS = "Success";
     }
 
     /// <summary>
