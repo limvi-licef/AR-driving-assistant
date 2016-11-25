@@ -142,6 +142,8 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         setupUIElements();
         setupSensors();
         setupListeners();
+        tcpListenerThread = new TCPListenerThread(this);
+        tcpListenerThread.start();
     }
 
     @Override
@@ -149,18 +151,6 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         unregisterListeners();
         stopListenerThreads();
         super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        tcpListenerThread = new TCPListenerThread(this);
-        tcpListenerThread.start();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         tcpListenerThread.kill();
     }
 
