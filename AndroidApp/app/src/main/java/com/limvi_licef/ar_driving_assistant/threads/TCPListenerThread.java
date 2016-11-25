@@ -200,7 +200,7 @@ public class TCPListenerThread extends Thread {
         List<String> rides = new ArrayList<>();
         JSONObject jsonResponse;
         try {
-            String userId = request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME);
+            String userId = request.getString(Config.HoloLens.JSON_REQUEST_ID);
             rides = getUserLastKnownRides(userId);
             if(rides.isEmpty()) {
                 status = Config.HoloLens.JSON_LAST_KNOWN_EMPTY_RESULT;
