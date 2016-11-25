@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Collections;
 
 #if UNITY_ANDROID
     using System.Net.Sockets;
@@ -52,15 +54,19 @@ public class TCPSender : MonoBehaviour {
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
 #if UNITY_ANDROID
-    private void ConnectAndSend(string jsonString)
+    private IEnumerator ConnectAndSend(string jsonString)
     {
         TcpClient client = new TcpClient();
         client.Connect(IP, Port);
-        NetworkStream stream = client.GetStream();
-        StreamWriter writer = new StreamWriter(stream);
-        writer.Write(jsonString);
-        writer.Close();
+        if (client.Connected)
+        {
+            NetworkStream stream = client.GetStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(jsonString);
+            writer.Close();
+        }
         client.Close();
+        yield return null;
     }
 #endif
 
@@ -74,7 +80,7 @@ public class TCPSender : MonoBehaviour {
         ConnectAndSend(JsonUtility.ToJson(json));
 #endif
 #if UNITY_ANDROID
-        ConnectAndSend(JsonUtility.ToJson(json));
+        StartCoroutine(ConnectAndSend(JsonUtility.ToJson(json)));
 #endif
     }
 
