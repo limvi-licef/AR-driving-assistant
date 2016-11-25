@@ -10,11 +10,6 @@ public class PopulateDropdownScript : MonoBehaviour {
     public TCPSender TCPSender;
     public Text Placeholder;
 
-    void Start ()
-    {
-        requestUserList();
-    }
-
     /// <summary>
     /// Populates the dropdown using a list of Users
     /// </summary>
@@ -27,12 +22,11 @@ public class PopulateDropdownScript : MonoBehaviour {
         {
             dropdown.options.Add(new Dropdown.OptionData(u.userName));
         }
-
-        //Unselect first option
-        dropdown.options.Add(new Dropdown.OptionData() { text = "" });
-        dropdown.value = dropdown.options.Count - 1;
-        dropdown.options.RemoveAt(dropdown.options.Count - 1);
-        Placeholder.gameObject.SetActive(true);
+        if(users.Count > 0)
+        {
+            dropdown.RefreshShownValue();
+            Placeholder.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -44,12 +38,14 @@ public class PopulateDropdownScript : MonoBehaviour {
         var dropdown = GetComponent<Dropdown>();
         dropdown.options.Add(new Dropdown.OptionData(user.userName));
         dropdown.value = dropdown.options.Count - 1;
+        dropdown.RefreshShownValue();
+        Placeholder.gameObject.SetActive(false);
     }
 
     /// <summary>
     /// Sends a request to fetch all Users
     /// </summary>
-    private void requestUserList()
+    public void requestUserList()
     {
         JsonClasses.JsonRequest idRequest = new JsonClasses.JsonRequest();
         idRequest.requestType = Config.Communication.USERS_REQUEST;
