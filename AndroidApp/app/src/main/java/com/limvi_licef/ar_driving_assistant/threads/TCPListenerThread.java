@@ -213,7 +213,7 @@ public class TCPListenerThread extends Thread {
             jsonResponse = new JSONObject();
             try {
                 jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_RIDES);
-                jsonResponse.put(Config.HoloLens.JSON_RIDES, rides);
+                jsonResponse.put(Config.HoloLens.JSON_RIDES, new JSONArray(rides));
                 jsonResponse.put(Config.HoloLens.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 Broadcasts.sendWriteToUIBroadcast(context, FETCH_RIDES_ERROR);
