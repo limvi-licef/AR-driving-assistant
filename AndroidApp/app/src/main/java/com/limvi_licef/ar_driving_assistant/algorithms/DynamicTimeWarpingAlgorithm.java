@@ -41,16 +41,19 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         Double closestRotation = null;
         Double closestSpeed = null;
 
+        //Generate the event TimeSeries
+        TimeSeries eventAccel, eventRotation, eventSpeed;
+        eventAccel = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+                DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
+        eventRotation = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+        eventSpeed = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+
         for(long start = startTimestamp, stop = startTimestamp + event.duration; stop < endTimestamp;
             start += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS, stop += Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS){
 
-            TimeSeries eventAccel, eventRotation, eventSpeed, segmentAccel, segmentRotation, segmentSpeed;
+            //Generate TimeSeries for the segment to be compared
+            TimeSeries segmentAccel, segmentRotation, segmentSpeed;
             try {
-                eventAccel = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                        DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-                eventRotation = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-                eventSpeed = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
-
                 segmentAccel = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                         DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
                 segmentRotation = Events.createTimeSeriesFromSensor(context, start, stop, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
