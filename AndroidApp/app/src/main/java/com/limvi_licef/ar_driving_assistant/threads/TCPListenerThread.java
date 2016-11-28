@@ -111,15 +111,19 @@ public class TCPListenerThread extends Thread {
         String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
         Log.d("TCP", "Received request : " + requestType);
         JSONObject json;
-        if(requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_USERS)) {
-            json = fetchUsers();
-        } else if (requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_INSERT_USER)) {
-            json = insertNewUser(request);
-        } else if (requestType.equals(Config.HoloLens.JSON_REQUEST_TYPE_LAST_KNOWN)) {
-            json = fetchAndSendLastKnownRides(request);
-        } else {
-            Broadcasts.sendWriteToUIBroadcast(context, UNKNOWN_REQUEST);
-            return;
+        switch (requestType) {
+            case Config.HoloLens.JSON_REQUEST_TYPE_USERS:
+                json = fetchUsers();
+                break;
+            case Config.HoloLens.JSON_REQUEST_TYPE_INSERT_USER:
+                json = insertNewUser(request);
+                break;
+            case Config.HoloLens.JSON_REQUEST_TYPE_LAST_KNOWN:
+                json = fetchAndSendLastKnownRides(request);
+                break;
+            default:
+                Broadcasts.sendWriteToUIBroadcast(context, UNKNOWN_REQUEST);
+                return;
         }
         sendJson(context, json);
     }
