@@ -27,6 +27,11 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
         this.startTimestamp = endTimestamp - duration;
     }
 
+    /**
+     * Run the latest batch of sensor data for each TrainingEvent and for each algorithm
+     * @param params
+     * @return
+     */
     @Override
     protected Void doInBackground(Void... params) {
 

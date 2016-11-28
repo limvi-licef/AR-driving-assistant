@@ -29,6 +29,10 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         this.context = context;
     }
 
+    /**
+     * Process the last Config.SensorDataCollection.LONG_DELAY minutes of data through the MonotoneSegmentation algorithm again
+     * and replace the old data with the newly processed data
+     */
     @Override
     public void run() {
         String userId = Preferences.getCurrentUserId(context);
@@ -62,6 +66,12 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         }
     }
 
+    /**
+     * Save processed sensor data to database
+     * @param processedData the processed data to save
+     * @param extremaStats the associated stats to save
+     * @param userId the userId associated with the data
+     */
     protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats, String userId);
 
     /**
@@ -72,7 +82,17 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
      */
     protected abstract List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp);
 
+    /**
+     * Delete data from the database associated with the userId
+     * @param fromTimestamp the start timestamp from which to begin deleting
+     * @param toTimestamp the end timestamp to which to end deleting
+     * @param userId the userId associated with the data to delete
+     */
     protected abstract void deleteData(long fromTimestamp, long toTimestamp, String userId);
 
+    /**
+     * Get the table name associated with the runnable
+     * @return the table name
+     */
     protected abstract String getTableName();
 }

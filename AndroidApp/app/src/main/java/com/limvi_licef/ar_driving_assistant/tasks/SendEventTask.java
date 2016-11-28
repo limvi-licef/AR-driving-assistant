@@ -26,6 +26,11 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
         this.eventType = eventName;
     }
 
+    /**
+     * Build event json to be displayed on the Unity app then send it
+     * @param urls
+     * @return
+     */
     protected String doInBackground(String... urls) {
         JSONObject json = new JSONObject();
         try {
@@ -38,6 +43,10 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
         return TCPListenerThread.sendJson(context, json);
     }
 
+    /**
+     * Show send JSON result as a toast
+     * @param toast
+     */
     protected void onPostExecute(String toast) {
         Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
     }

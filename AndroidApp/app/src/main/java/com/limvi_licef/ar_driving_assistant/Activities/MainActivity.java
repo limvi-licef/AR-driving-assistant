@@ -253,7 +253,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     }
 
     /**
-     * Bind listeners to listener thread
+     * Register listeners to the listener thread and start recording data
      */
     private void registerListeners(){
         rotationReceiver.register(this, sensorHandler);
@@ -262,6 +262,9 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         temperatureReceiver.register(this, sensorHandler);
     }
 
+    /**
+     * Unregister listeners from the listener thread and stop recording data
+     */
     private void unregisterListeners(){
         rotationReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
@@ -271,7 +274,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     }
 
     /**
-     * Start active monitoring of sensors
+     * Start monitoring of sensors
      */
     private void startMonitoring() {
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_ENABLED);
@@ -282,6 +285,9 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         Aware.startPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
+    /**
+     * Stop monitoring of sensors
+     */
     private void stopMonitoring() {
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, false);
         this.stopService(new Intent(this, Aware.class));

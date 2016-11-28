@@ -29,10 +29,17 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
     private static int runnableCount = 0;
     private static int runnableDoneCount = 0;
 
+    /**
+     * Add to the registered runnables count
+     */
     private void addToCount(){
         runnableCount++;
     }
 
+    /**
+     * Notify that a runnable has finished running
+     * Once all registered runnables have ended, run MatchEventTask
+     */
     private void notifyRunnableEnd() {
         runnableDoneCount++;
 
@@ -51,6 +58,9 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         addToCount();
     }
 
+    /**
+     * Process the accumulated data through the MonotoneSegmentation algorithm and save the processed data
+     */
     @Override
     public void run() {
         isRunning = true;
@@ -83,24 +93,48 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         }
     }
 
+    /**
+     * Add a TimestampedDouble to the data list
+     * @param d the data to add
+     */
     public void accumulateData(Structs.TimestampedDouble d){
         data.add(d);
     }
 
+    /**
+     * Checks if the runnable is currently running
+     * @return the runnable status
+     */
     public boolean isRunning(){
         return isRunning;
     }
 
+    /**
+     * Clear the accumulated data
+     */
     private void resetData(){
         data.clear();
     }
 
+    /**
+     * Get the data accumulated by the runnable
+     * @return the data ArrayList
+     */
     private List<Structs.TimestampedDouble> getData() {
         return new ArrayList<>(data);
     }
 
+    /**
+     * Save the processed data to the database
+     * @param processedData the processed data
+     * @param extremaStats the associated stats
+     */
     protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats);
 
+    /**
+     * The table associated with the runnable
+     * @return the table name
+     */
     protected abstract String getTableName();
 
 }

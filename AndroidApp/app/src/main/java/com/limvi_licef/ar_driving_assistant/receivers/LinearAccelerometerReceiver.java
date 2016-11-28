@@ -76,6 +76,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
+        //Get data
         double axisX = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_0);
         double axisY = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_1);
         double axisZ = values.getAsDouble(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.VALUES_2);
@@ -87,6 +88,8 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
 
         //Round off timestamp avoid clutter
         long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), Config.SensorDataCollection.ACCELERATION_PRECISION);
+
+        //Accumulate data
         runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));
         runnableAxisY.accumulateData(new TimestampedDouble(roundedTimestamp, axisY));
         runnableAxisZ.accumulateData(new TimestampedDouble(roundedTimestamp, axisZ));

@@ -25,6 +25,12 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
     private final long startTimestamp;
     private final long endTimestamp;
 
+    /**
+     * Create DynamicTimeWarping object and define the time period by which the sensor data will be fetched
+     * @param context
+     * @param startTimestamp the start timestamp of the time period
+     * @param endTimestamp the end timestamp of the data of the time period
+     */
     public DynamicTimeWarpingAlgorithm(Context context, long startTimestamp, long endTimestamp){
         this.context = context;
         this.startTimestamp = startTimestamp;
@@ -32,8 +38,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
     }
 
     /**
-     * Compare the event to recent sensor data and try to find a match
-     * A new set of TimeSeries to compare is generated each Config.DynamicTimeWarping.TIME_BETWEEN_SEGMENTS
+     * Compare the training event to each possible segment in the recent sensor data to try to find a match
+     * A segment is a continuous list of data with the same length as the event
+     * A new set of TimeSeries to compare is generated for each new segment
      * @param event The event to process
      */
     public void processEvent(Events.Event event) {

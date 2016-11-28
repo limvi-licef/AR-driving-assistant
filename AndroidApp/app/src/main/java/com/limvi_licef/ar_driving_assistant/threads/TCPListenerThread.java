@@ -38,7 +38,7 @@ import java.util.Locale;
 public class TCPListenerThread extends Thread {
 
     /**
-     * Error messages send to UI in case of error
+     * Error messages sent to UI in case of error
      */
     private static final String UNKNOWN_REQUEST = "Received Unknown Request";
     private static final String THREAD_END = "TCP Listener Ended";
@@ -55,7 +55,7 @@ public class TCPListenerThread extends Thread {
 
     public TCPListenerThread(Context context) {
         super();
-        this.context= context;
+        this.context = context;
     }
 
     public void kill() {
@@ -107,7 +107,7 @@ public class TCPListenerThread extends Thread {
      * @param request the request to process
      * @throws JSONException
      */
-    private void handleRequest(JSONObject request) throws JSONException{
+    private void handleRequest(JSONObject request) throws JSONException {
         String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
         Log.d("TCP", "Received request : " + requestType);
         JSONObject json;
@@ -154,7 +154,7 @@ public class TCPListenerThread extends Thread {
     }
 
     /**
-     * Writes new user to database and send it back to Unity app if insertion is successful
+     * Writes new user to database and sends it back to Unity app if insertion is successful
      * @param request request containing the new user's data
      * @return the response json
      */
@@ -195,7 +195,7 @@ public class TCPListenerThread extends Thread {
     }
 
     /**
-     * Fetches an user's last known rides and send them to the Unity app
+     * Fetches an user's last known rides and sends them to the Unity app
      * @param request the request containing the user id to look for
      * @return the response json
      */
@@ -285,7 +285,7 @@ public class TCPListenerThread extends Thread {
      * Sends a JSON string to the UnityApp
      * @param context
      * @param data the json string to send
-     * @return
+     * @return the status string
      */
     public static String sendJson(Context context, JSONObject data) {
         try {

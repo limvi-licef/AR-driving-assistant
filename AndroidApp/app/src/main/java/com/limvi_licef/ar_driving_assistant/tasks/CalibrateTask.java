@@ -46,6 +46,9 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
         linearAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     }
 
+    /**
+     * Setup dialog and start listener
+     */
     @Override
     protected void onPreExecute() {
         this.dialog.setTitle(context.getResources().getString(R.string.calibrate_task_title));
@@ -54,6 +57,11 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
         sensorManager.registerListener(this, linearAccelerationSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    /**
+     * Register sensor data after giving it time to stabilize
+     * @param params
+     * @return
+     */
     @Override
     protected String doInBackground(Void... params) {
         try {
@@ -71,6 +79,10 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
         }
     }
 
+    /**
+     * Calculate axes averages and save them
+     * @param result
+     */
     @Override
     protected void onPostExecute (String result) {
         sensorManager.unregisterListener(this, linearAccelerationSensor);
@@ -90,7 +102,10 @@ public class CalibrateTask extends AsyncTask<Void, Void, String> implements Sens
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
-    //Accumulate axis data
+    /**
+     * Accumulate sensor data for each axis
+     * @param event
+     */
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             sensorDataX.add((double)event.values[0]);

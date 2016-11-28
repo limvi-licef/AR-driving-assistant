@@ -86,8 +86,11 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
         return true;
     }
 
-    /*
+    /**
+     * Copy the database as a Json file
      * Adapted from http://stackoverflow.com/questions/25722585/convert-sqlite-to-json
+     * @param database the database to copy
+     * @return
      */
     private JSONObject getDatabaseAsJSON(SQLiteDatabase database)
     {
@@ -107,9 +110,9 @@ public class ExportTask extends AsyncTask<Void, Void, String> {
     }
 
     /**
-     * Translates the param tableName to a jsonArray
-     * @param database
-     * @param tableName
+     * Translates a table to a jsonArray
+     * @param database the database containing the table name
+     * @param tableName the table to translate
      * @return
      */
     private static JSONArray tableToJSON(SQLiteDatabase database, String tableName){

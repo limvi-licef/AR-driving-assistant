@@ -23,6 +23,11 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         this.context = context;
     }
 
+    /**
+     * Verifies there is sensor data associated with the event before inserting it
+     * @param params
+     * @return
+     */
     @Override
     protected String doInBackground(Void... params) {
 
@@ -45,11 +50,20 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         return saveNewEvent(event);
     }
 
+    /**
+     * Show the result as a toast in case of error
+     * @param result the result of the insert
+     */
     @Override
     protected void onPostExecute (String result) {
         Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Save a new event to the database
+     * @param event the event to save
+     * @return the status of the insert
+     */
     private String saveNewEvent(Events.Event event) {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();

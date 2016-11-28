@@ -25,14 +25,22 @@ public class SetupDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        //Add two text fields to the dialog layout
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
+
+        //current user id
         final EditText idText = new EditText(getActivity());
+
+        //Unity app ip address
         final EditText ipText = new EditText(getActivity());
 
+        //Set placeholder text
         idText.setHint(R.string.setup_dialog_id_placeholder);
         ipText.setHint(R.string.setup_dialog_ip_placeholder);
         SharedPreferences settings = getActivity().getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+        //Display previously entered text if it exists
         idText.setText(settings.getString(Preferences.ID_PREFERENCE, null));
         ipText.setText(settings.getString(Preferences.IP_ADDRESS_PREFERENCE, null));
 
@@ -44,6 +52,7 @@ public class SetupDialogFragment extends DialogFragment {
         .setPositiveButton(R.string.setup_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
+                //Save text field value to shared preferences
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
                 editor.putString(Preferences.ID_PREFERENCE, idText.getText().toString());
                 editor.putString(Preferences.IP_ADDRESS_PREFERENCE, ipText.getText().toString());

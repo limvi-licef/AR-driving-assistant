@@ -124,10 +124,18 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
         return DatabaseContract.LinearAccelerometerData.TABLE_NAME;
     }
 
+    /**
+     * Set the axis to be processed
+     * @param currentAxis the axis to be processed
+     */
     private void setCurrentAxis(String currentAxis){
         this.currentAxis = currentAxis;
     }
 
+    /**
+     * Get the axis currently being processed
+     * @return the axis name
+     */
     private String getCurrentAxis(){
         return currentAxis;
     }

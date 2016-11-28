@@ -25,6 +25,11 @@ public class MonotoneSegmentationAlgorithm {
         return new SegmentationAlgorithmReturnData(Statistics.computeExtremaStats(values, significantExtrema), piecewiseMonotone(values, significantExtrema));
     }
 
+    /**
+     *
+     * @param values the values used to compute the scalelabels
+     * @return the scalelabels
+     */
     private static Map<Integer,Double> computeScaleLabels(List<TimestampedDouble> values) {
         if(values.size() < 3) return new HashMap<>();
         boolean isMin;
@@ -33,7 +38,7 @@ public class MonotoneSegmentationAlgorithm {
         List<Integer> indexes = new ArrayList<>();
         int lastKey = 0;
 
-        //select extrema
+        //generate array of extrema in the values list
         extrema.put(0, values.get(0).value);
         for(int i = 1; i < values.size() - 1; i++) {
             if(values.get(i).value.equals(values.get(i-1).value)) {
@@ -89,6 +94,12 @@ public class MonotoneSegmentationAlgorithm {
         return scaleLabels;
     }
 
+    /**
+     * Construct list of significant extrema
+     * @param values the values used to generate the scalelabels
+     * @param tolerance the tolerance used to determine which extremum is significant
+     * @return the list of significant extrema
+     */
     private static List<Integer> selectSignificantExtrema(List<TimestampedDouble> values, int tolerance) {
         Map<Integer,Double> scaleLabels = computeScaleLabels(values);
         List<Integer> significantExtremaIndexes = new ArrayList<>();
@@ -102,6 +113,12 @@ public class MonotoneSegmentationAlgorithm {
         return significantExtremaIndexes;
     }
 
+    /**
+     * Produces a piece-wise monotone approximation
+     * @param values the values to process
+     * @param indexes the indexes of the segmentation points
+     * @return the processed values
+     */
     private static List<TimestampedDouble> piecewiseMonotone(List<TimestampedDouble> values, List<Integer> indexes){
         Map<Integer,TimestampedDouble> monotoneValues = new TreeMap<>();
         for(int i = 0; i < indexes.size() - 1; ++ i) {

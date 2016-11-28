@@ -22,14 +22,17 @@ public class CreateTrainingEventDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Create alert dialog to input Training Event type, label and message
+
+        // Create alert dialog layout
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
 
+        //Add textfield for the label of the training event to be created
         final EditText labelField = new EditText(getActivity());
         labelField.setHint(getResources().getString(R.string.training_task_hint_label));
         layout.addView(labelField);
 
+        //The type of the event to be created
         final RadioGroup rg = new RadioGroup(getActivity());
         rg.setOrientation(RadioGroup.VERTICAL);
         for(Events.EventTypes event : Events.EventTypes.values()){
@@ -37,9 +40,11 @@ public class CreateTrainingEventDialogFragment extends DialogFragment {
             rg.addView(rb);
             rb.setText(event.name());
         }
+        //Select first option
         rg.check(rg.getChildAt(0).getId());
         layout.addView(rg);
 
+        //Add textfield for the message associated with the training event
         final EditText eventText = new EditText(getActivity());
         eventText.setHint(getResources().getString(R.string.training_task_hint_message));
         layout.addView(eventText);
@@ -48,6 +53,7 @@ public class CreateTrainingEventDialogFragment extends DialogFragment {
                 .setView(layout)
                 .setPositiveButton(getResources().getString(R.string.training_task_dialog_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        //Send all values back to MainActivity
                         long startTimestamp = System.currentTimeMillis();
                         String label = labelField.getText().toString();
                         int index = rg.getCheckedRadioButtonId() % rg.getChildCount();
@@ -60,6 +66,7 @@ public class CreateTrainingEventDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton(getResources().getString(R.string.training_task_dialog_dismiss), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        //Untoggle button
                         MainActivity activity = (MainActivity)getActivity();
                         activity.trainToggle.setChecked(false);
                     }

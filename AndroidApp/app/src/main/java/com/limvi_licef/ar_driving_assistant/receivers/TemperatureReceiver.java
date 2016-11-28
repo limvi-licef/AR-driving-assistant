@@ -41,6 +41,7 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
         throw new UnsupportedOperationException("No runnable is used by this class");
     }
 
+    //Set to query temperature data once every 30 minutes
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Temperature Receiver", "Received intent");

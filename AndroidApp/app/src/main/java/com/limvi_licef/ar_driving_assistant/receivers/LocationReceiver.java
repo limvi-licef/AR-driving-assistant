@@ -70,10 +70,12 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
         //Convert location speed to km/h
         double speed = location.getDouble(location.getColumnIndex(Locations_Provider.Locations_Data.SPEED)) * KM_PER_HOUR_CONVERSION;
+
         //accumulate speed data
         runnable.accumulateData(new TimestampedDouble(location.getLong(location.getColumnIndex(Locations_Provider.Locations_Data.TIMESTAMP)), speed));
 
         String userId = Preferences.getCurrentUserId(context);
+
         //save location
         ContentValues valuesToSave = new ContentValues();
         valuesToSave.put(DatabaseContract.LocationData.CURRENT_USER_ID, userId);
