@@ -99,6 +99,7 @@ public static class Config {
         /// <summary>
         /// Multiplier applied to collider size while moving the hologram
         /// Allows the tap gesture to be recognized no matter where the hologram is placed
+        /// Shouldn't need to be changed
         /// </summary>
         public const float COLLIDER_SIZE_MULTIPLIER = 10f;
 

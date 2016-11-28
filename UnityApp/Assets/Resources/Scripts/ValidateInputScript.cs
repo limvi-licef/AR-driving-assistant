@@ -16,7 +16,9 @@ public class ValidateInputScript : MonoBehaviour {
     }
 
     /// <summary>
-    /// Validates that the user id is valid and sets the current user to that user if so
+    /// Validates that the user id is valid 
+    /// if valid, sets the current user to that user
+    /// if not valid, display error message on User Panel
     /// </summary>
     public void ValidateInput()
     {

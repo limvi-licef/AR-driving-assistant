@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Defines classes used to serialize and deserialize json
+/// Defines classes used to serialize and deserialize json in order to communicate between the Unity app and the Android app
 /// </summary>
 /// <remarks>
-/// UDPListenerThread.java receives and sends jsons formatted after these data structures
+/// TCPListenerAndroid.cs, TCPListenerHoloLens.cs and TCPListenerThread.java all receive and send jsons formatted after these data structures
 /// </remarks>
 public class JsonClasses : MonoBehaviour {
 

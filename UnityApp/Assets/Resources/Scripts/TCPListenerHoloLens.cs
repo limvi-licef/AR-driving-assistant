@@ -7,7 +7,7 @@ using System.IO;
 #endif
 
 /// <summary>
-/// Listens on port 12345 for incoming tcp connections and redirects messages to the adequate method
+/// Listens for incoming tcp connections and redirects messages to the adequate method
 /// </summary>
 /// <remarks>
 /// Adapted from https://www.tutorialspoint.com/windows10_development/windows10_development_networking.htm

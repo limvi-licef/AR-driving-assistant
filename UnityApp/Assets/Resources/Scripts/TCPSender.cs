@@ -14,7 +14,7 @@ using System.Collections;
 #endif
 
 /// <summary>
-/// Sends UDP packets containing json requests
+/// Sends TCP packets containing json requests
 /// </summary>
 public class TCPSender : MonoBehaviour {
 
@@ -34,11 +34,11 @@ public class TCPSender : MonoBehaviour {
         set { port = value; }
     }
 
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
     /// <summary>
     /// Connects to the Android app and send json
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
-#if UNITY_WSA_10_0 && !UNITY_EDITOR
     private async void ConnectAndSend(string jsonString)
     {
         StreamSocket socket = new StreamSocket();
@@ -49,11 +49,11 @@ public class TCPSender : MonoBehaviour {
     }
 #endif
 
+#if UNITY_ANDROID
     /// <summary>
     /// Connects to the Android app and send json
     /// </summary>
     /// <param name="jsonString">The json string to send</param>
-#if UNITY_ANDROID
     private IEnumerator ConnectAndSend(string jsonString)
     {
         TcpClient client = new TcpClient();

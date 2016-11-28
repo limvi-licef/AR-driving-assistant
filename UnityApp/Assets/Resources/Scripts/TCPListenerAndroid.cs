@@ -25,6 +25,7 @@ public class TCPListenerAndroid : MonoBehaviour {
 
     void Start()
     {
+        //Start listener thread
         mRunning = true;
         ThreadStart ts = new ThreadStart(Server);
         mThread = new Thread(ts);
@@ -36,6 +37,9 @@ public class TCPListenerAndroid : MonoBehaviour {
         mRunning = false;
     }
 
+    /// <summary>
+    /// Bind TcpListener to port and start listening to requests
+    /// </summary>
     void Server()
     {
         try
@@ -79,7 +83,7 @@ public class TCPListenerAndroid : MonoBehaviour {
     {
         // stop listening thread
         stopListening();
-        // wait fpr listening thread to terminate (max. 500ms)
+        // wait for listening thread to terminate (max. 500ms)
         mThread.Join(500);
     }
 
