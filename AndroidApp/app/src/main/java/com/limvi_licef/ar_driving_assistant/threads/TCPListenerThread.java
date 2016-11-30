@@ -260,10 +260,10 @@ public class TCPListenerThread extends Thread {
      */
     private List<String> getUserLastKnownRides(String id) {
         List<String> rides = new ArrayList<>();
-        Cursor ridesCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                new String[]{DatabaseContract.LinearAccelerometerData.TIMESTAMP},
-                DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID + " = ?", new String[]{"" + id}, null, null, "timestamp ASC");
-        int timestampColumnIndex = ridesCursor.getColumnIndexOrThrow(DatabaseContract.LinearAccelerometerData.TIMESTAMP);
+        Cursor ridesCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.LocationData.TABLE_NAME,
+                new String[]{DatabaseContract.LocationData.TIMESTAMP},
+                DatabaseContract.LocationData.CURRENT_USER_ID + " = ?", new String[]{"" + id}, null, null, "timestamp ASC");
+        int timestampColumnIndex = ridesCursor.getColumnIndexOrThrow(DatabaseContract.LocationData.TIMESTAMP);
         String lastDate = "";
         while (ridesCursor.moveToNext()) {
             long timestamp = ridesCursor.getLong(timestampColumnIndex);
