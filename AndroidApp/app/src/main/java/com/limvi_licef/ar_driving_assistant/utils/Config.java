@@ -71,12 +71,12 @@ public final class Config {
         /**
          * Precision, in milliseconds, of the rotation sensor timestamp rounding
          */
-        public static final long ROTATION_PRECISION = 100;
+        public static final long ROTATION_PRECISION = 200;
 
         /**
          * Precision, in milliseconds, of the linear accelerometer sensor timestamp rounding
          */
-        public static final long ACCELERATION_PRECISION = 100;
+        public static final long ACCELERATION_PRECISION = 200;
     }
 
     /**
@@ -108,7 +108,7 @@ public final class Config {
          *        |------|
          *       x+1    y+1
          */
-        public static final double TIME_BETWEEN_SEGMENTS = 100;
+        public static final double TIME_BETWEEN_SEGMENTS = 200;
 
         /**
          * The search radius for matching the two TimeSeries
