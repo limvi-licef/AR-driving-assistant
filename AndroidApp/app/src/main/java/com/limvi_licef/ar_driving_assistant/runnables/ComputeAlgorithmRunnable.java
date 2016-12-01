@@ -8,6 +8,7 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.tasks.MatchEventTask;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
@@ -46,7 +47,8 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         //launch task once all runnables are finished running
         if(runnableCount == runnableDoneCount){
             runnableDoneCount = 0;
-            new MatchEventTask(context, Config.SensorDataCollection.SHORT_DELAY).execute();
+//            new MatchEventTask(context, Config.SensorDataCollection.SHORT_DELAY).execute();
+            Broadcasts.sendStartDTWBroadcast(context);
         }
     }
 

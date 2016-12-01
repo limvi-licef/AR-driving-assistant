@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 public final class Broadcasts {
 
+    public static final String ACTION_START_DTW = "ACTION_START_DTW";
     public static final String ACTION_WRITE_TO_UI = "ACTION_WRITE_TO_UI";
     public static final String WRITE_MESSAGE = "WRITE_MESSAGE";
 
@@ -16,6 +17,11 @@ public final class Broadcasts {
     */
     public static void sendWriteToUIBroadcast(Context context, String message) {
         Intent localIntent = new Intent(ACTION_WRITE_TO_UI).putExtra(WRITE_MESSAGE, message);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
+    }
+
+    public static void sendStartDTWBroadcast(Context context) {
+        Intent localIntent = new Intent(ACTION_START_DTW);
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
     }
 }

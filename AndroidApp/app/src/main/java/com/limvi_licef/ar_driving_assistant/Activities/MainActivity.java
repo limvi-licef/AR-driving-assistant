@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Process;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.SensorReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.TemperatureReceiver;
+import com.limvi_licef.ar_driving_assistant.runnables.MatchEventRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
@@ -43,6 +45,8 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
 
     private HandlerThread sensorThread;
     private Handler sensorHandler;
+    private HandlerThread dtwThread;
+    private Handler dtwHandler;
     private SensorReceiver temperatureReceiver;
     private SensorReceiver locationReceiver;
     private SensorReceiver linearAccelerometerReceiver;
@@ -71,6 +75,13 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
             results.add(status);
             resultsAdapter.notifyDataSetChanged();
     }};
+
+    IntentFilter dtwIntentFilter = new IntentFilter(Broadcasts.ACTION_START_DTW);
+    private final BroadcastReceiver dtwReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            dtwHandler.post(new MatchEventRunnable(MainActivity.this));
+        }};
 
     /**
      * Called when a button has been clicked.
@@ -158,12 +169,14 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     protected void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver, statusIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(dtwReceiver, dtwIntentFilter);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(dtwReceiver);
     }
 
     /**
@@ -235,6 +248,11 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         Looper looper = sensorThread.getLooper();
         sensorHandler = new Handler(looper);
 
+        dtwThread = new HandlerThread("DTWHandlerThread", Process.THREAD_PRIORITY_FOREGROUND);
+        dtwThread.start();
+        Looper dtwlooper = dtwThread.getLooper();
+        dtwHandler = new Handler(dtwlooper);
+
         rotationReceiver = new RotationReceiver();
         linearAccelerometerReceiver = new LinearAccelerometerReceiver();
         locationReceiver = new LocationReceiver();
@@ -249,6 +267,11 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
             sensorThread.quitSafely();
         } else {
             sensorThread.quit();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            dtwThread.quitSafely();
+        } else {
+            dtwThread.quit();
         }
     }
 
@@ -271,6 +294,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         locationReceiver.unregister(this);
         temperatureReceiver.unregister(this);
         sensorHandler.removeCallbacksAndMessages(null);
+        dtwHandler.removeCallbacksAndMessages(null);
     }
 
     /**
