@@ -78,13 +78,17 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * @param sensor the SensorType to process
      */
     private void processSensor(Events.Event event, SensorType sensor){
+
+        //create event timeseries
         TimeSeries eventTS = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
         if(eventTS.size() == 0) {
             Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + sensor.getType());
             return;
         }
+        //create first segment timeseries
         TimeSeriesExtended segmentTS = Events.createTimeSeriesFromSensor(context, startTimestamp, startTimestamp + event.duration, sensor.getTableName(), sensor.getColumns());
 
+        //get remaining data
         List<List<Structs.TimestampedDouble>> remaining = new ArrayList<>();
         for(String column : sensor.getColumns()) {
             remaining.add(Database.getSensorData(startTimestamp + event.duration, endTimestamp, sensor.getTableName(), column, context));
@@ -101,7 +105,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             saveResults(event, start, stop, distance, sensor.getDistanceColumn());
         }
 
-        //Find Euclidean distance for remaining data
+        //Find Euclidean distance for each new segment the remaining data can produce
         for(int i = 0; i < remaining.get(0).size(); i++){
 
             //get next value from remaining data

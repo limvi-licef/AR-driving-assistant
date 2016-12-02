@@ -8,6 +8,9 @@ import com.fastdtw.timeseries.TimeSeriesPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Extension of the TimeSeriesBase that allows modification of the TimeSeries after the Builder created it
+ */
 public class TimeSeriesExtended implements TimeSeries {
 
     private List<TimeSeriesItem> items;
@@ -18,6 +21,12 @@ public class TimeSeriesExtended implements TimeSeries {
         this.numDimensions = items.isEmpty() ? 0 : items.get(0).getPoint().size();
     }
 
+    /**
+     * Add a element to the TimeSeries and removes the first element if the TimeSeries exceeds the max size
+     * @param maxSize the max size of the TimeSeries
+     * @param time the time of the element to add
+     * @param values the values of the element to add
+     */
     public void shiftRightByOne(int maxSize, double time, double... values) {
         if(items.size() >= maxSize && items.size() > 0) {
             items.remove(0);
