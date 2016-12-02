@@ -49,14 +49,14 @@ public final class Config {
     public static final class SensorDataCollection {
 
         /**
-         * Determines how long the ComputeAlgorithm runnables accumulate data before running
+         * Determines how long, in milliseconds, the ComputeAlgorithm runnables accumulate data before running
          */
-        public static final int SHORT_DELAY = 1000 * 60;
+        public static final int SHORT_DELAY = 1000 * 60; //1 minute
 
         /**
-         * Determines how long the RewriteAlgorithm runnables accumulate data before running
+         * Determines how long, in milliseconds, the RewriteAlgorithm runnables accumulate data before running
          */
-        public static final int LONG_DELAY = 1000 * 60 * 10;
+        public static final int LONG_DELAY = 1000 * 60 * 10; //10 minutes
 
         /**
          * Tolerance for the monotone segmentation algorithm
@@ -98,17 +98,6 @@ public final class Config {
          * The cutoff for determining whether a match is found between two TimeSeries of speed data
          */
         public static final double SPEED_DISTANCE_CUTOFF = 10;
-
-        /**
-         * Time, in milliseconds, between each segments of recent data
-         * In other words, the actual value of the +1 below
-         *
-         *      |------|------|------>
-         *      x      y
-         *        |------|
-         *       x+1    y+1
-         */
-        public static final double TIME_BETWEEN_SEGMENTS = 200;
 
         /**
          * The search radius for matching the two TimeSeries
