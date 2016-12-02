@@ -67,7 +67,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         for(SensorType sensor : sensors) {
             processSensor(event, sensor);
         }
-        if(isMatchFound(event)) {
+        if(!sensors.isEmpty() && isMatchFound(event)) {
             matchFound(event);
         }
 
