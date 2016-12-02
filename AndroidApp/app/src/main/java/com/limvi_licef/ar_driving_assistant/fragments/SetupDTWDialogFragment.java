@@ -11,9 +11,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.models.AccelerationSensor;
-import com.limvi_licef.ar_driving_assistant.models.RotationSensor;
-import com.limvi_licef.ar_driving_assistant.models.SpeedSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.AccelerationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.RotationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.SpeedSensor;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class SetupDTWDialogFragment extends DialogFragment {

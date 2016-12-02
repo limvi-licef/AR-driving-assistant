@@ -1,4 +1,4 @@
-package com.limvi_licef.ar_driving_assistant.models;
+package com.limvi_licef.ar_driving_assistant.models.sensors;
 
 /**
  * Interface to keep track of each sensor's info
