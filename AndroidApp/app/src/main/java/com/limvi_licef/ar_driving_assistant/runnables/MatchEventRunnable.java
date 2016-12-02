@@ -1,7 +1,6 @@
 package com.limvi_licef.ar_driving_assistant.runnables;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.algorithms.DynamicTimeWarpingAlgorithm;
 import com.limvi_licef.ar_driving_assistant.algorithms.EventAlgorithm;

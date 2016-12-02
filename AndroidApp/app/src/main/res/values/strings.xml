@@ -54,4 +54,6 @@
 
     <string name="match_event_task_status">Event status : </string>
     <string name="match_event_task_match_found">Match found : </string>
+
+    <string name="setup_dtw_button">DTW</string>
 </resources>

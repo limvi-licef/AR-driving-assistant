@@ -53,6 +53,12 @@
             android:layout_height="match_parent"
             android:text="@string/send_event_task_button" />
 
+        <Button
+            android:id="@+id/setup_dtw_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/setup_dtw_button" />
+
         <ToggleButton
             android:id="@+id/train_button"
             android:layout_width="match_parent"

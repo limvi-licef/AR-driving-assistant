@@ -24,6 +24,7 @@ import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
+import com.limvi_licef.ar_driving_assistant.fragments.SetupDTWDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
@@ -76,6 +77,9 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
             resultsAdapter.notifyDataSetChanged();
     }};
 
+    /**
+     * Starts DTW algorithm
+     */
     IntentFilter dtwIntentFilter = new IntentFilter(Broadcasts.ACTION_START_DTW);
     private final BroadcastReceiver dtwReceiver = new BroadcastReceiver() {
         @Override
@@ -104,6 +108,10 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
             case R.id.send_event_button :
                 SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
                 eventFragment.show(getFragmentManager(), "eventdialog");
+                break;
+            case R.id.setup_dtw_button :
+                SetupDTWDialogFragment dtwFragment = SetupDTWDialogFragment.newInstance();
+                dtwFragment.show(getFragmentManager(), "dtwdialog");
                 break;
         }
     }
@@ -206,6 +214,8 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         calibrateSensor.setOnClickListener(this);
         Button sendEvent = (Button) findViewById(R.id.send_event_button);
         sendEvent.setOnClickListener(this);
+        Button dtw = (Button) findViewById(R.id.setup_dtw_button);
+        dtw.setOnClickListener(this);
 
         trainToggle = (ToggleButton) findViewById(R.id.train_button);
         trainToggle.setEnabled(false);

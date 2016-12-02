@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.timeseries.TimeSeriesBase;
+import com.limvi_licef.ar_driving_assistant.algorithms.TimeSeriesExtended;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 
@@ -47,28 +48,32 @@ public final class Events {
     }
 
     /**
-     * Creates a TimeSeries using given parameters
+     * Creates a TimeSeriesExtended using given parameters
      * @param context
      * @param startTimestamp the timestamp from which to fetch data
      * @param endTimestamp the timestamp to which to fetch data
      * @param tableName the table containing the columns
      * @param valueColumnNames the varargs strings defining the columns to be used to create the time series
      * @return
-     * @throws IndexOutOfBoundsException
      */
-    public static TimeSeries createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) throws IndexOutOfBoundsException {
+    public static TimeSeriesExtended createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) {
+        TimeSeriesExtended.Builder b = TimeSeriesExtended.builder();
+
         List<List<Structs.TimestampedDouble>> valuesList = new ArrayList<>();
         for(String column : valueColumnNames) {
             valuesList.add(Database.getSensorData(startTimestamp, endTimestamp, tableName, column, context));
         }
 
-        TimeSeriesBase.Builder b = TimeSeriesBase.builder();
         for(int i = 0; i < valuesList.get(0).size(); i++) {
             double [] values = new double[valueColumnNames.length];
-            for(int j = 0; j < valueColumnNames.length; j++){
-                values[j] = valuesList.get(j).get(i).value;
+            try {
+                for(int j = 0; j < valueColumnNames.length; j++){
+                    values[j] = valuesList.get(j).get(i).value;
+                }
+                b.add(valuesList.get(0).get(i).timestamp, values);
+            } catch (IndexOutOfBoundsException e) {
+                //skip
             }
-            b.add(valuesList.get(0).get(i).timestamp, values);
         }
         return b.build();
     }

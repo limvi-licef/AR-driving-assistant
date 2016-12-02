@@ -71,4 +71,17 @@ public final class Structs {
             this.userAvatar = userAvatar;
         }
     }
+
+    /**
+     * TimestampTuple class to hold two timestamps
+     */
+    public static class TimestampTuple {
+        public long first;
+        public long second;
+
+        public TimestampTuple(long first, long second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
 }
