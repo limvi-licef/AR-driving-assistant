@@ -46,7 +46,7 @@ public class MatchEventRunnable implements Runnable {
      * @param context
      * @return
      */
-    private static List<Event> getAllEvents(Context context){
+    public static List<Event> getAllEvents(Context context){
         List<Event> events = new ArrayList<>();
         Cursor eventCursor = DatabaseHelper.getHelper(context).getWritableDatabase().query(DatabaseContract.TrainingEvents.TABLE_NAME,
                 new String[]{DatabaseContract.TrainingEvents.START_TIMESTAMP,

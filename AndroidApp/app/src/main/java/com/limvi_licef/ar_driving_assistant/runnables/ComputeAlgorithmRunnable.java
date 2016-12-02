@@ -40,7 +40,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
     /**
      * Notify that a runnable has finished running
-     * Once all registered runnables have ended, run MatchEventTask
+     * Once all registered runnables have ended, launch DTW algorithm
      */
     private void notifyRunnableEnd() {
         runnableDoneCount++;
