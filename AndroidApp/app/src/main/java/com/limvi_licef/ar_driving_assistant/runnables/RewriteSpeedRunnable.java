@@ -2,14 +2,13 @@ package com.limvi_licef.ar_driving_assistant.runnables;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
+import com.limvi_licef.ar_driving_assistant.models.ExtremaStats;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
@@ -21,11 +20,11 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats, String userId) {
+    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId) {
         long firstTimestamp = processedData.get(0).timestamp;
         long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
-        for(Structs.TimestampedDouble td : processedData) {
+        for(TimestampedDouble td : processedData) {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.SpeedData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.SpeedData.TIMESTAMP, td.timestamp);
@@ -47,7 +46,7 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
+    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
         return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED, context);
     }
 

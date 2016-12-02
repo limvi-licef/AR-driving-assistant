@@ -12,7 +12,7 @@ import android.widget.RadioGroup;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.activities.MainActivity;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
+import com.limvi_licef.ar_driving_assistant.models.Event;
 
 public class CreateTrainingEventDialogFragment extends DialogFragment {
 
@@ -35,7 +35,7 @@ public class CreateTrainingEventDialogFragment extends DialogFragment {
         //The type of the event to be created
         final RadioGroup rg = new RadioGroup(getActivity());
         rg.setOrientation(RadioGroup.VERTICAL);
-        for(Events.EventTypes event : Events.EventTypes.values()){
+        for(Event.EventTypes event : Event.EventTypes.values()){
             RadioButton rb = new RadioButton(getActivity());
             rg.addView(rb);
             rb.setText(event.name());

@@ -22,7 +22,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnabl
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
-import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
 public class LinearAccelerometerReceiver extends BroadcastReceiver implements SensorReceiver {
 

@@ -8,8 +8,10 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.models.ExtremaStats;
+import com.limvi_licef.ar_driving_assistant.models.SegmentationAlgorithmReturnData;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
  */
 public abstract class ComputeAlgorithmRunnable implements Runnable {
 
-    protected List<Structs.TimestampedDouble> data;
+    protected List<TimestampedDouble> data;
     protected Handler handler;
     protected SQLiteDatabase db;
     protected Context context;
@@ -66,8 +68,8 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         isRunning = true;
 
         //send accumulated data through algorithm
-        List<Structs.TimestampedDouble> newData = getData();
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        List<TimestampedDouble> newData = getData();
+        SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -97,7 +99,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
      * Add a TimestampedDouble to the data list
      * @param d the data to add
      */
-    public void accumulateData(Structs.TimestampedDouble d){
+    public void accumulateData(TimestampedDouble d){
         data.add(d);
     }
 
@@ -120,7 +122,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
      * Get the data accumulated by the runnable
      * @return the data ArrayList
      */
-    private List<Structs.TimestampedDouble> getData() {
+    private List<TimestampedDouble> getData() {
         return new ArrayList<>(data);
     }
 
@@ -129,7 +131,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
      * @param processedData the processed data
      * @param extremaStats the associated stats
      */
-    protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats);
+    protected abstract void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats);
 
     /**
      * The table associated with the runnable

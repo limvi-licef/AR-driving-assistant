@@ -22,7 +22,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
-import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
 import org.json.JSONException;
 import org.json.JSONObject;

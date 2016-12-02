@@ -1,9 +1,13 @@
 package com.limvi_licef.ar_driving_assistant.algorithms;
 
+import android.content.Context;
+
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.timeseries.TimeSeriesBase;
 import com.fastdtw.timeseries.TimeSeriesItem;
 import com.fastdtw.timeseries.TimeSeriesPoint;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.utils.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +97,36 @@ public class TimeSeriesExtended implements TimeSeries {
     @Override
     public double[] getMeasurementVector(int pointIndex) {
         return items.get(pointIndex).getPoint().toArray();
+    }
+
+    /**
+     * Creates a TimeSeriesExtended using given parameters
+     * @param context
+     * @param startTimestamp the timestamp from which to fetch data
+     * @param endTimestamp the timestamp to which to fetch data
+     * @param tableName the table containing the columns
+     * @param valueColumnNames the varargs strings defining the columns to be used to create the time series
+     * @return
+     */
+    public static TimeSeriesExtended createTimeSeriesFromSensor(Context context, long startTimestamp, long endTimestamp, String tableName, String... valueColumnNames) {
+        Builder b = builder();
+
+        List<List<TimestampedDouble>> valuesList = new ArrayList<>();
+        for(String column : valueColumnNames) {
+            valuesList.add(Database.getSensorData(startTimestamp, endTimestamp, tableName, column, context));
+        }
+
+        for(int i = 0; i < valuesList.get(0).size(); i++) {
+            double [] values = new double[valueColumnNames.length];
+            try {
+                for(int j = 0; j < valueColumnNames.length; j++){
+                    values[j] = valuesList.get(j).get(i).value;
+                }
+                b.add(valuesList.get(0).get(i).timestamp, values);
+            } catch (IndexOutOfBoundsException e) {
+                //skip
+            }
+        }
+        return b.build();
     }
 }

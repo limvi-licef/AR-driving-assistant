@@ -11,8 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.models.Event;
 import com.limvi_licef.ar_driving_assistant.tasks.SendEventTask;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 /**
  * DialogFragment used to send Event to Unity app
@@ -33,7 +33,7 @@ public class SendEventDialogFragment extends DialogFragment {
         rg.setOrientation(RadioGroup.VERTICAL);
 
         //Add a radio button for each EventTypes
-        for(Events.EventTypes event : Events.EventTypes.values()){
+        for(Event.EventTypes event : Event.EventTypes.values()){
             RadioButton rb = new RadioButton(getActivity());
             rg.addView(rb);
             rb.setText(event.name());

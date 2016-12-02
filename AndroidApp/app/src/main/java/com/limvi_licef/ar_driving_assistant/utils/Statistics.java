@@ -1,7 +1,7 @@
 package com.limvi_licef.ar_driving_assistant.utils;
 
-import com.limvi_licef.ar_driving_assistant.utils.Structs.ExtremaStats;
-import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.models.ExtremaStats;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
 import java.util.ArrayList;
 import java.util.List;

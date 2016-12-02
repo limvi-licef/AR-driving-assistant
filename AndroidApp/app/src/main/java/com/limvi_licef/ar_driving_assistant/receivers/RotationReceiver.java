@@ -14,7 +14,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAzimuthRunnable;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
-import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
 import static android.content.Context.SENSOR_SERVICE;
 

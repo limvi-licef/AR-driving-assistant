@@ -10,9 +10,9 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.models.User;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,11 +133,11 @@ public class TCPListenerThread extends Thread {
      * @return the response json
      */
     private JSONObject fetchUsers(){
-        List<Structs.User> usersList = getAllUsers(context);
+        List<User> usersList = getAllUsers(context);
         JSONObject jsonResponse = new JSONObject();
         try {
             JSONArray users = new JSONArray();
-            for(Structs.User user : usersList) {
+            for(User user : usersList) {
                 JSONObject jsonUser = new JSONObject();
                 jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_NAME, user.userName);
                 jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_AGE, user.userAge);
@@ -231,8 +231,8 @@ public class TCPListenerThread extends Thread {
      * @param context
      * @return users
      */
-    private List<Structs.User> getAllUsers(Context context){
-        List<Structs.User> users = new ArrayList<>();
+    private List<User> getAllUsers(Context context){
+        List<User> users = new ArrayList<>();
         Cursor eventCursor = DatabaseHelper.getHelper(context).getReadableDatabase().query(DatabaseContract.Users.TABLE_NAME,
                 new String[]{DatabaseContract.Users.USER_NAME,
                         DatabaseContract.Users.USER_AGE,
@@ -245,7 +245,7 @@ public class TCPListenerThread extends Thread {
         int avatarColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.Users.USER_AVATAR);
 
         while (eventCursor.moveToNext()) {
-            users.add(new Structs.User(eventCursor.getString(nameColumnIndex), eventCursor.getInt(ageColumnIndex), eventCursor.getString(genderColumnIndex),
+            users.add(new User(eventCursor.getString(nameColumnIndex), eventCursor.getInt(ageColumnIndex), eventCursor.getString(genderColumnIndex),
                     eventCursor.getInt(avatarColumnIndex)));
         }
         eventCursor.close();

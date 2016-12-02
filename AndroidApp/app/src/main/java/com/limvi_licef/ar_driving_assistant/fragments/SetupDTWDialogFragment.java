@@ -11,7 +11,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.algorithms.DynamicTimeWarpingAlgorithm;
+import com.limvi_licef.ar_driving_assistant.models.AccelerationSensor;
+import com.limvi_licef.ar_driving_assistant.models.RotationSensor;
+import com.limvi_licef.ar_driving_assistant.models.SpeedSensor;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class SetupDTWDialogFragment extends DialogFragment {
@@ -29,16 +31,16 @@ public class SetupDTWDialogFragment extends DialogFragment {
         SharedPreferences settings = getActivity().getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
         final CheckBox cbAcceleration = new CheckBox(getActivity());
-        cbAcceleration.setText(DynamicTimeWarpingAlgorithm.AccelerationSensor.class.getSimpleName());
-        cbAcceleration.setChecked(settings.getBoolean(DynamicTimeWarpingAlgorithm.AccelerationSensor.class.getSimpleName(), false));
+        cbAcceleration.setText(AccelerationSensor.class.getSimpleName());
+        cbAcceleration.setChecked(settings.getBoolean(AccelerationSensor.class.getSimpleName(), false));
 
         final CheckBox cbRotation = new CheckBox(getActivity());
-        cbRotation.setText(DynamicTimeWarpingAlgorithm.RotationSensor.class.getSimpleName());
-        cbRotation.setChecked(settings.getBoolean(DynamicTimeWarpingAlgorithm.RotationSensor.class.getSimpleName(), false));
+        cbRotation.setText(RotationSensor.class.getSimpleName());
+        cbRotation.setChecked(settings.getBoolean(RotationSensor.class.getSimpleName(), false));
 
         final CheckBox cbSpeed = new CheckBox(getActivity());
-        cbSpeed.setText(DynamicTimeWarpingAlgorithm.SpeedSensor.class.getSimpleName());
-        cbSpeed.setChecked(settings.getBoolean(DynamicTimeWarpingAlgorithm.SpeedSensor.class.getSimpleName(), false));
+        cbSpeed.setText(SpeedSensor.class.getSimpleName());
+        cbSpeed.setChecked(settings.getBoolean(SpeedSensor.class.getSimpleName(), false));
 
         //add checkboxes to layout
         layout.addView(cbAcceleration);

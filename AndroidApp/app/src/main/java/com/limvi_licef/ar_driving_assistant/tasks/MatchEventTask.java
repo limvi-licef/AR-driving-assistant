@@ -5,7 +5,8 @@ import android.os.AsyncTask;
 
 import com.limvi_licef.ar_driving_assistant.algorithms.DynamicTimeWarpingAlgorithm;
 import com.limvi_licef.ar_driving_assistant.algorithms.EventAlgorithm;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
+import com.limvi_licef.ar_driving_assistant.models.Event;
+import com.limvi_licef.ar_driving_assistant.runnables.MatchEventRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class MatchEventTask extends AsyncTask<Void, Void, Void> {
         List<EventAlgorithm> algorithms = new ArrayList<>();
         algorithms.add(new DynamicTimeWarpingAlgorithm(context, startTimestamp, endTimestamp));
 
-        for (Events.Event event : Events.getAllEvents(context)) {
+        for (Event event : MatchEventRunnable.getAllEvents(context)) {
             for(EventAlgorithm algorithm : algorithms) {
                 algorithm.processEvent(event);
             }

@@ -8,17 +8,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.algorithms.TimeSeriesExtended;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
+import com.limvi_licef.ar_driving_assistant.models.Event;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
     private Context context;
-    private Events.Event event;
+    private Event event;
 
-    public TrainingTask(Events.Event event, Context context) {
+    public TrainingTask(Event event, Context context) {
         this.event = event;
         this.context = context;
     }
@@ -39,10 +40,10 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
         }
 
         try {
-            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
+            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
                     DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-            Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
+            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
+            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
         } catch(IndexOutOfBoundsException e) {
             return context.getResources().getString(R.string.training_task_no_data);
         }
@@ -64,7 +65,7 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
      * @param event the event to save
      * @return the status of the insert
      */
-    private String saveNewEvent(Events.Event event) {
+    private String saveNewEvent(Event event) {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();
         String userId = Preferences.getCurrentUserId(context);

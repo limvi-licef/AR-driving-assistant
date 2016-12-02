@@ -8,9 +8,11 @@ import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
 import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.models.ExtremaStats;
+import com.limvi_licef.ar_driving_assistant.models.SegmentationAlgorithmReturnData;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.List;
 
@@ -41,8 +43,8 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         long nowMinusMinutes = now - SensorDataCollection.LONG_DELAY;
 
         //fetch existing data
-        List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        List<TimestampedDouble> newData = getData(nowMinusMinutes, now);
+        SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -72,7 +74,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
      * @param extremaStats the associated stats to save
      * @param userId the userId associated with the data
      */
-    protected abstract void saveData(List<Structs.TimestampedDouble> processedData, Structs.ExtremaStats extremaStats, String userId);
+    protected abstract void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId);
 
     /**
      * Fetches all data found during given time period
@@ -80,7 +82,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
      * @param toTimestamp timestamp to which to fetch data
      * @return list of TimestampedDouble found in database
      */
-    protected abstract List<Structs.TimestampedDouble> getData(long fromTimestamp, long toTimestamp);
+    protected abstract List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp);
 
     /**
      * Delete data from the database associated with the userId

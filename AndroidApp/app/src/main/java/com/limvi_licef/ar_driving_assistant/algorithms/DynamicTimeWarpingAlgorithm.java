@@ -13,12 +13,16 @@ import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.config.DynamicTimeWarping;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.models.AccelerationSensor;
+import com.limvi_licef.ar_driving_assistant.models.Event;
+import com.limvi_licef.ar_driving_assistant.models.RotationSensor;
+import com.limvi_licef.ar_driving_assistant.models.SensorType;
+import com.limvi_licef.ar_driving_assistant.models.SpeedSensor;
+import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
-import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +38,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
     private Context context;
     private final long startTimestamp;
     private final long endTimestamp;
-    private Map<String,List<Structs.TimestampTuple>> matches = new HashMap<>();
+    private Map<String,List<TimestampTuple>> matches = new HashMap<>();
 
     private List<SensorType> sensors = new ArrayList<>();
 
@@ -56,7 +60,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * A segment is a continuous list of data with the same length as the event
      * @param event The event to process
      */
-    public void processEvent(Events.Event event) {
+    public void processEvent(Event event) {
         long logTimestamp = System.currentTimeMillis();
         Broadcasts.sendWriteToUIBroadcast(context, "DTW start : " + logTimestamp);
 
@@ -75,19 +79,19 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * @param event the Event to process
      * @param sensor the SensorType to process
      */
-    private void processSensor(Events.Event event, SensorType sensor){
+    private void processSensor(Event event, SensorType sensor){
 
         //create event timeseries
-        TimeSeries eventTS = Events.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
+        TimeSeries eventTS = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
         if(eventTS.size() == 0) {
             Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + sensor.getType());
             return;
         }
         //create first segment timeseries
-        TimeSeriesExtended segmentTS = Events.createTimeSeriesFromSensor(context, startTimestamp, startTimestamp + event.duration, sensor.getTableName(), sensor.getColumns());
+        TimeSeriesExtended segmentTS = TimeSeriesExtended.createTimeSeriesFromSensor(context, startTimestamp, startTimestamp + event.duration, sensor.getTableName(), sensor.getColumns());
 
         //get remaining data
-        List<List<Structs.TimestampedDouble>> remaining = new ArrayList<>();
+        List<List<TimestampedDouble>> remaining = new ArrayList<>();
         for(String column : sensor.getColumns()) {
             remaining.add(Database.getSensorData(startTimestamp + event.duration, endTimestamp, sensor.getTableName(), column, context));
         }
@@ -128,7 +132,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
 
             //Match is considered found if within particular distance
             if(distance < sensor.getDistanceCutoff()){
-                matches.get(sensor.getType()).add(new Structs.TimestampTuple(start, stop));
+                matches.get(sensor.getType()).add(new TimestampTuple(start, stop));
             }
         }
     }
@@ -137,19 +141,19 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * Checks if a match was found for all SensorTypes that were used to process the event
      * @return true if all sensors matches
      */
-    private boolean isMatchFound(Events.Event event) {
+    private boolean isMatchFound(Event event) {
         if(matches.size() == 1) {
             return matches.entrySet().iterator().next().getValue().size() != 0;
         }
-        List<Structs.TimestampTuple> toRemove = new ArrayList<>();
-        Iterator<Map.Entry<String,List<Structs.TimestampTuple>>> it = matches.entrySet().iterator();
-        List<Structs.TimestampTuple> first = it.next().getValue(), next;
+        List<TimestampTuple> toRemove = new ArrayList<>();
+        Iterator<Map.Entry<String,List<TimestampTuple>>> it = matches.entrySet().iterator();
+        List<TimestampTuple> first = it.next().getValue(), next;
         while(it.hasNext()) {
             next = it.next().getValue();
 
-            for(Structs.TimestampTuple i : first) {
+            for(TimestampTuple i : first) {
                 boolean match = false;
-                for(Structs.TimestampTuple j : next) {
+                for(TimestampTuple j : next) {
                     if(i.first - (event.duration / 2) <= j.first && i.second + (event.duration / 2) >= j.second ) {
                         match = true;
                         break;
@@ -169,7 +173,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * Send event to Unity app when a match is found
      * @param e The event to send
      */
-    private void matchFound(Events.Event e){
+    private void matchFound(Event e){
         Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
         String status;
         JSONObject json = new JSONObject();
@@ -192,7 +196,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * @param distance
      * @param distanceColumn
      */
-    private void saveResults(Events.Event event, long segmentStart, long segmentStop, double distance, String distanceColumn) {
+    private void saveResults(Event event, long segmentStart, long segmentStop, double distance, String distanceColumn) {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();
         ContentValues values = new ContentValues();
@@ -221,42 +225,20 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             sensors.add(new SpeedSensor());
         }
         for(SensorType sensor : sensors) {
-            matches.put(sensor.getType(), new ArrayList<Structs.TimestampTuple>());
+            matches.put(sensor.getType(), new ArrayList<TimestampTuple>());
         }
     }
 
     /**
-     * Interface to keep track of each sensor's info
+     * Data structure that holds two timestamps
      */
-    private interface SensorType {
-        String getType();
-        String getTableName();
-        String[] getColumns();
-        String getDistanceColumn();
-        double getDistanceCutoff();
-    }
+    private static class TimestampTuple {
+        long first;
+        long second;
 
-    public final class AccelerationSensor implements SensorType {
-        public String getType() { return getClass().getSimpleName(); }
-        public String getTableName() { return DatabaseContract.LinearAccelerometerData.TABLE_NAME; }
-        public String[] getColumns() { return new String[]{DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z}; }
-        public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_ACCELERATION; }
-        public double getDistanceCutoff() { return DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF; }
-    }
-
-    public final class RotationSensor implements SensorType {
-        public String getType() { return getClass().getSimpleName(); }
-        public String getTableName() { return DatabaseContract.RotationData.TABLE_NAME; }
-        public String[] getColumns() { return new String[]{DatabaseContract.RotationData.AZIMUTH}; }
-        public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_ROTATION; }
-        public double getDistanceCutoff() { return DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF; }
-    }
-
-    public final class SpeedSensor implements SensorType {
-        public String getType() { return getClass().getSimpleName(); }
-        public String getTableName() { return DatabaseContract.SpeedData.TABLE_NAME; }
-        public String[] getColumns() { return new String[]{DatabaseContract.SpeedData.SPEED}; }
-        public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_SPEED; }
-        public double getDistanceCutoff() { return DynamicTimeWarping.SPEED_DISTANCE_CUTOFF; }
+        TimestampTuple(long first, long second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }

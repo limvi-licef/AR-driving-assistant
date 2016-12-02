@@ -27,6 +27,7 @@ import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogF
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDTWDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
+import com.limvi_licef.ar_driving_assistant.models.Event;
 import com.limvi_licef.ar_driving_assistant.receivers.LinearAccelerometerReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.LocationReceiver;
 import com.limvi_licef.ar_driving_assistant.receivers.RotationReceiver;
@@ -38,7 +39,6 @@ import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
 
@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
                     linearAccelerometerReceiver.savePrematurely();
                     rotationReceiver.savePrematurely();
                     locationReceiver.savePrematurely();
-                    new TrainingTask(new Events.Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Events.EventTypes.valueOf(type), message), MainActivity.this).execute();
+                    new TrainingTask(new Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Event.EventTypes.valueOf(type), message), MainActivity.this).execute();
                     startTimestamp = 0;
                 }
                 break;
