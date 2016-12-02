@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
@@ -68,7 +68,7 @@ public class TCPListenerThread extends Thread {
         running = true;
 
         try {
-            serverSocket = new ServerSocket(Config.HoloLens.HOLOLENS_PORT);
+            serverSocket = new ServerSocket(Communication.HOLOLENS_PORT);
 
             while(running){
 
@@ -108,17 +108,17 @@ public class TCPListenerThread extends Thread {
      * @throws JSONException
      */
     private void handleRequest(JSONObject request) throws JSONException {
-        String requestType = request.getString(Config.HoloLens.JSON_REQUEST_TYPE);
+        String requestType = request.getString(Communication.JSON_REQUEST_TYPE);
         Log.d("TCP", "Received request : " + requestType);
         JSONObject json;
         switch (requestType) {
-            case Config.HoloLens.JSON_REQUEST_TYPE_USERS:
+            case Communication.JSON_REQUEST_TYPE_USERS:
                 json = fetchUsers();
                 break;
-            case Config.HoloLens.JSON_REQUEST_TYPE_INSERT_USER:
+            case Communication.JSON_REQUEST_TYPE_INSERT_USER:
                 json = insertNewUser(request);
                 break;
-            case Config.HoloLens.JSON_REQUEST_TYPE_LAST_KNOWN:
+            case Communication.JSON_REQUEST_TYPE_LAST_KNOWN:
                 json = fetchAndSendLastKnownRides(request);
                 break;
             default:
@@ -139,14 +139,14 @@ public class TCPListenerThread extends Thread {
             JSONArray users = new JSONArray();
             for(Structs.User user : usersList) {
                 JSONObject jsonUser = new JSONObject();
-                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME, user.userName);
-                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE, user.userAge);
-                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER, user.userGender);
-                jsonUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, user.userAvatar);
+                jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_NAME, user.userName);
+                jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_AGE, user.userAge);
+                jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_GENDER, user.userGender);
+                jsonUser.put(Communication.JSON_REQUEST_RETURN_VALUES_AVATAR, user.userAvatar);
                 users.put(jsonUser);
             }
-            jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_USER);
-            jsonResponse.put(Config.HoloLens.JSON_USERS, users);
+            jsonResponse.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_USER);
+            jsonResponse.put(Communication.JSON_USERS, users);
         } catch (JSONException ex) {
             Broadcasts.sendWriteToUIBroadcast(context, FETCH_USERS_ERROR);
         }
@@ -164,10 +164,10 @@ public class TCPListenerThread extends Thread {
         try {
             SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
             ContentValues user = new ContentValues();
-            user.put(DatabaseContract.Users.USER_NAME, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME));
-            user.put(DatabaseContract.Users.USER_AGE, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE));
-            user.put(DatabaseContract.Users.USER_GENDER, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER));
-            user.put(DatabaseContract.Users.USER_AVATAR, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR));
+            user.put(DatabaseContract.Users.USER_NAME, request.getString(Communication.JSON_REQUEST_RETURN_VALUES_NAME));
+            user.put(DatabaseContract.Users.USER_AGE, request.getInt(Communication.JSON_REQUEST_RETURN_VALUES_AGE));
+            user.put(DatabaseContract.Users.USER_GENDER, request.getString(Communication.JSON_REQUEST_RETURN_VALUES_GENDER));
+            user.put(DatabaseContract.Users.USER_AVATAR, request.getInt(Communication.JSON_REQUEST_RETURN_VALUES_AVATAR));
             status = db.insert(DatabaseContract.Users.TABLE_NAME, null, user) != -1;
         } catch(JSONException e) {
             status = false;
@@ -175,14 +175,14 @@ public class TCPListenerThread extends Thread {
             jsonResponse = new JSONObject();
             try {
                 JSONObject newUser = new JSONObject();
-                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_NAME));
-                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AGE));
-                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER, request.getString(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_GENDER));
-                newUser.put(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR, request.getInt(Config.HoloLens.JSON_REQUEST_RETURN_VALUES_AVATAR));
+                newUser.put(Communication.JSON_REQUEST_RETURN_VALUES_NAME, request.getString(Communication.JSON_REQUEST_RETURN_VALUES_NAME));
+                newUser.put(Communication.JSON_REQUEST_RETURN_VALUES_AGE, request.getInt(Communication.JSON_REQUEST_RETURN_VALUES_AGE));
+                newUser.put(Communication.JSON_REQUEST_RETURN_VALUES_GENDER, request.getString(Communication.JSON_REQUEST_RETURN_VALUES_GENDER));
+                newUser.put(Communication.JSON_REQUEST_RETURN_VALUES_AVATAR, request.getInt(Communication.JSON_REQUEST_RETURN_VALUES_AVATAR));
 
-                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER);
-                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE_PARAM_NEW_USER, newUser);
-                jsonResponse.put(Config.HoloLens.JSON_RETURN_STATUS, status);
+                jsonResponse.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_NEW_USER);
+                jsonResponse.put(Communication.JSON_REQUEST_TYPE_PARAM_NEW_USER, newUser);
+                jsonResponse.put(Communication.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 if(!status) {
                     Broadcasts.sendWriteToUIBroadcast(context, INSERT_USER_ERROR);
@@ -204,21 +204,21 @@ public class TCPListenerThread extends Thread {
         List<String> rides = new ArrayList<>();
         JSONObject jsonResponse;
         try {
-            String userId = request.getString(Config.HoloLens.JSON_REQUEST_ID);
+            String userId = request.getString(Communication.JSON_REQUEST_ID);
             rides = getUserLastKnownRides(userId);
             if(rides.isEmpty()) {
-                status = Config.HoloLens.JSON_LAST_KNOWN_EMPTY_RESULT;
+                status = Communication.JSON_LAST_KNOWN_EMPTY_RESULT;
             } else {
-                status = Config.HoloLens.JSON_LAST_KNOWN_SUCCESS;
+                status = Communication.JSON_LAST_KNOWN_SUCCESS;
             }
         } catch (JSONException e) {
-            status = Config.HoloLens.JSON_LAST_KNOWN_ERROR_MESSAGE;
+            status = Communication.JSON_LAST_KNOWN_ERROR_MESSAGE;
         } finally {
             jsonResponse = new JSONObject();
             try {
-                jsonResponse.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_RIDES);
-                jsonResponse.put(Config.HoloLens.JSON_RIDES, new JSONArray(rides));
-                jsonResponse.put(Config.HoloLens.JSON_RETURN_STATUS, status);
+                jsonResponse.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_RIDES);
+                jsonResponse.put(Communication.JSON_RIDES, new JSONArray(rides));
+                jsonResponse.put(Communication.JSON_RETURN_STATUS, status);
             } catch (JSONException ex) {
                 Broadcasts.sendWriteToUIBroadcast(context, FETCH_RIDES_ERROR);
             }
@@ -295,7 +295,7 @@ public class TCPListenerThread extends Thread {
             if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 
             InetAddress ipAddress = InetAddress.getByName(ipString);
-            Socket socket = new Socket(ipAddress, Config.HoloLens.HOLOLENS_PORT);
+            Socket socket = new Socket(ipAddress, Communication.HOLOLENS_PORT);
             DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
             outToServer.write(message.getBytes("UTF-8"));
             outToServer.flush();

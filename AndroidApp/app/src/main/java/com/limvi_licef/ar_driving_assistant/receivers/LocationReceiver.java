@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
+import com.limvi_licef.ar_driving_assistant.config.Communication;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
@@ -19,7 +21,6 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
 
@@ -39,9 +40,9 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     public void register(Context context, Handler handler) {
         isRegistered = true;
         runnable = new ComputeSpeedRunnable(handler, context);
-        handler.postDelayed(runnable, Config.SensorDataCollection.SHORT_DELAY);
+        handler.postDelayed(runnable, SensorDataCollection.SHORT_DELAY);
         rewriteRunnable = new RewriteSpeedRunnable(handler, context);
-        handler.postDelayed(rewriteRunnable, Config.SensorDataCollection.LONG_DELAY);
+        handler.postDelayed(rewriteRunnable, SensorDataCollection.LONG_DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
@@ -62,7 +63,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Location Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         //fetch most recent location
         Cursor location = context.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, "timestamp DESC LIMIT 1");
@@ -103,8 +104,8 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
     private void updateSpeedCounter(Context context, double speed){
         JSONObject json = new JSONObject();
         try {
-            json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_SPEED);
-            json.put("speedText", speed + Config.HoloLens.JSON_SPEED_UNITS);
+            json.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_SPEED);
+            json.put("speedText", speed + Communication.JSON_SPEED_UNITS);
         } catch (JSONException e) {
             Log.d("Location Receiver", "JSON Initialization Failure");
         }

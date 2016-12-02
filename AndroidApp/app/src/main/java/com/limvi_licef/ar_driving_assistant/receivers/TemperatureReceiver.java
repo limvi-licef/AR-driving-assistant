@@ -11,10 +11,10 @@ import android.util.Log;
 
 import com.aware.plugin.openweather.Plugin;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public class TemperatureReceiver extends BroadcastReceiver implements SensorReceiver {
@@ -45,7 +45,7 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Temperature Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         ContentValues values = (ContentValues) intent.getExtras().get(Plugin.EXTRA_OPENWEATHER);
         if(values == null || values.size() == 0) return;

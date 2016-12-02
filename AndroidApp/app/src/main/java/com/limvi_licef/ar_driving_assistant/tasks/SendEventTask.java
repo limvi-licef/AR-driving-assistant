@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +34,9 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... urls) {
         JSONObject json = new JSONObject();
         try {
-            json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_EVENT);
-            json.put(Config.HoloLens.JSON_EVENT_TYPE, eventType);
-            json.put(Config.HoloLens.JSON_EVENT_MESSAGE, message);
+            json.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_EVENT);
+            json.put(Communication.JSON_EVENT_TYPE, eventType);
+            json.put(Communication.JSON_EVENT_MESSAGE, message);
         } catch (JSONException e) {
             return context.getResources().getString(R.string.send_event_task_failure);
         }

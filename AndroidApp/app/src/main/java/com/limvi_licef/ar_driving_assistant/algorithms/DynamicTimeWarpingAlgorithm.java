@@ -9,11 +9,12 @@ import com.fastdtw.dtw.FastDTW;
 import com.fastdtw.timeseries.TimeSeries;
 import com.fastdtw.util.Distances;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.Communication;
+import com.limvi_licef.ar_driving_assistant.config.DynamicTimeWarping;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
@@ -98,7 +99,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
 
         //Find Euclidean distance between each time series
         if(segmentTS.size() != 0){
-            distance = FastDTW.compare(eventTS, segmentTS, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            distance = FastDTW.compare(eventTS, segmentTS, DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
             saveResults(event, start, stop, distance, sensor.getDistanceColumn());
         }
 
@@ -122,7 +123,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             start = (long)segmentTS.getTimeAtNthPoint(0);
             stop = (long)segmentTS.getTimeAtNthPoint(segmentTS.size()-1);
 
-            distance = FastDTW.compare(eventTS, segmentTS, Config.DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
+            distance = FastDTW.compare(eventTS, segmentTS, DynamicTimeWarping.SEARCH_RADIUS, Distances.EUCLIDEAN_DISTANCE).getDistance();
             saveResults(event, start, stop, distance, sensor.getDistanceColumn());
 
             //Match is considered found if within particular distance
@@ -173,9 +174,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         String status;
         JSONObject json = new JSONObject();
         try {
-            json.put(Config.HoloLens.JSON_REQUEST_TYPE, Config.HoloLens.JSON_REQUEST_TYPE_PARAM_EVENT);
-            json.put(Config.HoloLens.JSON_EVENT_TYPE, e.type.name());
-            json.put(Config.HoloLens.JSON_EVENT_MESSAGE, e.message);
+            json.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_EVENT);
+            json.put(Communication.JSON_EVENT_TYPE, e.type.name());
+            json.put(Communication.JSON_EVENT_MESSAGE, e.message);
             status = TCPListenerThread.sendJson(context, json);
         } catch (JSONException ex) {
             status = context.getResources().getString(R.string.send_event_task_failure);
@@ -240,7 +241,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         public String getTableName() { return DatabaseContract.LinearAccelerometerData.TABLE_NAME; }
         public String[] getColumns() { return new String[]{DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z}; }
         public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_ACCELERATION; }
-        public double getDistanceCutoff() { return Config.DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF; }
+        public double getDistanceCutoff() { return DynamicTimeWarping.ACCELERATION_DISTANCE_CUTOFF; }
     }
 
     public final class RotationSensor implements SensorType {
@@ -248,7 +249,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         public String getTableName() { return DatabaseContract.RotationData.TABLE_NAME; }
         public String[] getColumns() { return new String[]{DatabaseContract.RotationData.AZIMUTH}; }
         public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_ROTATION; }
-        public double getDistanceCutoff() { return Config.DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF; }
+        public double getDistanceCutoff() { return DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF; }
     }
 
     public final class SpeedSensor implements SensorType {
@@ -256,6 +257,6 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         public String getTableName() { return DatabaseContract.SpeedData.TABLE_NAME; }
         public String[] getColumns() { return new String[]{DatabaseContract.SpeedData.SPEED}; }
         public String getDistanceColumn() { return DatabaseContract.ResultsDTW.DISTANCE_SPEED; }
-        public double getDistanceCutoff() { return Config.DynamicTimeWarping.SPEED_DISTANCE_CUTOFF; }
+        public double getDistanceCutoff() { return DynamicTimeWarping.SPEED_DISTANCE_CUTOFF; }
     }
 }

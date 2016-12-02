@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.AwareSettings;
 import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDTWDialogFragment;
@@ -37,7 +38,6 @@ import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
@@ -236,16 +236,16 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
      * Set aware preferences for sensors using Config settings
      */
     private void setupSensors(){
-        Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_ENABLED);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, Config.AwareSettings.ACCELEROMETER_FREQUENCY);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, AwareSettings.ACCELEROMETER_ENABLED);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, AwareSettings.ACCELEROMETER_FREQUENCY);
 
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, Config.AwareSettings.LOCATION_NETWORK_ENABLED);
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, Config.AwareSettings.LOCATION_FREQUENCY);
-        Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, Config.AwareSettings.LOCATION_MIN_GPS_ACCURACY);
-        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, Config.AwareSettings.LOCATION_EXPIRATION_TIME);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, AwareSettings.LOCATION_NETWORK_ENABLED);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, AwareSettings.LOCATION_FREQUENCY);
+        Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, AwareSettings.LOCATION_MIN_GPS_ACCURACY);
+        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, AwareSettings.LOCATION_EXPIRATION_TIME);
 
-        Aware.setSetting(this, com.aware.plugin.openweather.Settings.STATUS_PLUGIN_OPENWEATHER, Config.AwareSettings.OPENWEATHER_ENABLED, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
-        Aware.setSetting(this, com.aware.plugin.openweather.Settings.PLUGIN_OPENWEATHER_FREQUENCY, Config.AwareSettings.OPENWEATHER_FREQUENCY, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
+        Aware.setSetting(this, com.aware.plugin.openweather.Settings.STATUS_PLUGIN_OPENWEATHER, AwareSettings.OPENWEATHER_ENABLED, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
+        Aware.setSetting(this, com.aware.plugin.openweather.Settings.PLUGIN_OPENWEATHER_FREQUENCY, AwareSettings.OPENWEATHER_FREQUENCY, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
         Aware.setSetting(this, com.aware.plugin.openweather.Settings.OPENWEATHER_API_KEY, getResources().getString(R.string.openweather), com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
@@ -311,7 +311,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
      * Start monitoring of sensors
      */
     private void startMonitoring() {
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, Config.AwareSettings.LOCATION_GPS_ENABLED);
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, AwareSettings.LOCATION_GPS_ENABLED);
         this.startService(new Intent(this, Aware.class));
         registerListeners();
         Aware.startLocations(this);

@@ -12,14 +12,20 @@ public final class Broadcasts {
 
     private Broadcasts(){}
 
-   /*
-    * Send local broadcast with message to write to Main Activity monitoring textview
-    */
+    /**
+     * Send local broadcast with message to write to Main Activity monitoring textview
+     * @param context
+     * @param message the message to write to the UI
+     */
     public static void sendWriteToUIBroadcast(Context context, String message) {
         Intent localIntent = new Intent(ACTION_WRITE_TO_UI).putExtra(WRITE_MESSAGE, message);
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
     }
 
+    /**
+     * Send local broadcast to indicate that the DTW algorithm launched
+     * @param context
+     */
     public static void sendStartDTWBroadcast(Context context) {
         Intent localIntent = new Intent(ACTION_START_DTW);
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);

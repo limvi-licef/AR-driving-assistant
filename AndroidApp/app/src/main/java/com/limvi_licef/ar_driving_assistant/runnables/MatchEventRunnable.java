@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.limvi_licef.ar_driving_assistant.algorithms.DynamicTimeWarpingAlgorithm;
 import com.limvi_licef.ar_driving_assistant.algorithms.EventAlgorithm;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.utils.Events;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ public class MatchEventRunnable implements Runnable {
     public MatchEventRunnable (Context context) {
         this.context = context;
         this.endTimestamp = System.currentTimeMillis();
-        this.startTimestamp = endTimestamp - Config.SensorDataCollection.SHORT_DELAY;
+        this.startTimestamp = endTimestamp - SensorDataCollection.SHORT_DELAY;
     }
 
     /**
-     * Run the latest batch of sensor data for each TrainingEvent and for each algorithm
+     * Run the latest batch of sensor data for each TrainingEvent and for each EventAlgorithm
      */
     @Override
     public void run() {

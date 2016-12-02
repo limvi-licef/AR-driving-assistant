@@ -7,9 +7,9 @@ import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
@@ -35,17 +35,17 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
     public void run() {
         String userId = Preferences.getCurrentUserId(context);
         long now = System.currentTimeMillis();
-        long nowMinusMinutes = now - Config.SensorDataCollection.LONG_DELAY;
+        long nowMinusMinutes = now - SensorDataCollection.LONG_DELAY;
 
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_X);
         List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData dataAxisX = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData dataAxisX = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Y);
         newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData dataAxisY = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData dataAxisY = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
         setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Z);
         newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData dataAxisZ = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData dataAxisZ = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -69,7 +69,7 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
             db.endTransaction();
 
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
-            handler.postDelayed(this, Config.SensorDataCollection.LONG_DELAY);
+            handler.postDelayed(this, SensorDataCollection.LONG_DELAY);
         }
     }
 

@@ -6,10 +6,9 @@ import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.tasks.MatchEventTask;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         //launch task once all runnables are finished running
         if(runnableCount == runnableDoneCount){
             runnableDoneCount = 0;
-//            new MatchEventTask(context, Config.SensorDataCollection.SHORT_DELAY).execute();
             Broadcasts.sendStartDTWBroadcast(context);
         }
     }
@@ -69,7 +67,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
         //send accumulated data through algorithm
         List<Structs.TimestampedDouble> newData = getData();
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -90,7 +88,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
 
 //            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             isRunning = false;
-            handler.postDelayed(this, Config.SensorDataCollection.SHORT_DELAY);
+            handler.postDelayed(this, SensorDataCollection.SHORT_DELAY);
             notifyRunnableEnd();
         }
     }

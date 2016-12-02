@@ -14,12 +14,12 @@ import android.widget.Toast;
 import com.aware.LinearAccelerometer;
 import com.aware.providers.Linear_Accelerometer_Provider;
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.utils.Structs.TimestampedDouble;
@@ -43,13 +43,13 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
 
         //Create a runnable to handle each axis separately
         runnableAxisX = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_X);
-        handler.postDelayed(runnableAxisX, Config.SensorDataCollection.SHORT_DELAY);
+        handler.postDelayed(runnableAxisX, SensorDataCollection.SHORT_DELAY);
         runnableAxisY = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Y);
-        handler.postDelayed(runnableAxisY, Config.SensorDataCollection.SHORT_DELAY);
+        handler.postDelayed(runnableAxisY, SensorDataCollection.SHORT_DELAY);
         runnableAxisZ = new ComputeAccelerationRunnable(handler, context, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-        handler.postDelayed(runnableAxisZ, Config.SensorDataCollection.SHORT_DELAY);
+        handler.postDelayed(runnableAxisZ, SensorDataCollection.SHORT_DELAY);
         rewriteRunnable = new RewriteAccelerationRunnable(handler, context);
-        handler.postDelayed(rewriteRunnable, Config.SensorDataCollection.LONG_DELAY);
+        handler.postDelayed(rewriteRunnable, SensorDataCollection.LONG_DELAY);
         context.registerReceiver(this, broadcastFilter, null, handler);
     }
 
@@ -72,7 +72,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Linear Receiver", "Received intent");
-        if(System.currentTimeMillis() - previousTimestamp <= Config.SensorDataCollection.MINIMUM_DELAY) return;
+        if(System.currentTimeMillis() - previousTimestamp <= SensorDataCollection.MINIMUM_DELAY) return;
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;
 
@@ -87,7 +87,7 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
         axisZ -= offsetZ;
 
         //Round off timestamp avoid clutter
-        long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), Config.SensorDataCollection.ACCELERATION_PRECISION);
+        long roundedTimestamp = Statistics.roundOffTimestamp(values.getAsLong(Linear_Accelerometer_Provider.Linear_Accelerometer_Data.TIMESTAMP), SensorDataCollection.ACCELERATION_PRECISION);
 
         //Accumulate data
         runnableAxisX.accumulateData(new TimestampedDouble(roundedTimestamp, axisX));

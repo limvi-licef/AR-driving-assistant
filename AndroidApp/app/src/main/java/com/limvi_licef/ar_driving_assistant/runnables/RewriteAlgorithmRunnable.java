@@ -6,9 +6,9 @@ import android.os.Handler;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
+import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
-import com.limvi_licef.ar_driving_assistant.utils.Config;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Structs;
 
@@ -30,7 +30,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
     }
 
     /**
-     * Process the last Config.SensorDataCollection.LONG_DELAY minutes of data through the MonotoneSegmentation algorithm again
+     * Process the last SensorDataCollection.LONG_DELAY minutes of data through the MonotoneSegmentation algorithm again
      * and replace the old data with the newly processed data
      */
     @Override
@@ -38,11 +38,11 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         String userId = Preferences.getCurrentUserId(context);
         //set time period of rewrite
         long now = System.currentTimeMillis();
-        long nowMinusMinutes = now - Config.SensorDataCollection.LONG_DELAY;
+        long nowMinusMinutes = now - SensorDataCollection.LONG_DELAY;
 
         //fetch existing data
         List<Structs.TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, Config.SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Structs.SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
 
         try{
             db.beginTransaction();
@@ -62,7 +62,7 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
             db.endTransaction();
 
             Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
-            handler.postDelayed(this, Config.SensorDataCollection.LONG_DELAY);
+            handler.postDelayed(this, SensorDataCollection.LONG_DELAY);
         }
     }
 
