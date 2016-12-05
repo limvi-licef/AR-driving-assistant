@@ -18,7 +18,7 @@ import java.util.List;
 public class TimeSeriesExtended implements TimeSeries {
 
     private List<TimeSeriesItem> items;
-    private final int numDimensions;
+    private int numDimensions;
 
     public TimeSeriesExtended(List<TimeSeriesItem> items) {
         this.items = items;
@@ -35,7 +35,8 @@ public class TimeSeriesExtended implements TimeSeries {
         if(items.size() >= maxSize && items.size() > 0) {
             items.remove(0);
         }
-         items.add(new TimeSeriesItem(time, new TimeSeriesPoint(values)));
+        items.add(new TimeSeriesItem(time, new TimeSeriesPoint(values)));
+        this.numDimensions = items.get(0).getPoint().size();
     }
 
     public final static TimeSeriesExtended.Builder builder() {
