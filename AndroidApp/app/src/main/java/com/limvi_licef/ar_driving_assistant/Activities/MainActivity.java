@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     private ArrayAdapter<String> resultsAdapter;
 
     public ToggleButton trainToggle;
+    public ToggleButton monitoringToggle;
 
     private TCPListenerThread tcpListenerThread = null;
 
@@ -84,7 +85,9 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
     private final BroadcastReceiver dtwReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            dtwHandler.post(new MatchEventRunnable(MainActivity.this));
+            if (monitoringToggle.isChecked()) {
+                dtwHandler.post(new MatchEventRunnable(MainActivity.this));
+            }
         }};
 
     /**
@@ -141,6 +144,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
                     CreateTrainingEventDialogFragment trainingFragment = CreateTrainingEventDialogFragment.newInstance();
                     trainingFragment.show(getFragmentManager(), "trainingdialog");
                 } else {
+                    monitoringToggle.setChecked(false);
                     if(startTimestamp == 0) return;
 
                     //Save prematurely to have access to data to make sure enough data has been collected during this period
@@ -221,7 +225,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         trainToggle.setEnabled(false);
         trainToggle.setOnCheckedChangeListener(this);
 
-        ToggleButton monitoringToggle = (ToggleButton) findViewById(R.id.monitoring_button);
+        monitoringToggle = (ToggleButton) findViewById(R.id.monitoring_button);
         monitoringToggle.setOnCheckedChangeListener(this);
 
         //Listview to show broadcast messages in the UI
