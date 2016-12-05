@@ -7,12 +7,21 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fastdtw.timeseries.TimeSeries;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.algorithms.TimeSeriesExtended;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.models.Event;
+import com.limvi_licef.ar_driving_assistant.models.sensors.AccelerationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.RotationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.SensorType;
+import com.limvi_licef.ar_driving_assistant.models.sensors.SpeedSensor;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrainingTask extends AsyncTask<Void, Void, String> {
 
@@ -39,13 +48,16 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             Log.d("TrainingTask", "" + e.getMessage());
         }
 
-        try {
-            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME,
-                    DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH);
-            TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED);
-        } catch(IndexOutOfBoundsException e) {
-            return context.getResources().getString(R.string.training_task_no_data);
+        List<SensorType> list = new ArrayList<>();
+        list.add(new AccelerationSensor());
+        list.add(new RotationSensor());
+        list.add(new SpeedSensor());
+
+        for(SensorType sensor : list) {
+            TimeSeries temp = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
+            if(temp.size() == 0) {
+                return context.getResources().getString(R.string.training_task_no_data);
+            }
         }
 
         return saveNewEvent(event);
