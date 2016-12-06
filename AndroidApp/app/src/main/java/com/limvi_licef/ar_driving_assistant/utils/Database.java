@@ -7,6 +7,7 @@ import android.os.Environment;
 
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
+import com.limvi_licef.ar_driving_assistant.models.Event;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
 import java.util.ArrayList;
@@ -30,6 +31,37 @@ public final class Database {
         }
         c.close();
         return namesArray;
+    }
+
+    /**
+     * Fetches all TrainingEvents in the database
+     * @param context
+     * @return
+     */
+    public static List<Event> getAllEvents(Context context){
+        List<Event> events = new ArrayList<>();
+        Cursor eventCursor = DatabaseHelper.getHelper(context).getWritableDatabase().query(DatabaseContract.TrainingEvents.TABLE_NAME,
+                new String[]{DatabaseContract.TrainingEvents.START_TIMESTAMP,
+                        DatabaseContract.TrainingEvents.END_TIMESTAMP,
+                        DatabaseContract.TrainingEvents.DURATION,
+                        DatabaseContract.TrainingEvents.LABEL,
+                        DatabaseContract.TrainingEvents.TYPE,
+                        DatabaseContract.TrainingEvents.MESSAGE},
+                null, null, null, null, null);
+        int startTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.START_TIMESTAMP);
+        int endTimestampColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.END_TIMESTAMP);
+        int durationColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.DURATION);
+        int labelColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.LABEL);
+        int typeColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.TYPE);
+        int messageColumnIndex = eventCursor.getColumnIndexOrThrow(DatabaseContract.TrainingEvents.MESSAGE);
+
+        while (eventCursor.moveToNext()) {
+            events.add(new Event(eventCursor.getString(labelColumnIndex), eventCursor.getLong(startTimestampColumnIndex), eventCursor.getLong(endTimestampColumnIndex),
+                    eventCursor.getLong(durationColumnIndex), Event.EventTypes.valueOf(eventCursor.getString(typeColumnIndex)), eventCursor.getString(messageColumnIndex)));
+        }
+
+        eventCursor.close();
+        return events;
     }
 
     /**
@@ -64,4 +96,5 @@ public final class Database {
         cursor.close();
         return data;
     }
+
 }
