@@ -214,16 +214,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * Verify which sensor have been checked in the DTW dialog and enable them for the algorithm
      */
     private void enableCheckedSensors() {
-        SharedPreferences settings = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if( settings.getBoolean(AccelerationSensor.class.getSimpleName(), false) ) {
-            sensors.add(new AccelerationSensor());
-        }
-        if( settings.getBoolean(RotationSensor.class.getSimpleName(), false) ) {
-            sensors.add(new RotationSensor());
-        }
-        if( settings.getBoolean(SpeedSensor.class.getSimpleName(), false) ) {
-            sensors.add(new SpeedSensor());
-        }
+        sensors = Preferences.getEnabledSensors(context);
         for(SensorType sensor : sensors) {
             matches.put(sensor.getType(), new ArrayList<TimestampTuple>());
         }

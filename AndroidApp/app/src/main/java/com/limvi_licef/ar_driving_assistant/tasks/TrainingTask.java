@@ -2,6 +2,7 @@ package com.limvi_licef.ar_driving_assistant.tasks;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -48,12 +49,8 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             Log.d("TrainingTask", "" + e.getMessage());
         }
 
-        List<SensorType> list = new ArrayList<>();
-        list.add(new AccelerationSensor());
-        list.add(new RotationSensor());
-        list.add(new SpeedSensor());
-
-        for(SensorType sensor : list) {
+        //Verify that the event has data associated with each enabled sensors
+        for(SensorType sensor : Preferences.getEnabledSensors(context)) {
             TimeSeries temp = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
             if(temp.size() == 0) {
                 return context.getResources().getString(R.string.training_task_no_data);

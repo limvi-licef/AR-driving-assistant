@@ -2,6 +2,15 @@ package com.limvi_licef.ar_driving_assistant.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+
+import com.limvi_licef.ar_driving_assistant.models.sensors.AccelerationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.RotationSensor;
+import com.limvi_licef.ar_driving_assistant.models.sensors.SensorType;
+import com.limvi_licef.ar_driving_assistant.models.sensors.SpeedSensor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Preferences {
 
@@ -29,6 +38,21 @@ public final class Preferences {
     public static String getIPAddress(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         return prefs.getString(IP_ADDRESS_PREFERENCE, null);
+    }
+
+    public static List<SensorType> getEnabledSensors(Context context) {
+        List<SensorType> sensors = new ArrayList<>();
+        SharedPreferences settings = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if( settings.getBoolean(AccelerationSensor.class.getSimpleName(), false) ) {
+            sensors.add(new AccelerationSensor());
+        }
+        if( settings.getBoolean(RotationSensor.class.getSimpleName(), false) ) {
+            sensors.add(new RotationSensor());
+        }
+        if( settings.getBoolean(SpeedSensor.class.getSimpleName(), false) ) {
+            sensors.add(new SpeedSensor());
+        }
+        return sensors;
     }
 
     /*
