@@ -24,7 +24,8 @@ import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.config.AwareSettings;
 import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogFragment;
-import com.limvi_licef.ar_driving_assistant.fragments.DeleteEventsDialogFragment;
+import com.limvi_licef.ar_driving_assistant.fragments.DeleteEventDialogFragment;
+import com.limvi_licef.ar_driving_assistant.fragments.ListEventsDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDTWDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
@@ -117,9 +118,9 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
                 SetupDTWDialogFragment dtwFragment = SetupDTWDialogFragment.newInstance();
                 dtwFragment.show(getSupportFragmentManager(), "dtwdialog");
                 break;
-            case R.id.delete_events_button :
-                DeleteEventsDialogFragment deleteFragment = DeleteEventsDialogFragment.newInstance();
-                deleteFragment.show(getSupportFragmentManager(), "deletedialog");
+            case R.id.list_events_button:
+                ListEventsDialogFragment deleteFragment = ListEventsDialogFragment.newInstance();
+                deleteFragment.show(getSupportFragmentManager(), "listeventsdialog");
                 break;
         }
     }
@@ -198,6 +199,25 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     }
 
     /**
+     * Method used to show a DeleteEventDialogFragment
+     * Used to switch to DeleteEventDialogFragment from inside a ListEventsDialogFragment
+     * @param item
+     */
+    public void showDeleteEventDialog(String item){
+        DeleteEventDialogFragment newFragment = DeleteEventDialogFragment.newInstance(item);
+        newFragment.show(getSupportFragmentManager(), "deleteeventdialog");
+    }
+
+    /**
+     * Method to show a ListEventsDialogFragment
+     * Used to switch to ListEventsDialogFragment from inside a DeleteEventDialogFragment
+     */
+    public void showListEventDialog() {
+        ListEventsDialogFragment newFragment = ListEventsDialogFragment.newInstance();
+        newFragment.show(getSupportFragmentManager(), "listeventsdialog");
+    }
+
+    /**
      * Sets the data necessary to create a new TrainingEvent
      * Used by CreateTrainingEventDialogFragment to return data
      * @param timestamp event start timestamp
@@ -226,7 +246,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         sendEvent.setOnClickListener(this);
         Button dtw = (Button) findViewById(R.id.setup_dtw_button);
         dtw.setOnClickListener(this);
-        Button deleteEvents = (Button) findViewById(R.id.delete_events_button);
+        Button deleteEvents = (Button) findViewById(R.id.list_events_button);
         deleteEvents.setOnClickListener(this);
 
         trainToggle = (ToggleButton) findViewById(R.id.train_button);
