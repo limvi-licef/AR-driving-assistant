@@ -59,6 +59,12 @@
             android:layout_height="match_parent"
             android:text="@string/setup_dtw_button" />
 
+        <Button
+            android:id="@+id/delete_events_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/delete_events_button" />
+
         <ToggleButton
             android:id="@+id/train_button"
             android:layout_width="match_parent"

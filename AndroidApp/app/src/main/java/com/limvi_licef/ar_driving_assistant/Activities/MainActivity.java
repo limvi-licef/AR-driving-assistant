@@ -25,6 +25,7 @@ import com.aware.Aware_Preferences;
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.config.AwareSettings;
 import com.limvi_licef.ar_driving_assistant.fragments.CreateTrainingEventDialogFragment;
+import com.limvi_licef.ar_driving_assistant.fragments.DeleteEventsDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SendEventDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDTWDialogFragment;
 import com.limvi_licef.ar_driving_assistant.fragments.SetupDialogFragment;
@@ -116,6 +117,10 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
             case R.id.setup_dtw_button :
                 SetupDTWDialogFragment dtwFragment = SetupDTWDialogFragment.newInstance();
                 dtwFragment.show(getSupportFragmentManager(), "dtwdialog");
+                break;
+            case R.id.delete_events_button :
+                DeleteEventsDialogFragment deleteFragment = DeleteEventsDialogFragment.newInstance();
+                deleteFragment.show(getSupportFragmentManager(), "deletedialog");
                 break;
         }
     }
@@ -221,6 +226,8 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         sendEvent.setOnClickListener(this);
         Button dtw = (Button) findViewById(R.id.setup_dtw_button);
         dtw.setOnClickListener(this);
+        Button deleteEvents = (Button) findViewById(R.id.delete_events_button);
+        deleteEvents.setOnClickListener(this);
 
         trainToggle = (ToggleButton) findViewById(R.id.train_button);
         trainToggle.setEnabled(false);

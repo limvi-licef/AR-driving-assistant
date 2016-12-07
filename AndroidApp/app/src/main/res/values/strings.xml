@@ -56,4 +56,12 @@
     <string name="match_event_task_match_found">Match found : </string>
 
     <string name="setup_dtw_button">DTW</string>
+
+    <string name="delete_events_button">Manage Events</string>
+    <string name="list_events_dialog_title">Training Events</string>
+    <string name="list_events_dialog_dismiss">Close</string>
+    <string name="list_events_inner_dialog_title">Delete %1$s?</string>
+    <string name="list_events_delete_button">Delete</string>
+    <string name="list_events_delete_all_button">Delete all events</string>
+    <string name="list_events_empty">No events found</string>
 </resources>
