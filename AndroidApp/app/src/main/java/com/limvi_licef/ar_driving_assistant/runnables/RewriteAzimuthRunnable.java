@@ -20,19 +20,19 @@ public class RewriteAzimuthRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId) {
+    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId, String column) {
         for(TimestampedDouble td : processedData) {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.RotationData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.RotationData.TIMESTAMP, td.timestamp);
-            values.put(DatabaseContract.RotationData.AZIMUTH, td.value);
+            values.put(column, td.value);
             db.insert(DatabaseContract.RotationData.TABLE_NAME, null, values);
         }
     }
 
     @Override
-    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
-        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.RotationData.TABLE_NAME, DatabaseContract.RotationData.AZIMUTH, context);
+    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String column) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.RotationData.TABLE_NAME, column, context);
     }
 
     @Override
@@ -43,5 +43,10 @@ public class RewriteAzimuthRunnable extends RewriteAlgorithmRunnable {
     @Override
     protected String getTableName(){
         return DatabaseContract.RotationData.TABLE_NAME;
+    }
+
+    @Override
+    protected String[] getColumns() {
+        return new String[]{DatabaseContract.RotationData.AZIMUTH};
     }
 }

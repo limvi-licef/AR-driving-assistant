@@ -5,16 +5,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 
-import com.limvi_licef.ar_driving_assistant.R;
-import com.limvi_licef.ar_driving_assistant.algorithms.MonotoneSegmentationAlgorithm;
-import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.models.ExtremaStats;
-import com.limvi_licef.ar_driving_assistant.models.SegmentationAlgorithmReturnData;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
-import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 import java.util.List;
 
@@ -22,61 +16,13 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
 
     private static final String WHERE_CLAUSE = DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID + " = ? AND " + DatabaseContract.LinearAccelerometerData.TIMESTAMP + " BETWEEN ? AND ?";
     private static final String WHERE_CLAUSE_STATS = DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID + " = ? AND " + DatabaseContract.LinearAccelerometerStats.AXIS_NAME + " = ? AND " + DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP + " >= ? AND " + DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP + " <= ?";
-    private String currentAxis;
 
     public RewriteAccelerationRunnable(Handler handler, Context context) {
         super(handler, context);
     }
 
-    //TODO REFACTOR RewriteAlgorithm instead of overriding run() here and using setCurrentAxis
-    /**
-     * Override RewriteAlgorithmRunnable's run method in order to sync the three axes together,
-     * especially in case of insert and delete error on a single axis
-     */
     @Override
-    public void run() {
-        String userId = Preferences.getCurrentUserId(context);
-        long now = System.currentTimeMillis();
-        long nowMinusMinutes = now - SensorDataCollection.LONG_DELAY;
-
-        setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_X);
-        List<TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        SegmentationAlgorithmReturnData dataAxisX = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
-        setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Y);
-        newData = getData(nowMinusMinutes, now);
-        SegmentationAlgorithmReturnData dataAxisY = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
-        setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Z);
-        newData = getData(nowMinusMinutes, now);
-        SegmentationAlgorithmReturnData dataAxisZ = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
-
-        try{
-            db.beginTransaction();
-            deleteData(nowMinusMinutes, now, userId);
-            setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_X);
-            saveData(dataAxisX.monotoneValues, dataAxisX.extremaStats, userId);
-            setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Y);
-            saveData(dataAxisY.monotoneValues, dataAxisY.extremaStats, userId);
-            setCurrentAxis(DatabaseContract.LinearAccelerometerData.AXIS_Z);
-            saveData(dataAxisZ.monotoneValues, dataAxisZ.extremaStats, userId);
-            db.setTransactionSuccessful();
-            insertionStatus = getTableName() + " " + context.getResources().getString(R.string.database_rewrite_success);
-        }
-        catch (IndexOutOfBoundsException e) {
-            insertionStatus = getTableName() + " " + context.getResources().getString(R.string.database_rewrite_empty_data);
-        }
-        catch (Exception e) {
-            insertionStatus = getTableName() + " " + context.getResources().getString(R.string.database_rewrite_failure) + " " + e;
-        }
-        finally{
-            db.endTransaction();
-
-            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
-            handler.postDelayed(this, SensorDataCollection.LONG_DELAY);
-        }
-    }
-
-    @Override
-    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId) {
+    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId, String column) {
         long firstTimestamp = processedData.get(0).timestamp;
         long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
@@ -84,7 +30,7 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.LinearAccelerometerData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.LinearAccelerometerData.TIMESTAMP, td.timestamp);
-            values.put(getCurrentAxis(), td.value);
+            values.put(column, td.value);
 
             //Create new row if none exist for this timestamp
             int id = (int) db.insertWithOnConflict(DatabaseContract.LinearAccelerometerData.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
@@ -96,7 +42,7 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
 
         ContentValues stats = new ContentValues();
         stats.put(DatabaseContract.LinearAccelerometerStats.CURRENT_USER_ID, userId);
-        stats.put(DatabaseContract.LinearAccelerometerStats.AXIS_NAME, getCurrentAxis());
+        stats.put(DatabaseContract.LinearAccelerometerStats.AXIS_NAME, column);
         stats.put(DatabaseContract.LinearAccelerometerStats.START_TIMESTAMP, firstTimestamp);
         stats.put(DatabaseContract.LinearAccelerometerStats.END_TIMESTAMP, lastTimestamp);
         stats.put(DatabaseContract.LinearAccelerometerStats.ACCEL_AVERAGE, extremaStats.positiveAverage);
@@ -109,8 +55,8 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
-        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, getCurrentAxis(), context);
+    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String column) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.LinearAccelerometerData.TABLE_NAME, column, context);
     }
 
     @Override
@@ -126,19 +72,9 @@ public class RewriteAccelerationRunnable extends RewriteAlgorithmRunnable {
         return DatabaseContract.LinearAccelerometerData.TABLE_NAME;
     }
 
-    /**
-     * Set the axis to be processed
-     * @param currentAxis the axis to be processed
-     */
-    private void setCurrentAxis(String currentAxis){
-        this.currentAxis = currentAxis;
+    @Override
+    protected String[] getColumns() {
+        return new String[]{DatabaseContract.LinearAccelerometerData.AXIS_X, DatabaseContract.LinearAccelerometerData.AXIS_Y, DatabaseContract.LinearAccelerometerData.AXIS_Z};
     }
 
-    /**
-     * Get the axis currently being processed
-     * @return the axis name
-     */
-    private String getCurrentAxis(){
-        return currentAxis;
-    }
 }

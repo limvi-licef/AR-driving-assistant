@@ -14,7 +14,9 @@ import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Long-running runnable that periodically (10 mins) fetches and rewrites the previous data
@@ -42,15 +44,23 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
         long now = System.currentTimeMillis();
         long nowMinusMinutes = now - SensorDataCollection.LONG_DELAY;
 
-        //fetch existing data
-        List<TimestampedDouble> newData = getData(nowMinusMinutes, now);
-        SegmentationAlgorithmReturnData returnData = MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE);
+        Map<String,SegmentationAlgorithmReturnData> dataList = new HashMap<>();
+        for(String column : getColumns()) {
+            List<TimestampedDouble> newData = getData(nowMinusMinutes, now, column);
+            dataList.put(column, MonotoneSegmentationAlgorithm.computeData(newData, SensorDataCollection.MONOTONE_SEGMENTATION_TOLERANCE));
+        }
 
         try{
             db.beginTransaction();
+
             //deletes previous data and save new data inside a transaction in case of error
             deleteData(nowMinusMinutes, now, userId);
-            saveData(returnData.monotoneValues, returnData.extremaStats, userId);
+
+            //save each column data
+            for(Map.Entry<String, SegmentationAlgorithmReturnData> entry : dataList.entrySet()){
+                saveData(entry.getValue().monotoneValues, entry.getValue().extremaStats, userId, entry.getKey());
+            }
+
             db.setTransactionSuccessful();
             insertionStatus = getTableName() + " " + context.getResources().getString(R.string.database_rewrite_success);
         }
@@ -73,16 +83,18 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
      * @param processedData the processed data to save
      * @param extremaStats the associated stats to save
      * @param userId the userId associated with the data
+     * @param column the table column to save data to
      */
-    protected abstract void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId);
+    protected abstract void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId, String column);
 
     /**
      * Fetches all data found during given time period
      * @param fromTimestamp timestamp from which to fetch data
      * @param toTimestamp timestamp to which to fetch data
+     * @param column the table column to get data from
      * @return list of TimestampedDouble found in database
      */
-    protected abstract List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp);
+    protected abstract List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String column);
 
     /**
      * Delete data from the database associated with the userId
@@ -97,4 +109,10 @@ public abstract class RewriteAlgorithmRunnable implements Runnable {
      * @return the table name
      */
     protected abstract String getTableName();
+
+    /**
+     * Get the table columns associated with the runnable
+     * @return the table columns to be processed
+     */
+    protected abstract String[] getColumns();
 }

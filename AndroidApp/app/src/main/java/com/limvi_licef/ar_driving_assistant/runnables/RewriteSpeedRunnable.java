@@ -20,7 +20,7 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId) {
+    protected void saveData(List<TimestampedDouble> processedData, ExtremaStats extremaStats, String userId, String column) {
         long firstTimestamp = processedData.get(0).timestamp;
         long lastTimestamp = processedData.get(processedData.size()-1).timestamp;
 
@@ -28,7 +28,7 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
             ContentValues values = new ContentValues();
             values.put(DatabaseContract.SpeedData.CURRENT_USER_ID, userId);
             values.put(DatabaseContract.SpeedData.TIMESTAMP, td.timestamp);
-            values.put(DatabaseContract.SpeedData.SPEED, td.value);
+            values.put(column, td.value);
             db.insert(DatabaseContract.SpeedData.TABLE_NAME, null, values);
         }
 
@@ -46,8 +46,8 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     }
 
     @Override
-    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp) {
-        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.SpeedData.TABLE_NAME, DatabaseContract.SpeedData.SPEED, context);
+    protected List<TimestampedDouble> getData(long fromTimestamp, long toTimestamp, String column) {
+        return Database.getSensorData(fromTimestamp, toTimestamp, DatabaseContract.SpeedData.TABLE_NAME, column, context);
     }
 
     @Override
@@ -61,5 +61,10 @@ public class RewriteSpeedRunnable extends RewriteAlgorithmRunnable {
     @Override
     protected String getTableName(){
         return DatabaseContract.SpeedData.TABLE_NAME;
+    }
+
+    @Override
+    protected String[] getColumns() {
+        return new String[]{DatabaseContract.SpeedData.SPEED};
     }
 }
