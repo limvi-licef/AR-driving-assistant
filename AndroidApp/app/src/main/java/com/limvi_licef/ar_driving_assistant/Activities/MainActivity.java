@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Process;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -42,7 +43,7 @@ import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements  View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends FragmentActivity implements  View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private HandlerThread sensorThread;
     private Handler sensorHandler;
@@ -100,7 +101,7 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
         switch (v.getId()) {
             case R.id.setup_button :
                 SetupDialogFragment setupFragment = SetupDialogFragment.newInstance();
-                setupFragment.show(getFragmentManager(), "setupdialog");
+                setupFragment.show(getSupportFragmentManager(), "setupdialog");
                 break;
             case R.id.check_database_button :
                 new ExportTask(MainActivity.this).execute();
@@ -110,11 +111,11 @@ public class MainActivity extends Activity implements  View.OnClickListener, Com
                 break;
             case R.id.send_event_button :
                 SendEventDialogFragment eventFragment = SendEventDialogFragment.newInstance();
-                eventFragment.show(getFragmentManager(), "eventdialog");
+                eventFragment.show(getSupportFragmentManager(), "eventdialog");
                 break;
             case R.id.setup_dtw_button :
                 SetupDTWDialogFragment dtwFragment = SetupDTWDialogFragment.newInstance();
-                dtwFragment.show(getFragmentManager(), "dtwdialog");
+                dtwFragment.show(getSupportFragmentManager(), "dtwdialog");
                 break;
         }
     }
