@@ -1,6 +1,5 @@
 package com.limvi_licef.ar_driving_assistant.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -171,13 +170,14 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         setupUIElements();
         setupSensors();
         setupListeners();
+        startAwareServices();
         tcpListenerThread = new TCPListenerThread(this);
         tcpListenerThread.start();
     }
 
     @Override
     protected void onDestroy() {
-        unregisterListeners();
+        stopAwareServices();
         stopListenerThreads();
         super.onDestroy();
         tcpListenerThread.kill();
@@ -251,6 +251,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         Aware.setSetting(this, Aware_Preferences.STATUS_LINEAR_ACCELEROMETER, AwareSettings.ACCELEROMETER_ENABLED);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LINEAR_ACCELEROMETER, AwareSettings.ACCELEROMETER_FREQUENCY);
 
+        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, AwareSettings.LOCATION_GPS_ENABLED);
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, AwareSettings.LOCATION_NETWORK_ENABLED);
         Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, AwareSettings.LOCATION_FREQUENCY);
         Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, AwareSettings.LOCATION_MIN_GPS_ACCURACY);
@@ -298,9 +299,9 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     }
 
     /**
-     * Register listeners to the listener thread and start recording data
+     * Start sensor data collecting listeners
      */
-    private void registerListeners(){
+    private void startMonitoring(){
         rotationReceiver.register(this, sensorHandler);
         linearAccelerometerReceiver.register(this, sensorHandler);
         locationReceiver.register(this, sensorHandler);
@@ -308,9 +309,9 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     }
 
     /**
-     * Unregister listeners from the listener thread and stop recording data
+     * Stop sensor data collecting listeners
      */
-    private void unregisterListeners(){
+    private void stopMonitoring(){
         rotationReceiver.unregister(this);
         linearAccelerometerReceiver.unregister(this);
         locationReceiver.unregister(this);
@@ -320,24 +321,22 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     }
 
     /**
-     * Start monitoring of sensors
+     * Start Aware framework services required for the sensors we want to monitor
      */
-    private void startMonitoring() {
-        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, AwareSettings.LOCATION_GPS_ENABLED);
+    private void startAwareServices() {
         this.startService(new Intent(this, Aware.class));
-        registerListeners();
         Aware.startLocations(this);
         Aware.startLinearAccelerometer(this);
         Aware.startPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
 
     /**
-     * Stop monitoring of sensors
+     * Stop Aware framework services required for the sensors we want to monitor
      */
-    private void stopMonitoring() {
+    private void stopAwareServices() {
         Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, false);
         this.stopService(new Intent(this, Aware.class));
-        unregisterListeners();
+        stopMonitoring();
         Aware.stopAWARE();
         Aware.stopPlugin(this, com.aware.plugin.openweather.BuildConfig.APPLICATION_ID);
     }
