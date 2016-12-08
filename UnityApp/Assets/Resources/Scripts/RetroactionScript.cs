@@ -43,7 +43,7 @@ public class RetroactionScript : MonoBehaviour {
     public void SetErrorText(string message)
     {
         SetDefaultText();
-        textZone.text = message;
+        textZone.text += message;
     }
 
     /// <summary>
