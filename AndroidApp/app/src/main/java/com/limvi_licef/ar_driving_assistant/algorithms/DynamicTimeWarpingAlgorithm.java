@@ -117,6 +117,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
                     values[j] = remaining.get(j).get(i).value;
                 }
             } catch (IndexOutOfBoundsException e) {
+                //break since at least one of the remaining columns is empty
                 break;
             }
 
