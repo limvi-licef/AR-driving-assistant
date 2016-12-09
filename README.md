@@ -1,12 +1,17 @@
 # AR-driving-assistant
 
-TODO: Project description
+AR-driving-assistant is a tool built by an intern in order to research the impact of Augmented Reality technologies on the driving patterns of senior citizens. The project consists of two apps meant to be working in tandem. 
+The first is used to display information to the driver. It is built using Unity and is configured to work with either a Microsoft HoloLens device or an Android phone.
+The second is an Android application used to collect data during driving and analyse it (currently with a delay of a minute). 
+Currently, four types of data are collected : linear acceleration, speed (in km/h), location and rotation (azimuth)
 
 ## Getting started
 
-TODO: Getting Started
+Follow these steps to deploy the app
 
 ### Prerequisites
+
+* An Android phone and either another Android phone or a Microsoft HoloLens
 
 * AndroidApp
   * Android Studio 2.2 or later
