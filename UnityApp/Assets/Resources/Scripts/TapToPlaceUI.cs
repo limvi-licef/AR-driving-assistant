@@ -9,26 +9,43 @@
 public class TapToPlaceUI : MonoBehaviour
 {
     public GameObject UIComponent;
+    public GameObject MovementButton;
 
     bool placing = false;
     float fixedAngle;
-    Vector3 colliderSize;
-    Vector3 placingColliderSize;
+    Vector3 defaultScale;
+    Vector3 placingScale;
     Vector3 targetPosition;
     Vector3 velocity = Vector3.zero;
 
-    void Start()
-    {
-        //Initialize a bigger collider to be used while placing ui to ensure the collider is always interactible no matter where the user places the ui
-        colliderSize = gameObject.GetComponent<BoxCollider>().size;
-        placingColliderSize = new Vector3(colliderSize.x * Config.HoloLensOnly.COLLIDER_SIZE_MULTIPLIER, colliderSize.y * Config.HoloLensOnly.COLLIDER_SIZE_MULTIPLIER, colliderSize.z);
-        //Lock the y axis so the hologram doesn't block the road while driving
-        fixedAngle = Camera.main.transform.forward.y;
-    }
-
-    void OnSelect()
+    /// <summary>
+    /// Toggles whether the UI is in placing mode or not
+    /// When toggled on, the UI will follow the user's gaze until a tap gesture is detected
+    /// </summary>
+    public void ToggleMovement()
     {
         placing = !placing;
+
+        /// When placing, make the button size large enough to cover the whole UI
+        /// Hack to ensure the tap gesture is detected no matter where the hologram is placed
+        if (placing)
+        {
+            MovementButton.transform.localScale = placingScale;
+        }
+        else
+        {
+            MovementButton.transform.localScale = defaultScale;
+        }
+    }
+
+    void Start()
+    {
+        // Save default button scale and define a bigger scale
+        defaultScale = MovementButton.transform.localScale;
+        placingScale = defaultScale * Config.HoloLensOnly.COLLIDER_SIZE_MULTIPLIER;
+
+        //Lock the y axis so the hologram doesn't block the road while driving
+        fixedAngle = Camera.main.transform.forward.y;
     }
 
     void Update()
@@ -39,13 +56,9 @@ public class TapToPlaceUI : MonoBehaviour
             transform.position = (Camera.main.transform.position + Camera.main.transform.forward * Config.HoloLensOnly.DISTANCE_TO_CAMERA);
             //Lock the UI to the center of the user's gaze
             fixedAngle = Camera.main.transform.forward.y;
-            //Use bigger collider size
-            gameObject.GetComponent<BoxCollider>().size = placingColliderSize;
         }
         else
         {
-            //Reset default collider size
-            gameObject.GetComponent<BoxCollider>().size = colliderSize;
             //Set the new relative position of the UI compared to the user
             targetPosition = new Vector3(Camera.main.transform.forward.x, fixedAngle, Camera.main.transform.forward.z) * Config.HoloLensOnly.DISTANCE_TO_CAMERA + Camera.main.transform.position;
 

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityApp.CSharp", "UnityApp.CSharp.csproj", "{F13BB18C-EB55-7CF3-89F8-D7CC07BE0226}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityApp", "UnityApp.csproj", "{29503793-AF0A-74FC-95FE-2A9BB510426E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityApp.CSharp.Editor", "UnityApp.CSharp.Editor.csproj", "{2D9C72AA-10E6-0384-38ED-20A2FDF1C2EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityApp.Editor", "UnityApp.Editor.csproj", "{C34FCB14-4CB8-067B-B42C-55E4EFBD9C20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F13BB18C-EB55-7CF3-89F8-D7CC07BE0226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F13BB18C-EB55-7CF3-89F8-D7CC07BE0226}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F13BB18C-EB55-7CF3-89F8-D7CC07BE0226}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F13BB18C-EB55-7CF3-89F8-D7CC07BE0226}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D9C72AA-10E6-0384-38ED-20A2FDF1C2EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D9C72AA-10E6-0384-38ED-20A2FDF1C2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D9C72AA-10E6-0384-38ED-20A2FDF1C2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D9C72AA-10E6-0384-38ED-20A2FDF1C2EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29503793-AF0A-74FC-95FE-2A9BB510426E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29503793-AF0A-74FC-95FE-2A9BB510426E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29503793-AF0A-74FC-95FE-2A9BB510426E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29503793-AF0A-74FC-95FE-2A9BB510426E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C34FCB14-4CB8-067B-B42C-55E4EFBD9C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C34FCB14-4CB8-067B-B42C-55E4EFBD9C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C34FCB14-4CB8-067B-B42C-55E4EFBD9C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C34FCB14-4CB8-067B-B42C-55E4EFBD9C20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

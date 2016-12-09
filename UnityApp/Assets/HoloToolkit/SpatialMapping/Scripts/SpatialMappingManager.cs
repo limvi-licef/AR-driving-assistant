@@ -51,8 +51,10 @@ namespace HoloToolkit.Unity
         public SpatialMappingSource Source { get; private set; }
 
         // Called when the GameObject is first created.
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             surfaceObserver = gameObject.GetComponent<SpatialMappingObserver>();
             Source = surfaceObserver;
         }
@@ -184,13 +186,15 @@ namespace HoloToolkit.Unity
         /// </summary>
         public void StartObserver()
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
+            // Allow observering if a device is present (Holographic Remoting)
+            if(!UnityEngine.VR.VRDevice.isPresent) return;
+#endif
             if (!IsObserverRunning())
             {
                 surfaceObserver.StartObserving();
                 StartTime = Time.time;
             }
-#endif
         }
 
         /// <summary>
@@ -198,12 +202,22 @@ namespace HoloToolkit.Unity
         /// </summary>
         public void StopObserver()
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
+            // Allow observering if a device is present (Holographic Remoting)
+            if(!UnityEngine.VR.VRDevice.isPresent) return;
+#endif
             if (IsObserverRunning())
             {
                 surfaceObserver.StopObserving();
-            }
-#endif
+            } 
+        }
+
+        /// <summary>
+        /// Instructs the SurfaceObserver to stop and cleanup all meshes.
+        /// </summary>
+        public void CleanupObserver()
+        {
+            surfaceObserver.CleanupObserver();
         }
 
         /// <summary>

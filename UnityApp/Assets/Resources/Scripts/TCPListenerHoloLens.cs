@@ -27,7 +27,6 @@ public class TCPListenerHoloLens : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(Application.platform);
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
         Server();
 #endif
@@ -65,6 +64,7 @@ public class TCPListenerHoloLens : MonoBehaviour
                 Windows.Networking.Sockets.StreamSocketListener sender, 
                 Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)
     {
+        
         //save ip address in case it is different from default
         TCPSender.IP = args.Socket.Information.RemoteAddress.ToString();
 
