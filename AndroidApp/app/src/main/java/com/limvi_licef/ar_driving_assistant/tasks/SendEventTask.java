@@ -40,7 +40,7 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             return context.getResources().getString(R.string.send_event_task_failure);
         }
-        return TCPListenerThread.sendJson(context, json);
+        return TCPListenerThread.sendJson(context, json, false);
     }
 
     /**

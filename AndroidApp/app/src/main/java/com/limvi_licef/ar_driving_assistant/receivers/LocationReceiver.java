@@ -109,7 +109,7 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
         } catch (JSONException e) {
             Log.d("Location Receiver", "JSON Initialization Failure");
         }
-        TCPListenerThread.sendJson(context, json);
+        TCPListenerThread.sendJson(context, json, true);
     }
 
 }

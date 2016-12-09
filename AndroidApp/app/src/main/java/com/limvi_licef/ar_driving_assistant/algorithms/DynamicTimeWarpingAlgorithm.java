@@ -182,7 +182,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             json.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_EVENT);
             json.put(Communication.JSON_EVENT_TYPE, e.type.name());
             json.put(Communication.JSON_EVENT_MESSAGE, e.message);
-            status = TCPListenerThread.sendJson(context, json);
+            status = TCPListenerThread.sendJson(context, json, false);
         } catch (JSONException ex) {
             status = context.getResources().getString(R.string.send_event_task_failure);
         }

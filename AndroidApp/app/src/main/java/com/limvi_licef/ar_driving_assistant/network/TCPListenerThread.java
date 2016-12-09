@@ -125,7 +125,7 @@ public class TCPListenerThread extends Thread {
                 Broadcasts.sendWriteToUIBroadcast(context, UNKNOWN_REQUEST);
                 return;
         }
-        sendJson(context, json);
+        sendJson(context, json, false);
     }
 
     /**
@@ -285,9 +285,10 @@ public class TCPListenerThread extends Thread {
      * Sends a JSON string to the UnityApp
      * @param context
      * @param data the json string to send
+     * @param silent whether to broadcast failure or not
      * @return the status string
      */
-    public static String sendJson(Context context, JSONObject data) {
+    public static String sendJson(Context context, JSONObject data, boolean silent) {
         try {
             String message = data.toString();
             Log.d("TCP", message);
@@ -303,7 +304,9 @@ public class TCPListenerThread extends Thread {
             socket.close();
         } catch (IOException e) {
             Log.d("EventSender", "" + e.getMessage());
-            Broadcasts.sendWriteToUIBroadcast(context, SEND_ERROR);
+            if (!silent) {
+                Broadcasts.sendWriteToUIBroadcast(context, SEND_ERROR);
+            }
             return context.getResources().getString(R.string.send_event_task_failure);
         }
         return context.getResources().getString(R.string.send_event_task_success);
