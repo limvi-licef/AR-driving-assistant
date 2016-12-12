@@ -61,10 +61,6 @@ Follow these steps to deploy the app
      * Switch to the 'Android' platform
    * Choose Build & Run to deploy the apk file directly to the phone via USB
 
-## Usage
-
-TODO: Write usage instructions
-
 ## License
 
 TODO: License
