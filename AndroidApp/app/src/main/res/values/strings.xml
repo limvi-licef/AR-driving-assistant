@@ -46,6 +46,7 @@
     <string name="training_button_stop">Stop Training</string>
     <string name="training_task_success">Inserting event to database</string>
     <string name="training_task_no_data">Error inserting event : no data from sensor found</string>
+    <string name="training_task_no_sensor">Error inserting event : no sensor specified</string>
     <string name="training_task_label_exists">Error inserting event : the label already exists</string>
     <string name="training_task_hint_label">Label</string>
     <string name="training_task_hint_message">Message</string>

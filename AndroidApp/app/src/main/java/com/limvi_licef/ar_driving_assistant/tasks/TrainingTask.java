@@ -49,8 +49,13 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
             Log.d("TrainingTask", "" + e.getMessage());
         }
 
+        List<SensorType> sensors = Preferences.getEnabledSensors(context);
+        if(sensors.isEmpty()) {
+            return context.getResources().getString(R.string.training_task_no_sensor);
+        }
+
         //Verify that the event has data associated with each enabled sensors
-        for(SensorType sensor : Preferences.getEnabledSensors(context)) {
+        for(SensorType sensor : sensors) {
             TimeSeries temp = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
             if(temp.size() == 0) {
                 return context.getResources().getString(R.string.training_task_no_data);
