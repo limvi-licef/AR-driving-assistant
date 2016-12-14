@@ -87,9 +87,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     private final BroadcastReceiver dtwReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (monitoringToggle.isChecked()) {
-                dtwHandler.post(new MatchEventRunnable(MainActivity.this));
-            }
+            dtwHandler.post(new MatchEventRunnable(MainActivity.this));
         }};
 
     /**
@@ -150,13 +148,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
                     CreateTrainingEventDialogFragment trainingFragment = CreateTrainingEventDialogFragment.newInstance();
                     trainingFragment.show(getFragmentManager(), "trainingdialog");
                 } else {
-                    monitoringToggle.setChecked(false);
                     if(startTimestamp == 0) return;
-
-                    //Save prematurely to have access to data to make sure enough data has been collected during this period
-                    linearAccelerometerReceiver.savePrematurely();
-                    rotationReceiver.savePrematurely();
-                    locationReceiver.savePrematurely();
                     new TrainingTask(new Event(label, startTimestamp, timestamp, timestamp - startTimestamp, Event.EventTypes.valueOf(type), message), MainActivity.this).execute();
                     startTimestamp = 0;
                 }

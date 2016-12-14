@@ -84,7 +84,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         //create event timeseries
         TimeSeries eventTS = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
         if(eventTS.size() == 0) {
-            Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + sensor.getType());
+            Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + event.label + " with " + sensor.getType());
             return;
         }
         //create first segment timeseries

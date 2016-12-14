@@ -41,27 +41,6 @@ public class TrainingTask extends AsyncTask<Void, Void, String> {
      */
     @Override
     protected String doInBackground(Void... params) {
-
-        try {
-            //wait for sensor runnables to save data
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Log.d("TrainingTask", "" + e.getMessage());
-        }
-
-        List<SensorType> sensors = Preferences.getEnabledSensors(context);
-        if(sensors.isEmpty()) {
-            return context.getResources().getString(R.string.training_task_no_sensor);
-        }
-
-        //Verify that the event has data associated with each enabled sensors
-        for(SensorType sensor : sensors) {
-            TimeSeries temp = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
-            if(temp.size() == 0) {
-                return context.getResources().getString(R.string.training_task_no_data);
-            }
-        }
-
         return saveNewEvent(event);
     }
 
