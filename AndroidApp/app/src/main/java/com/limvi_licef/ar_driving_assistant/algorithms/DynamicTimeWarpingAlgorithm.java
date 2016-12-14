@@ -132,7 +132,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             saveResults(event, start, stop, distance, sensor.getDistanceColumn());
 
             //Match is considered found if within particular distance
-            if(distance < sensor.getDistanceCutoff()){
+            if(distance < sensor.getDistanceCutoff(context)){
                 matches.get(sensor.getType()).add(new TimestampTuple(start, stop));
             }
         }

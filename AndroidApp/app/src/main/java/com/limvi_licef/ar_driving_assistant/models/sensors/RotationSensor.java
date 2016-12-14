@@ -1,8 +1,11 @@
 package com.limvi_licef.ar_driving_assistant.models.sensors;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.limvi_licef.ar_driving_assistant.config.DynamicTimeWarping;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
-import com.limvi_licef.ar_driving_assistant.models.sensors.SensorType;
+import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 
 public final class RotationSensor implements SensorType {
     public String getType() {
@@ -17,7 +20,8 @@ public final class RotationSensor implements SensorType {
     public String getDistanceColumn() {
         return DatabaseContract.ResultsDTW.DISTANCE_ROTATION;
     }
-    public double getDistanceCutoff() {
-        return DynamicTimeWarping.ROTATION_DISTANCE_CUTOFF;
+    public double getDistanceCutoff(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(Preferences.USER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return Preferences.getDouble(settings, Preferences.ROTATION_DISTANCE_CUTOFF, DynamicTimeWarping.DEFAULT_ROTATION_DISTANCE_CUTOFF);
     }
 }

@@ -20,6 +20,9 @@ public final class Preferences {
     public static final String OFFSET_X_PREF = "offset_x";
     public static final String OFFSET_Y_PREF = "offset_y";
     public static final String OFFSET_Z_PREF = "offset_z";
+    public static final String ACCEL_DISTANCE_CUTOFF = "acceleration_distance_cutoff";
+    public static final String ROTATION_DISTANCE_CUTOFF = "rotation_distance_cutoff";
+    public static final String SPEED_DISTANCE_CUTOFF = "speed_distance_cutoff";
     private static final String DEFAULT_ID = "0";
 
     private Preferences(){}

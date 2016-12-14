@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.limvi_licef.ar_driving_assistant.R;
+import com.limvi_licef.ar_driving_assistant.config.DynamicTimeWarping;
 import com.limvi_licef.ar_driving_assistant.models.sensors.AccelerationSensor;
 import com.limvi_licef.ar_driving_assistant.models.sensors.RotationSensor;
 import com.limvi_licef.ar_driving_assistant.models.sensors.SpeedSensor;
@@ -42,10 +45,31 @@ public class SetupDTWDialogFragment extends DialogFragment {
         cbSpeed.setText(SpeedSensor.class.getSimpleName());
         cbSpeed.setChecked(settings.getBoolean(SpeedSensor.class.getSimpleName(), false));
 
+        final TextView accelLabel = new TextView(getActivity());
+        accelLabel.setText(R.string.setup_dtw_accel_label);
+        final EditText accelText = new EditText(getActivity());
+        accelText.setText(String.valueOf(Preferences.getDouble(settings, Preferences.ACCEL_DISTANCE_CUTOFF, DynamicTimeWarping.DEFAULT_ACCELERATION_DISTANCE_CUTOFF)));
+
+        final TextView rotationLabel = new TextView(getActivity());
+        rotationLabel.setText(R.string.setup_dtw_rotation_label);
+        final EditText rotationText = new EditText(getActivity());
+        rotationText.setText(String.valueOf(Preferences.getDouble(settings, Preferences.ROTATION_DISTANCE_CUTOFF, DynamicTimeWarping.DEFAULT_ROTATION_DISTANCE_CUTOFF)));
+
+        final TextView speedLabel = new TextView(getActivity());
+        speedLabel.setText(R.string.setup_dtw_speed_label);
+        final EditText speedText = new EditText(getActivity());
+        speedText.setText(String.valueOf(Preferences.getDouble(settings, Preferences.SPEED_DISTANCE_CUTOFF, DynamicTimeWarping.DEFAULT_SPEED_DISTANCE_CUTOFF)));
+
         //add checkboxes to layout
         layout.addView(cbAcceleration);
         layout.addView(cbRotation);
         layout.addView(cbSpeed);
+        layout.addView(accelLabel);
+        layout.addView(accelText);
+        layout.addView(rotationLabel);
+        layout.addView(rotationText);
+        layout.addView(speedLabel);
+        layout.addView(speedText);
 
         return new AlertDialog.Builder(getActivity())
                 .setNegativeButton(R.string.setup_dialog_dismiss, null)
@@ -57,6 +81,23 @@ public class SetupDTWDialogFragment extends DialogFragment {
                         editor.putBoolean(cbAcceleration.getText().toString(), cbAcceleration.isChecked());
                         editor.putBoolean(cbRotation.getText().toString(), cbRotation.isChecked());
                         editor.putBoolean(cbSpeed.getText().toString(), cbSpeed.isChecked());
+
+                        //save distance cutoff values to shared preferences
+                        try {
+                            Preferences.putDouble(editor, Preferences.ACCEL_DISTANCE_CUTOFF, Double.parseDouble(accelText.getText().toString()));
+                        } catch (NumberFormatException e) {
+                            //do not save if not a number
+                        }
+                        try {
+                            Preferences.putDouble(editor, Preferences.ROTATION_DISTANCE_CUTOFF, Double.parseDouble(rotationText.getText().toString()));
+                        } catch (NumberFormatException e) {
+                            //do not save if not a number
+                        }
+                        try {
+                            Preferences.putDouble(editor, Preferences.SPEED_DISTANCE_CUTOFF, Double.parseDouble(speedText.getText().toString()));
+                        } catch (NumberFormatException e) {
+                            //do not save if not a number
+                        }
                         editor.apply();
                     }
                 })

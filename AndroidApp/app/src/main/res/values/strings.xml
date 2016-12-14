@@ -57,6 +57,9 @@
     <string name="match_event_task_match_found">Match found : </string>
 
     <string name="setup_dtw_button">DTW</string>
+    <string name="setup_dtw_accel_label">Acceleration Distance Cutoff</string>
+    <string name="setup_dtw_rotation_label">Rotation Distance Cutoff</string>
+    <string name="setup_dtw_speed_label">Speed Distance Cutoff</string>
 
     <string name="delete_events_button">Manage Events</string>
     <string name="list_events_dialog_title">Training Events</string>

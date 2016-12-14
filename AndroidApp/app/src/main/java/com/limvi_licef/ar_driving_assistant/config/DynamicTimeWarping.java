@@ -6,19 +6,19 @@ package com.limvi_licef.ar_driving_assistant.config;
 public final class DynamicTimeWarping {
 
     /**
-     * The cutoff for determining whether a match is found between two TimeSeries of acceleration data
+     * The default cutoff for determining whether a match is found between two TimeSeries of acceleration data
      */
-    public static final double ACCELERATION_DISTANCE_CUTOFF = 15;
+    public static final double DEFAULT_ACCELERATION_DISTANCE_CUTOFF = 15;
 
     /**
-     * The cutoff for determining whether a match is found between two TimeSeries of rotation data
+     * The default cutoff for determining whether a match is found between two TimeSeries of rotation data
      */
-    public static final double ROTATION_DISTANCE_CUTOFF = 200;
+    public static final double DEFAULT_ROTATION_DISTANCE_CUTOFF = 100;
 
     /**
-     * The cutoff for determining whether a match is found between two TimeSeries of speed data
+     * The default cutoff for determining whether a match is found between two TimeSeries of speed data
      */
-    public static final double SPEED_DISTANCE_CUTOFF = 10;
+    public static final double DEFAULT_SPEED_DISTANCE_CUTOFF = 15;
 
     /**
      * The search radius for matching the two TimeSeries
