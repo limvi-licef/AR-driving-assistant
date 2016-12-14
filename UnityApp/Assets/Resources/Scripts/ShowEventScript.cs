@@ -50,7 +50,7 @@ public class ShowEventScript : MonoBehaviour
 #endif
 #if UNITY_ANDROID
         var audioClip = Resources.Load("Sounds/" + e.Sound) as AudioClip;
-        AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+        AudioSource.PlayClipAtPoint(audioClip, Vector3.zero, AudioListener.volume);
 #endif
     }
 
