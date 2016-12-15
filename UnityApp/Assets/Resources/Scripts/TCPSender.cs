@@ -41,11 +41,18 @@ public class TCPSender : MonoBehaviour {
     /// <param name="jsonString">The json string to send</param>
     private async void ConnectAndSend(string jsonString)
     {
-        StreamSocket socket = new StreamSocket();
-        await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port.ToString());
-        DataWriter writer = new DataWriter(socket.OutputStream);
-        writer.WriteString(jsonString);
-        await writer.StoreAsync();
+        try
+        {
+            StreamSocket socket = new StreamSocket();
+            await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port.ToString());
+            DataWriter writer = new DataWriter(socket.OutputStream);
+            writer.WriteString(jsonString);
+            await writer.StoreAsync();
+        }
+        catch (Exception ex)
+        {
+            //silently fail
+        }
     }
 #endif
 
