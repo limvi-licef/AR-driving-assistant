@@ -57,7 +57,7 @@ public class TCPListenerAndroid : MonoBehaviour {
                 {
                     TcpClient client = tcp_Listener.AcceptTcpClient();
                     //save ip address in case it is different from default
-                    TCPSender.IP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
+                    TCPSender.IP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString().Trim();
                     NetworkStream ns = client.GetStream();
                     StreamReader reader = new StreamReader(ns);
                     msg = reader.ReadLine();
@@ -89,6 +89,7 @@ public class TCPListenerAndroid : MonoBehaviour {
 
     void HandleRequest(string message)
     {
+
         //Deserialize json
         JsonClasses.JsonResponse response = new JsonClasses.JsonResponse();
         JsonUtility.FromJsonOverwrite(message, response);
@@ -104,7 +105,8 @@ public class TCPListenerAndroid : MonoBehaviour {
         {
             JsonClasses.JsonResponseEvent eventResponse = new JsonClasses.JsonResponseEvent();
             JsonUtility.FromJsonOverwrite(message, eventResponse);
-            EventManager.SendEvent(eventResponse.eventType, eventResponse.message);
+            //called on main thread since textures can only be updated on main thread
+            UnityMainThreadDispatcher.Instance().Enqueue(DispatchEvent(eventResponse.eventType, eventResponse.message));
         }
         else if (response.requestType.Equals(Config.Communication.USERS_RESPONSE))
         {
@@ -139,6 +141,13 @@ public class TCPListenerAndroid : MonoBehaviour {
             }
         }
     }
+
+    private IEnumerator DispatchEvent(string eventType, string message)
+    {
+        EventManager.SendEvent(eventType, message);
+        yield return null;
+    }
+
 #endif
 }
 

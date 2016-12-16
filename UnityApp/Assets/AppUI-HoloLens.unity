@@ -1636,6 +1636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7e70b412e6bc543837c6957373f0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userManager: {fileID: 0}
   TCPSender: {fileID: 1753665251}
   sendButton: {fileID: 975000826}
   IdField: {fileID: 353073615}
@@ -8740,6 +8741,14 @@ MonoBehaviour:
       loopTime: 0
       sounds:
       - sound: {fileID: 8300000, guid: 62ee9ec868f577545a65c2c69f1f9492, type: 3}
+        looping: 0
+        delayCenter: 0
+        delayRandomization: 0
+      - sound: {fileID: 8300000, guid: 89de696724ab31c46b096f70fc97b6ca, type: 3}
+        looping: 0
+        delayCenter: 0
+        delayRandomization: 0
+      - sound: {fileID: 8300000, guid: b94da147b5c711943afa421fbfb11566, type: 3}
         looping: 0
         delayCenter: 0
         delayRandomization: 0

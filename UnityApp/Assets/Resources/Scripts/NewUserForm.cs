@@ -8,6 +8,7 @@ using System.Linq;
 /// </summary>
 public class NewUserForm : MonoBehaviour {
 
+    public UserManager userManager;
     public TCPSender TCPSender;
     public Button sendButton;
     public InputField IdField;
@@ -34,6 +35,11 @@ public class NewUserForm : MonoBehaviour {
     /// </summary>
     public void SendForm()
     {
+        if(string.IsNullOrEmpty(IdField.text))
+        {
+            userManager.DisplayError(Config.ErrorMessages.INVALID_ID);
+            return;
+        }
         JsonClasses.JsonRequestNewUser newUserRequest = new JsonClasses.JsonRequestNewUser();
         newUserRequest.requestType = Config.Communication.NEW_USER_REQUEST;
         newUserRequest.userName = IdField.text;

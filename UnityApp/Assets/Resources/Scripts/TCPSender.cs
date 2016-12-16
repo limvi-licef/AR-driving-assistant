@@ -64,7 +64,7 @@ public class TCPSender : MonoBehaviour {
     private IEnumerator ConnectAndSend(string jsonString)
     {
         TcpClient client = new TcpClient();
-        client.Connect(IP, Port);
+        client.Connect(IP.Trim(), Port);
         if (client.Connected)
         {
             NetworkStream stream = client.GetStream();

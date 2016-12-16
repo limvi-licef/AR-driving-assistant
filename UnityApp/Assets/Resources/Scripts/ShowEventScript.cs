@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
     using HoloToolkit.Unity;
@@ -40,18 +41,18 @@ public class ShowEventScript : MonoBehaviour
     /// <param name="e">The event to instantiate</param>
     void SetupEvent(Event e)
     {
-        eventDisplay = (Instantiate(Resources.Load("Prefabs/" + e.Prefab), Vector3.zero, Quaternion.identity) as GameObject);
-        eventDisplay.transform.SetParent(gameObject.transform, false);
-        eventDisplay.GetComponentInChildren<Text>().text = e.Text;
-        eventDisplay.GetComponentInChildren<RawImage>().texture = Resources.Load("Images/" + e.Icon) as Texture;
-        eventDisplay.GetComponentInChildren<RawImage>().color = e.Color;
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
+        eventDisplay = (Instantiate(Resources.Load("Prefabs/" + e.Prefab), Vector3.zero, Quaternion.identity) as GameObject);
         UAudioManager.Instance.PlayEvent(e.Sound, this.gameObject.GetComponent<AudioSource>());
 #endif
 #if UNITY_ANDROID
-        var audioClip = Resources.Load("Sounds/" + e.Sound) as AudioClip;
-        AudioSource.PlayClipAtPoint(audioClip, Vector3.zero, AudioListener.volume);
+        eventDisplay = (Instantiate(Resources.Load("Prefabs/Android/" + e.Prefab), Vector3.zero, Quaternion.identity) as GameObject);
+        GetComponent<AudioSource>().PlayOneShot(Resources.Load("Sounds/" + e.Sound) as AudioClip, AudioListener.volume);
 #endif
+        eventDisplay.GetComponentInChildren<Text>().text = e.Text;
+        eventDisplay.GetComponentInChildren<RawImage>().texture = Resources.Load("Images/" + e.Icon) as Texture;
+        eventDisplay.GetComponentInChildren<RawImage>().color = e.Color;
+        eventDisplay.transform.SetParent(gameObject.transform, false);
     }
 
     /// <summary>
@@ -69,7 +70,12 @@ public class ShowEventScript : MonoBehaviour
     /// </summary>
     void SetupWelcomeScreen()
     {
+#if UNITY_WSA_10_0 && !UNITY_EDITOR
         welcomeScreen = (Instantiate(Resources.Load("Prefabs/WelcomeScreen"), Vector3.zero, Quaternion.identity) as GameObject);
+#endif
+#if UNITY_ANDROID
+        welcomeScreen = (Instantiate(Resources.Load("Prefabs/Android/WelcomeScreen"), Vector3.zero, Quaternion.identity) as GameObject);
+#endif
         welcomeScreen.transform.SetParent(gameObject.transform, false);
         welcomeScreen.GetComponentInChildren<Text>().text = UserManager.userId;
     }
