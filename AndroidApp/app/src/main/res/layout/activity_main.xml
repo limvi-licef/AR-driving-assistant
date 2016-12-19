@@ -12,79 +12,84 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.limvi_licef.ar_driving_assistant.activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_title" />
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
+        android:id="@+id/scrollview_main"
+        android:fadeScrollbars="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="7" >
 
-        <ToggleButton
-            android:id="@+id/monitoring_button"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textOff="@string/monitoring_start"
-            android:textOn="@string/monitoring_stop" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/setup_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/setup_user" />
+            <ToggleButton
+                android:id="@+id/monitoring_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textOff="@string/monitoring_start"
+                android:textOn="@string/monitoring_stop" />
 
-        <Button
-            android:id="@+id/check_database_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/export_db" />
+            <Button
+                android:id="@+id/setup_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/setup_user" />
 
-        <Button
-            android:id="@+id/calibrate_sensor_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/calibrate_button" />
+            <Button
+                android:id="@+id/check_database_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/export_db" />
 
-        <Button
-            android:id="@+id/send_event_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/send_event_task_button" />
+            <Button
+                android:id="@+id/calibrate_sensor_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/calibrate_button" />
 
-        <Button
-            android:id="@+id/setup_dtw_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/setup_dtw_button" />
+            <Button
+                android:id="@+id/send_event_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/send_event_task_button" />
 
-        <Button
-            android:id="@+id/list_events_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/delete_events_button" />
+            <Button
+                android:id="@+id/setup_dtw_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/setup_dtw_button" />
 
-        <ToggleButton
-            android:id="@+id/train_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textOff="@string/training_button_start"
-            android:textOn="@string/training_button_stop" />
+            <Button
+                android:id="@+id/list_events_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/delete_events_button" />
 
-    </LinearLayout>
+            <ToggleButton
+                android:id="@+id/train_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textOff="@string/training_button_start"
+                android:textOn="@string/training_button_stop" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <ListView
         android:id="@+id/monitoring_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll" />
 
     <TextView
         android:id="@+id/emptyList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:text="@string/monitoring_empty"
         android:visibility="gone" />
 </LinearLayout>
