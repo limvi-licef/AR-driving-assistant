@@ -2,7 +2,6 @@ package com.limvi_licef.ar_driving_assistant.algorithms;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.fastdtw.dtw.FastDTW;
@@ -13,11 +12,8 @@ import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.config.DynamicTimeWarping;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
-import com.limvi_licef.ar_driving_assistant.models.sensors.AccelerationSensor;
 import com.limvi_licef.ar_driving_assistant.models.Event;
-import com.limvi_licef.ar_driving_assistant.models.sensors.RotationSensor;
 import com.limvi_licef.ar_driving_assistant.models.sensors.SensorType;
-import com.limvi_licef.ar_driving_assistant.models.sensors.SpeedSensor;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
@@ -38,6 +34,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
     private Context context;
     private final long startTimestamp;
     private final long endTimestamp;
+    private String userID;
     private Map<String,List<TimestampTuple>> matches = new HashMap<>();
 
     private List<SensorType> sensors = new ArrayList<>();
@@ -52,6 +49,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         this.context = context;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
+        userID = Preferences.getCurrentUserId(context);
         enableCheckedSensors();
     }
 
@@ -201,6 +199,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         db.beginTransaction();
         ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ResultsDTW.CURRENT_USER_ID, userID);
         values.put(DatabaseContract.ResultsDTW.EVENT_LABEL, event.label);
         values.put(DatabaseContract.ResultsDTW.EVENT_DURATION, event.duration);
         values.put(DatabaseContract.ResultsDTW.SEGMENT_START, segmentStart);

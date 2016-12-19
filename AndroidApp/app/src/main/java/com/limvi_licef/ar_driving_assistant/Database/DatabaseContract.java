@@ -232,6 +232,7 @@ public final class DatabaseContract {
 
     public static abstract class ResultsDTW implements BaseColumns {
         public static final String TABLE_NAME       = "ResultsDTW";
+        public static final String CURRENT_USER_ID = "CurrentUserID";
         public static final String EVENT_LABEL = "EventLabel";
         public static final String EVENT_DURATION = "EventDuration";
         public static final String SEGMENT_START = "SegmentStart";
@@ -243,6 +244,7 @@ public final class DatabaseContract {
         public static final String CREATE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
+                CURRENT_USER_ID + TEXT_TYPE + COMMA_SEP +
                 EVENT_LABEL + TEXT_TYPE + COMMA_SEP +
                 EVENT_DURATION + REAL_TYPE + COMMA_SEP +
                 SEGMENT_START + DATETIME_TYPE + COMMA_SEP +
