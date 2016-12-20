@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.aware.Locations;
 import com.aware.providers.Locations_Provider;
+import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.config.Communication;
 import com.limvi_licef.ar_driving_assistant.config.SensorDataCollection;
 import com.limvi_licef.ar_driving_assistant.database.DatabaseContract;
@@ -21,6 +22,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteSpeedRunnable;
 import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
 
@@ -62,7 +64,9 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Location Receiver", "Received intent");
+        if(SensorDataCollection.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, "Received Location Data");
+        }
         if(System.currentTimeMillis() - previousTimestamp <= SensorDataCollection.MINIMUM_DELAY) return;
         SQLiteDatabase db = DatabaseHelper.getHelper(context).getWritableDatabase();
         //fetch most recent location
@@ -91,8 +95,6 @@ public class LocationReceiver extends BroadcastReceiver implements SensorReceive
 
         updateSpeedCounter(context, speed);
         location.close();
-//        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.LocationData.TABLE_NAME + " " +
-//                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
         previousTimestamp = System.currentTimeMillis();
     }
 

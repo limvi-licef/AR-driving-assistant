@@ -65,8 +65,10 @@ public class TemperatureReceiver extends BroadcastReceiver implements SensorRece
 
         boolean success = db.insert(DatabaseContract.TemperatureData.TABLE_NAME, null, valuesToSave) != -1L;
 
-        Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.TemperatureData.TABLE_NAME + " " +
-                (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
+        if (SensorDataCollection.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, DatabaseContract.TemperatureData.TABLE_NAME + " " +
+                    (success ? context.getResources().getString(R.string.database_insert_success) : context.getResources().getString(R.string.database_insert_failure)));
+        }
         previousTimestamp = System.currentTimeMillis();
     }
 }

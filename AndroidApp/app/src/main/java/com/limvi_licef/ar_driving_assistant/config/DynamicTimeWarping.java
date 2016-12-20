@@ -24,4 +24,9 @@ public final class DynamicTimeWarping {
      * The search radius for matching the two TimeSeries
      */
     public static final int SEARCH_RADIUS = 10;
+
+    /**
+     * Defines whether or not the DTW results are written to the UI
+     */
+    public static final boolean LOGGING_ENABLED = true;
 }

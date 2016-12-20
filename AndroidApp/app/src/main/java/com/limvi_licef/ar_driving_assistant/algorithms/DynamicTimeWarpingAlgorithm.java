@@ -60,7 +60,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      */
     public void processEvent(Event event) {
         long logTimestamp = System.currentTimeMillis();
-        Broadcasts.sendWriteToUIBroadcast(context, "DTW start : " + logTimestamp);
+        if (DynamicTimeWarping.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, "DTW start : " + logTimestamp);
+        }
 
         for(SensorType sensor : sensors) {
             processSensor(event, sensor);
@@ -69,7 +71,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             matchFound(event);
         }
 
-        Broadcasts.sendWriteToUIBroadcast(context, "DTW done : " + (System.currentTimeMillis() - logTimestamp));
+        if (DynamicTimeWarping.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, "DTW done : " + (System.currentTimeMillis() - logTimestamp));
+        }
     }
 
     /**
@@ -82,7 +86,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         //create event timeseries
         TimeSeries eventTS = TimeSeriesExtended.createTimeSeriesFromSensor(context, event.startTimestamp, event.endTimestamp, sensor.getTableName(), sensor.getColumns());
         if(eventTS.size() == 0) {
-            Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + event.label + " with " + sensor.getType());
+            if (DynamicTimeWarping.LOGGING_ENABLED) {
+                Broadcasts.sendWriteToUIBroadcast(context, "DTW : Could not create event TimeSeries for " + event.label + " with " + sensor.getType());
+            }
             return;
         }
         //create first segment timeseries
@@ -173,7 +179,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
      * @param e The event to send
      */
     private void matchFound(Event e){
-        Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
+        if (DynamicTimeWarping.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_match_found) + e.label);
+        }
         String status;
         JSONObject json = new JSONObject();
         try {
@@ -184,7 +192,9 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
         } catch (JSONException ex) {
             status = context.getResources().getString(R.string.send_event_task_failure);
         }
-        Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_status) + status);
+        if (DynamicTimeWarping.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, context.getResources().getString(R.string.match_event_task_status) + status);
+        }
     }
 
     /**

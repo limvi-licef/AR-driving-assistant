@@ -20,6 +20,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.ComputeAccelerationRunnabl
 import com.limvi_licef.ar_driving_assistant.runnables.ComputeAlgorithmRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAccelerationRunnable;
 import com.limvi_licef.ar_driving_assistant.runnables.RewriteAlgorithmRunnable;
+import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
 import com.limvi_licef.ar_driving_assistant.utils.Statistics;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
@@ -71,7 +72,9 @@ public class LinearAccelerometerReceiver extends BroadcastReceiver implements Se
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Linear Receiver", "Received intent");
+        if(SensorDataCollection.LOGGING_ENABLED) {
+            Broadcasts.sendWriteToUIBroadcast(context, "Received Linear Accelerometer Data");
+        }
         if(System.currentTimeMillis() - previousTimestamp <= SensorDataCollection.MINIMUM_DELAY) return;
         ContentValues values = (ContentValues) intent.getExtras().get(LinearAccelerometer.EXTRA_DATA);
         if(values == null || values.size() == 0) return;

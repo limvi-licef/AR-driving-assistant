@@ -34,4 +34,9 @@ public final class SensorDataCollection {
      * Precision, in milliseconds, of the linear accelerometer sensor timestamp rounding
      */
     public static final long ACCELERATION_PRECISION = 200;
+
+    /**
+     * Defines whether or not the receivers notify the UI when they receive data
+     */
+    public static final boolean LOGGING_ENABLED = false;
 }

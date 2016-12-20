@@ -88,7 +88,7 @@ public abstract class ComputeAlgorithmRunnable implements Runnable {
         finally{
             db.endTransaction();
 
-//            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
+            Broadcasts.sendWriteToUIBroadcast(context, insertionStatus);
             isRunning = false;
             handler.postDelayed(this, SensorDataCollection.SHORT_DELAY);
             notifyRunnableEnd();
