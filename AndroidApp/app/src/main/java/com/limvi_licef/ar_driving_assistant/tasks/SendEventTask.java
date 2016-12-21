@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.limvi_licef.ar_driving_assistant.R;
 import com.limvi_licef.ar_driving_assistant.config.Communication;
-import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
+import com.limvi_licef.ar_driving_assistant.network.UDPListenerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ public class SendEventTask extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             return context.getResources().getString(R.string.send_event_task_failure);
         }
-        return TCPListenerThread.sendJson(context, json, false);
+        return UDPListenerThread.sendJson(context, json, false);
     }
 
     /**

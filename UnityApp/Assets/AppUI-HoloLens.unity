@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d4e685eae88441af17e470f580f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TCPSender: {fileID: 1753665251}
+  UDPSender: {fileID: 1753665251}
   Placeholder: {fileID: 969490328}
 --- !u!1 &124413663
 GameObject:
@@ -1636,8 +1636,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7e70b412e6bc543837c6957373f0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userManager: {fileID: 0}
-  TCPSender: {fileID: 1753665251}
+  userManager: {fileID: 1753665249}
+  UDPSender: {fileID: 1753665251}
   sendButton: {fileID: 975000826}
   IdField: {fileID: 353073615}
   AgeField: {fileID: 657028535}
@@ -7697,7 +7697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba645708e17a754eb60308f5a5170cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TCPSender: {fileID: 1753665251}
+  UDPSender: {fileID: 1753665251}
   UserManager: {fileID: 1753665249}
 --- !u!1 &1513687335
 GameObject:
@@ -9069,7 +9069,7 @@ MonoBehaviour:
   speedCounter: {fileID: 1758246326}
   userManager: {fileID: 1753665249}
   retroaction: {fileID: 1497752888}
-  TCPSender: {fileID: 1753665251}
+  UDPSender: {fileID: 1753665251}
 --- !u!114 &1753665251
 MonoBehaviour:
   m_ObjectHideFlags: 0

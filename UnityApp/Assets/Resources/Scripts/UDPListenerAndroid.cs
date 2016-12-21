@@ -4,24 +4,26 @@ using System.Threading;
 using System.Net.Sockets;
 using System.IO;
 using System.Net;
+using System.Text;
+using System;
 
 /// <summary>
-/// TCP listener for Unity on Android
+/// UDP listener for Unity on Android
 /// </summary>
-public class TCPListenerAndroid : MonoBehaviour {
+public class UDPListenerAndroid : MonoBehaviour {
 
-    //Deal with the tcp responses
+    //Deal with the udp responses
     public SpeedCounter speedCounter;
     public UserManager userManager;
     public RetroactionScript retroaction;
-    public TCPSender TCPSender;
+    public UDPSender UDPSender;
 
 #if UNITY_ANDROID
 
     string msg = "";
     Thread mThread;
     bool mRunning;
-    TcpListener tcp_Listener = null;
+    UdpClient udpClient = null;
 
     void Start()
     {
@@ -38,34 +40,25 @@ public class TCPListenerAndroid : MonoBehaviour {
     }
 
     /// <summary>
-    /// Bind TcpListener to port and start listening to requests
+    /// Bind UdpClient to port and start listening to requests
     /// </summary>
     void Server()
     {
         try
         {
-            tcp_Listener = new TcpListener(IPAddress.Any, Config.Communication.PORT);
-            tcp_Listener.Start();
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, Config.Communication.PORT);
+            udpClient = new UdpClient(endPoint);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+
             while (mRunning)
             {
-                // check if new connections are pending, if not, be nice and sleep 100ms
-                if (!tcp_Listener.Pending())
-                {
-                    Thread.Sleep(100);
-                }
-                else
-                {
-                    TcpClient client = tcp_Listener.AcceptTcpClient();
-                    //save ip address in case it is different from default
-                    TCPSender.IP = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString().Trim();
-                    NetworkStream ns = client.GetStream();
-                    StreamReader reader = new StreamReader(ns);
-                    msg = reader.ReadLine();
-                    HandleRequest(msg);
+                Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
 
-                    reader.Close();
-                    client.Close();
-                }
+                //save ip address in case it is different from default
+                UDPSender.IP = RemoteIpEndPoint.Address.ToString().Trim();
+
+                msg = Encoding.ASCII.GetString(receiveBytes);
+                HandleRequest(msg);
             }
         }
         catch (ThreadAbortException)
@@ -75,7 +68,7 @@ public class TCPListenerAndroid : MonoBehaviour {
         finally
         {
             mRunning = false;
-            tcp_Listener.Stop();
+            udpClient.Close();
         }
     }
 

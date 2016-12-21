@@ -15,7 +15,7 @@ import com.limvi_licef.ar_driving_assistant.database.DatabaseHelper;
 import com.limvi_licef.ar_driving_assistant.models.Event;
 import com.limvi_licef.ar_driving_assistant.models.sensors.SensorType;
 import com.limvi_licef.ar_driving_assistant.models.TimestampedDouble;
-import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
+import com.limvi_licef.ar_driving_assistant.network.UDPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 import com.limvi_licef.ar_driving_assistant.utils.Database;
 import com.limvi_licef.ar_driving_assistant.utils.Preferences;
@@ -188,7 +188,7 @@ public class DynamicTimeWarpingAlgorithm implements EventAlgorithm {
             json.put(Communication.JSON_REQUEST_TYPE, Communication.JSON_REQUEST_TYPE_PARAM_EVENT);
             json.put(Communication.JSON_EVENT_TYPE, e.type.name());
             json.put(Communication.JSON_EVENT_MESSAGE, e.message);
-            status = TCPListenerThread.sendJson(context, json, false);
+            status = UDPListenerThread.sendJson(context, json, false);
         } catch (JSONException ex) {
             status = context.getResources().getString(R.string.send_event_task_failure);
         }

@@ -39,7 +39,7 @@ import com.limvi_licef.ar_driving_assistant.runnables.MatchEventRunnable;
 import com.limvi_licef.ar_driving_assistant.tasks.CalibrateTask;
 import com.limvi_licef.ar_driving_assistant.tasks.ExportTask;
 import com.limvi_licef.ar_driving_assistant.tasks.TrainingTask;
-import com.limvi_licef.ar_driving_assistant.network.TCPListenerThread;
+import com.limvi_licef.ar_driving_assistant.network.UDPListenerThread;
 import com.limvi_licef.ar_driving_assistant.utils.Broadcasts;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
     public ToggleButton trainToggle;
     public ToggleButton monitoringToggle;
 
-    private TCPListenerThread tcpListenerThread = null;
+    private UDPListenerThread udpListenerThread = null;
 
     private long startTimestamp = 0;
     private String label;
@@ -164,8 +164,8 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         setupSensors();
         setupListeners();
         startAwareServices();
-        tcpListenerThread = new TCPListenerThread(this);
-        tcpListenerThread.start();
+        udpListenerThread = new UDPListenerThread(this);
+        udpListenerThread.start();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class MainActivity extends FragmentActivity implements  View.OnClickListe
         stopAwareServices();
         stopListenerThreads();
         super.onDestroy();
-        tcpListenerThread.kill();
+        udpListenerThread.kill();
     }
 
     @Override

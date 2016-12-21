@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Collections;
 
 #if UNITY_ANDROID
-    using System.Net.Sockets;
+using System.Net.Sockets;
+using System.Text;
+using System.Net;
 #endif
 
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
@@ -14,9 +16,9 @@ using System.Collections;
 #endif
 
 /// <summary>
-/// Sends TCP packets containing json requests
+/// Sends UDP packets containing json requests
 /// </summary>
-public class TCPSender : MonoBehaviour {
+public class UDPSender : MonoBehaviour {
 
     //default ip address for android hotspot
     private string ip = Config.Communication.DEFAULT_IP;
@@ -43,7 +45,7 @@ public class TCPSender : MonoBehaviour {
     {
         try
         {
-            StreamSocket socket = new StreamSocket();
+            DatagramSocket socket = new DatagramSocket();
             await socket.ConnectAsync(new Windows.Networking.HostName(IP), Port.ToString());
             DataWriter writer = new DataWriter(socket.OutputStream);
             writer.WriteString(jsonString);
@@ -63,15 +65,9 @@ public class TCPSender : MonoBehaviour {
     /// <param name="jsonString">The json string to send</param>
     private IEnumerator ConnectAndSend(string jsonString)
     {
-        TcpClient client = new TcpClient();
-        client.Connect(IP.Trim(), Port);
-        if (client.Connected)
-        {
-            NetworkStream stream = client.GetStream();
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(jsonString);
-            writer.Close();
-        }
+        UdpClient client = new UdpClient();
+        byte[] data = Encoding.UTF8.GetBytes(jsonString);
+        client.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(IP.Trim()), Port));
         client.Close();
         yield return null;
     }

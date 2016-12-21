@@ -22,10 +22,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.channels.DatagramChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,25 +38,25 @@ import java.util.Locale;
 /**
  * Thread that listens for json messages from the Unity app
  */
-public class TCPListenerThread extends Thread {
+public class UDPListenerThread extends Thread {
 
     /**
      * Error messages sent to UI in case of error
      */
     private static final String UNKNOWN_REQUEST = "Received Unknown Request";
-    private static final String THREAD_END = "TCP Listener Ended";
-    private static final String THREAD_EXCEPTION = "TCP Listener Exception ";
+    private static final String THREAD_END = "UDP Listener Ended";
+    private static final String THREAD_EXCEPTION = "UDP Listener Exception ";
     private static final String RETURN_ERROR = "There was an error while returning data";
     private static final String SEND_ERROR = "There was an error while sending data";
     private static final String FETCH_USERS_ERROR = "There was an error while fetching all Users";
     private static final String INSERT_USER_ERROR = "There was an error while inserting a new user";
     private static final String FETCH_RIDES_ERROR = "There was an error while fetching user rides";
 
-    private ServerSocket serverSocket;
+    private DatagramSocket serverSocket;
     private Context context;
     private boolean running;
 
-    public TCPListenerThread(Context context) {
+    public UDPListenerThread(Context context) {
         super();
         this.context = context;
     }
@@ -68,23 +71,23 @@ public class TCPListenerThread extends Thread {
         running = true;
 
         try {
-            serverSocket = new ServerSocket(Communication.HOLOLENS_PORT);
+            serverSocket = new DatagramSocket(Communication.HOLOLENS_PORT);
 
             while(running){
+                byte[] buffer = new byte[1024*1024];
 
                 // receive request
-                Socket connectionSocket = serverSocket.accept();
-                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                message = inFromClient.readLine();
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                serverSocket.receive(packet);
+                message = new String(buffer, 0, packet.getLength());
 
                 try {
-                    Log.d("TCP", message);
+                    Log.d("UDP", message);
                     JSONObject request = new JSONObject(message);
                     handleRequest(request);
                 } catch(JSONException e) {
                     Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
                 }
-                connectionSocket.close();
             }
             Broadcasts.sendWriteToUIBroadcast(context, THREAD_END);
         } catch (SocketException e) {
@@ -93,11 +96,7 @@ public class TCPListenerThread extends Thread {
             Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
         } finally {
             if(serverSocket != null){
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                    Broadcasts.sendWriteToUIBroadcast(context, THREAD_EXCEPTION + e.getMessage());
-                }
+                serverSocket.close();
             }
         }
     }
@@ -109,7 +108,7 @@ public class TCPListenerThread extends Thread {
      */
     private void handleRequest(JSONObject request) throws JSONException {
         String requestType = request.getString(Communication.JSON_REQUEST_TYPE);
-        Log.d("TCP", "Received request : " + requestType);
+        Log.d("UDP", "Received request : " + requestType);
         JSONObject json;
         switch (requestType) {
             case Communication.JSON_REQUEST_TYPE_USERS:
@@ -296,11 +295,9 @@ public class TCPListenerThread extends Thread {
             if (ipString == null || ipString.isEmpty()) return context.getResources().getString(R.string.send_event_task_invalid_ip);
 
             InetAddress ipAddress = InetAddress.getByName(ipString);
-            Socket socket = new Socket(ipAddress, Communication.HOLOLENS_PORT);
-            DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
-            outToServer.write(message.getBytes("UTF-8"));
-            outToServer.flush();
-            outToServer.close();
+            DatagramSocket socket = DatagramChannel.open().socket();
+            DatagramPacket dp = new DatagramPacket(message.getBytes(), message.length(), ipAddress, Communication.HOLOLENS_PORT);
+            socket.send(dp);
             socket.close();
         } catch (IOException e) {
             Log.d("EventSender", "" + e.getMessage());

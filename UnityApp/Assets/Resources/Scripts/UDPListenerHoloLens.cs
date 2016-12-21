@@ -7,22 +7,22 @@ using System.IO;
 #endif
 
 /// <summary>
-/// Listens for incoming tcp connections and redirects messages to the adequate method
+/// Listens for incoming udp packets and redirects messages to the adequate method
 /// </summary>
 /// <remarks>
-/// Adapted from https://www.tutorialspoint.com/windows10_development/windows10_development_networking.htm
+/// Adapted from https://forums.hololens.com/discussion/comment/9837
 /// Packets must contain a json string that respect the classes in JsonClasses.cs
 /// </remarks>
-public class TCPListenerHoloLens : MonoBehaviour
+public class UDPListenerHoloLens : MonoBehaviour
 {
-    //Deal with the tcp responses
+    //Deal with the udp responses
     public SpeedCounter speedCounter;
     public UserManager userManager;
     public RetroactionScript retroaction;
-    public TCPSender TCPSender;
+    public UDPSender UDPSender;
 
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
-    private Windows.Networking.Sockets.StreamSocketListener socketListener;
+    private DatagramSocket socket;
 #endif
 
     void Start()
@@ -43,12 +43,12 @@ public class TCPListenerHoloLens : MonoBehaviour
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
     private async void Server()
     {
-        socketListener = new Windows.Networking.Sockets.StreamSocketListener();
-        socketListener.ConnectionReceived += SocketListener_ConnectionReceived;
+        socket = new DatagramSocket();
+        socket.MessageReceived += Socket_MessageReceived;
 
         try
         {
-            await socketListener.BindServiceNameAsync(Config.Communication.PORT.ToString()); 
+            await socket.BindEndpointAsync(null, Config.Communication.PORT.ToString());
         }
         catch (Exception e)
         {
@@ -60,16 +60,15 @@ public class TCPListenerHoloLens : MonoBehaviour
 #endif
 
 #if UNITY_WSA_10_0 && !UNITY_EDITOR
-    private async void SocketListener_ConnectionReceived(
-                Windows.Networking.Sockets.StreamSocketListener sender, 
-                Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)
+    private async void Socket_MessageReceived(
+                Windows.Networking.Sockets.DatagramSocket sender, 
+                Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
     {
-        
         //save ip address in case it is different from default
-        TCPSender.IP = args.Socket.Information.RemoteAddress.ToString();
+        UDPSender.IP = args.RemoteAddress.ToString();
 
         //Read the json message that was received from the Android client
-        Stream streamIn = args.Socket.InputStream.AsStreamForRead();
+        Stream streamIn = args.GetDataStream().AsStreamForRead();
         StreamReader reader = new StreamReader(streamIn);
         string message = await reader.ReadLineAsync();
 
