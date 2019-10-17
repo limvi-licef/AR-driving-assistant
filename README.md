@@ -63,4 +63,4 @@ Follow these steps to deploy the app
 
 ## License
 
-TODO: License
+Apache License 2.0   Thanks to the main contributors Julien Brochu-Renaud, Perrine Ruer and Charles Gouin-Vallerand
